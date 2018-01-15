@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="110dp">
+
+    <ImageView
+        android:id="@+id/iv_rank_cover"
+        android:layout_width="60dp"
+        android:layout_height="90dp"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        android:layout_marginStart="10dp"
+        tools:background="@drawable/error"/>
+
+    <TextView
+        android:id="@+id/tv_rank_pos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="34sp"
+        android:layout_gravity="center"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/item_text"
+        tools:text="01"/>
+
+    <TextView
+        android:id="@+id/tv_rank_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_gravity="center"
+        android:layout_marginStart="6dp"
+        android:textColor="@color/item_text"
+        android:maxLines="1"
+        android:maxEms="8"
+        android:ellipsize="end"
+        tools:text="这里是漫画名字啊"/>
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/tv_rank_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="10dp"
+        android:textColor="@color/look_num"
+        tools:text="100万"/>
+</LinearLayout>

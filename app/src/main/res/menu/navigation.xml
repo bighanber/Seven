@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_index"
+        android:icon="@drawable/thenew_off_icon"
+        android:title="@string/title_update"/>
+
+    <item
+        android:id="@+id/navigation_shelf"
+        android:icon="@drawable/comic_off_icon"
+        android:title="@string/title_comic"/>
+
+    <item
+        android:id="@+id/navigation_news"
+        android:icon="@drawable/news_off_icon"
+        android:title="@string/title_collect"/>
+
+</menu>

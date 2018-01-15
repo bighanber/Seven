@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="horizontal"
+              android:layout_marginTop="200dp"
+              app:layout_collapseMode="parallax"
+              app:layout_collapseParallaxMultiplier="0.5"
+              android:background="@color/white"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_header_update"
+        android:drawableTop="@drawable/new_update"
+        android:text="@string/update"
+        style="@style/IndexHeaderSort"/>
+
+    <TextView
+        android:id="@+id/tv_header_rank"
+        android:drawableTop="@drawable/new_rank"
+        android:text="@string/rank"
+        style="@style/IndexHeaderSort"/>
+
+    <TextView
+        android:id="@+id/tv_header_sort"
+        android:drawableTop="@drawable/new_category"
+        android:text="@string/sort"
+        style="@style/IndexHeaderSort"/>
+
+    <TextView
+        android:id="@+id/tv_header_special"
+        android:drawableTop="@drawable/special_icon"
+        android:text="@string/special"
+        style="@style/IndexHeaderSort"/>
+</LinearLayout>

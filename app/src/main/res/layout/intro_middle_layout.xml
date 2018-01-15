@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="200dp"
+    android:id="@+id/middler"
+    android:orientation="vertical"
+    app:layout_collapseMode="parallax"
+    app:layout_collapseParallaxMultiplier="0.5">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:background="@color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:id="@+id/tv_intro_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="75dp"
+            tools:text="Lover's Day"
+            android:textColor="@color/black"
+            android:layout_marginBottom="10dp"
+            android:textSize="17sp"/>
+
+        <TextView
+            android:id="@+id/tv_intro_authors"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="10dp"
+            tools:text="Lover's Day"
+            android:textColor="@color/item_text"/>
+
+        <TextView
+            android:id="@+id/tv_intro_tags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/tv_intro_authors"
+            tools:text="Lover's Day"
+            android:textColor="@color/item_text"/>
+
+
+        <TextView
+            android:id="@+id/tv_intro_read"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/start_read"
+            android:gravity="center"
+            android:text="开始阅读"
+            android:padding="5dp"
+            android:textColor="@color/white"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_sort_list_cover"
+        android:layout_width="100dp"
+        android:layout_height="130dp"
+        android:scaleType="centerCrop"
+        tools:background="@drawable/error"/>
+
+    <TextView
+        android:id="@+id/tv_sort_list_title"
+        android:layout_toEndOf="@id/iv_sort_list_cover"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="16sp"
+        android:layout_marginTop="0dp"
+        style="@style/sortListItemStyle"
+        tools:text="XXXXXXXXXX"/>
+
+    <TextView
+        android:id="@+id/tv_sort_list_authors"
+        android:layout_toEndOf="@id/iv_sort_list_cover"
+        android:layout_below="@id/tv_sort_list_title"
+        style="@style/sortListItemStyle"
+        tools:text="xxxxxxx" />
+
+    <TextView
+        android:id="@+id/tv_sort_list_types"
+        android:layout_toEndOf="@id/iv_sort_list_cover"
+        android:layout_below="@id/tv_sort_list_authors"
+        style="@style/sortListItemStyle"
+        tools:text="xxxxxxx"  />
+
+    <TextView
+        android:id="@+id/tv_sort_list_status"
+        android:layout_toEndOf="@id/iv_sort_list_cover"
+        android:layout_below="@id/tv_sort_list_types"
+        style="@style/sortListItemStyle"
+        tools:text="xxxxxxx"  />
+
+    <TextView
+        android:id="@+id/tv_last_update_time"
+        android:layout_toEndOf="@id/iv_sort_list_cover"
+        android:layout_below="@id/tv_sort_list_status"
+        tools:text="xxxxxxx"
+        style="@style/sortListItemStyle"/>
+</RelativeLayout>

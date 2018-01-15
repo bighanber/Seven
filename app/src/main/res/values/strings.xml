@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Seven</string>
+
+    <string name="appbar_imageview_behavior">com.luuu.seven.behavior.ImageBehavior</string>
+
+    <string name="title_update">首页</string>
+    <string name="title_comic">书架</string>
+    <string name="title_collect">资讯</string>
+
+    <string name="collect">收藏</string>
+    <string name="sort">分类</string>
+    <string name="update">更新</string>
+    <string name="rank">排行</string>
+    <string name="special">专题</string>
+    <string name="comic_search">漫画搜索</string>
+    <string name="search">搜索</string>
+    <string name="cancel">取消</string>
+    <string name="hot_search">- 热门搜索 -</string>
+</resources>

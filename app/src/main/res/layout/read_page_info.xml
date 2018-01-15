@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_info_layout"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="right"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:background="@color/read_page_info_bg">
+
+    <TextView
+        android:id="@+id/tv_chapter_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@+id/tv_chapter_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        android:textSize="12sp"/>
+
+    <com.luuu.seven.widgets.ClockText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        android:textSize="12sp"/>
+
+    <ImageView
+        android:id="@+id/iv_battery_charge"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:background="@drawable/ic_battery_charge"/>
+
+    <ImageView
+        android:id="@+id/iv_battery"
+        android:layout_width="23dp"
+        android:layout_height="20dp"
+        android:background="@drawable/ic_battery_10"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/tv_battery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="4dp"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        android:textSize="12sp"/>
+</LinearLayout>

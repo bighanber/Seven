@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_special_det_cover"
+        android:layout_width="100dp"
+        android:layout_height="130dp"
+        android:scaleType="centerCrop"
+        tools:background="@drawable/error"/>
+
+    <TextView
+        android:id="@+id/tv_special_det_title"
+        android:layout_toEndOf="@id/iv_special_det_cover"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="16sp"
+        android:layout_marginTop="0dp"
+        style="@style/sortListItemStyle"
+        tools:text="XXXXXXXXXX"/>
+
+    <TextView
+        android:id="@+id/tv_special_det_brief"
+        android:layout_toEndOf="@id/iv_special_det_cover"
+        android:layout_below="@id/tv_special_det_title"
+        style="@style/sortListItemStyle"
+        tools:text="xxxxxxx" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_special_det_reason"
+        android:layout_toEndOf="@id/iv_special_det_cover"
+        android:layout_below="@id/tv_special_det_brief"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="12sp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        tools:text="xxxxxxx"  />
+</RelativeLayout>
