@@ -2,7 +2,6 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -63,7 +62,7 @@
                 android:button="@null"
                 android:padding="10dp"
                 android:checked="true"
-                android:text="新闻"/>
+                android:text="@string/news"/>
 
             <RadioButton
                 android:id="@+id/rb_flash"
@@ -75,7 +74,7 @@
                 android:textColor="@drawable/text_selector"
                 android:button="@null"
                 android:padding="10dp"
-                android:text="快讯"/>
+                android:text="@string/flash_news"/>
         </RadioGroup>
 
         <FrameLayout

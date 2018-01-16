@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="75dp"
-            tools:text="Lover's Day"
+            tools:text="L"
             android:textColor="@color/black"
             android:layout_marginBottom="10dp"
             android:textSize="17sp"/>
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="120dp"
             android:layout_marginTop="10dp"
-            tools:text="Lover's Day"
+            tools:text="L"
             android:textColor="@color/item_text"/>
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_marginStart="120dp"
             android:layout_marginTop="10dp"
             android:layout_below="@+id/tv_intro_authors"
-            tools:text="Lover's Day"
+            tools:text="L"
             android:textColor="@color/item_text"/>
 
 
@@ -52,11 +52,11 @@
             android:id="@+id/tv_intro_read"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="60dp"
             android:background="@drawable/start_read"
             android:gravity="center"
-            android:text="开始阅读"
+            android:text="@string/start_read"
             android:padding="5dp"
             android:textColor="@color/white"/>
 

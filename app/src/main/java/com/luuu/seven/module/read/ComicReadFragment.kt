@@ -54,7 +54,7 @@ class ComicReadFragment : BaseFragment() {
             isFromDisk = it.getBoolean("disk")
         }
 
-        pv_read_page.setOnPhotoTapListener { view, x, y ->
+        pv_read_page.setOnPhotoTapListener { _, x, y ->
             val act = activity
             if (act is ComicReadActivity) {
                 (activity as ComicReadActivity).clickEvents(x, y)

@@ -88,14 +88,15 @@ class ComicNewsFlashFragment : BaseFragment(), ComicNewsFlashContract.View {
     }
 
     private fun initAdapter(flashBeanList: List<ComicNewsFlashBean>) {
-        mAdapter = ComicNewsFlashAdapter(R.layout.item_news_flash_layout, flashBeanList)
+        mAdapter = with(ComicNewsFlashAdapter(R.layout.item_news_flash_layout, flashBeanList)) {
+            setEnableLoadMore(true)
+            setOnLoadMoreListener({
+                mPageNum++
+                mPresenter.loadMoreData(mPageNum)
+            }, recycler)
+            this
+        }
         recycler.layoutManager = mLayoutManager
         recycler.adapter = mAdapter
-
-        mAdapter!!.setEnableLoadMore(true)
-        mAdapter!!.setOnLoadMoreListener({
-            mPageNum++
-            mPresenter.loadMoreData(mPageNum)
-        }, recycler)
     }
 }

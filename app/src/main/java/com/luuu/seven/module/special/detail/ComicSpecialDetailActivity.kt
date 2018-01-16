@@ -17,7 +17,7 @@ class ComicSpecialDetailActivity : BaseActivity(), ComicSpecialDetailContract.Vi
 
     private val mPresent by lazy { ComicSpecialDetailPresenter(this) }
     private var mAdapter: ComicSpecialDetailAdapter? = null
-    private var mLayoutManager = LinearLayoutManager(this)
+    private val mLayoutManager by lazy { LinearLayoutManager(this) }
     private var tagId = 0
     private var mTitle = ""
 

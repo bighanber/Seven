@@ -117,7 +117,8 @@ class ComicUpdateFragment : BaseFragment(), ComicUpdateContract.View {
                     mUpdateBeanList!!.addAll(data)
                 }
             }
-            else -> showToast("更新失败")
+            else -> {
+            }
         }
     }
 

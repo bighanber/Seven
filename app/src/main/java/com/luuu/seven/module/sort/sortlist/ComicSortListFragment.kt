@@ -33,7 +33,7 @@ class ComicSortListFragment : BaseFragment(), ComicSortListContract.View {
     private var sortId = 0
     private val mPresent by lazy { ComicSortListPresenter(this) }
     private var mAdapter: ComicSortListAdapter? = null
-    private val mLayoutManager: LinearLayoutManager = LinearLayoutManager(mContext)
+    private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
     override fun onFirstUserVisible() {
         mSortListBeanList = ArrayList()
@@ -67,9 +67,7 @@ class ComicSortListFragment : BaseFragment(), ComicSortListContract.View {
         }
     }
 
-    override fun getContentViewLayoutID(): Int {
-        return R.layout.fra_tab_layout
-    }
+    override fun getContentViewLayoutID(): Int = R.layout.fra_tab_layout
 
     override fun onFirstUserInvisible() {
     }
@@ -103,7 +101,8 @@ class ComicSortListFragment : BaseFragment(), ComicSortListContract.View {
                     mSortListBeanList!!.addAll(data)
                 }
             }
-            else -> showToast("刷新失败")
+            else -> {
+            }
         }
     }
 

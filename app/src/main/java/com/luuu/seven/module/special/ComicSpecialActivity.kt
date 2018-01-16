@@ -19,7 +19,7 @@ class ComicSpecialActivity : BaseActivity(), ComicSpecialContract.View {
 
     private val mPresenter by lazy { ComicSpecialPresenter(this) }
     private var mAdapter: ComicSpecialAdapter? = null
-    private var mLayoutManager: LinearLayoutManager = LinearLayoutManager(this)
+    private val mLayoutManager by lazy { LinearLayoutManager(this) }
     private var mSpecialBeanList: MutableList<ComicSpecialBean>? = null
     private var mPageNum = 0
 
@@ -73,7 +73,8 @@ class ComicSpecialActivity : BaseActivity(), ComicSpecialContract.View {
                     mAdapter!!.loadMoreComplete()
                     mSpecialBeanList!!.addAll(data)
                 }
-            else -> showToast(special_recycler,"刷新失败")
+            else -> {
+            }
         }
     }
 

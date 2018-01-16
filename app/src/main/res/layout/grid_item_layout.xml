@@ -21,7 +21,6 @@
         android:scaleType="fitXY"
         tools:src="@mipmap/ic_launcher"/>
 
-
     <TextView
         android:id="@+id/tv_grid_title"
         android:layout_width="match_parent"

@@ -84,7 +84,8 @@ class ComicNewsListFragment : BaseFragment(), ComicNewsListContract.View {
                 mAdapter!!.loadMoreComplete()
                 mNewsListBeanList!!.addAll(data)
             }
-            else -> showToast("刷新失败")
+            else -> {
+            }
         }
     }
 
@@ -93,19 +94,22 @@ class ComicNewsListFragment : BaseFragment(), ComicNewsListContract.View {
     }
 
     private fun initAdapter(newsListBeen: List<ComicNewsListBean>) {
-        mAdapter = ComicNewsListAdapter(R.layout.item_news_list_layout, newsListBeen)
+        mAdapter = with(ComicNewsListAdapter(R.layout.item_news_list_layout, newsListBeen)) {
+            setEnableLoadMore(true)
+            setOnLoadMoreListener({
+                mPageNum++
+                mPresenter.loadMoreData(mPageNum)
+            }, recycler)
+            setOnItemClickListener { _, _, position ->
+                val mBundle = Bundle()
+                mBundle.putString("url", mNewsListBeanList!![position].pageUrl)
+                startNewActivity(WebActivity::class.java, mBundle)
+            }
+            this
+        }
         recycler.layoutManager = mLayoutManager
         recycler.adapter = mAdapter
 
-        mAdapter!!.setEnableLoadMore(true)
-        mAdapter!!.setOnLoadMoreListener({
-            mPageNum++
-            mPresenter.loadMoreData(mPageNum)
-        }, recycler)
-        mAdapter!!.setOnItemClickListener { _, _, position ->
-            val mBundle = Bundle()
-            mBundle.putString("url", mNewsListBeanList!![position].pageUrl)
-            startNewActivity(WebActivity::class.java, mBundle)
-        }
+
     }
 }

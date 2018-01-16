@@ -32,8 +32,9 @@
         android:maxLines="1"
         android:padding="6dp"
         android:textColor="@color/white"
-        android:textSize="10sp"
-        tools:text="第4话 "/>
+        android:textSize="12sp"
+        tools:text="第4话 "
+        tools:ignore="RtlHardcoded" />
 
 
     <TextView

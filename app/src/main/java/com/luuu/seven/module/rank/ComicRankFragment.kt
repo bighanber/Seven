@@ -141,7 +141,8 @@ class ComicRankFragment : BaseFragment(), ComicRankContract.View {
                     mHotComicBeanList!!.addAll(data)
                 }
             }
-            else -> showToast("刷新失败")
+            else -> {
+            }
         }
     }
 

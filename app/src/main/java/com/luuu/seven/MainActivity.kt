@@ -39,9 +39,7 @@ class MainActivity : BaseActivity() {
     override fun getIntentExtras(extras: Bundle?) {
     }
 
-    override fun getContentViewLayoutID(): Int {
-        return R.layout.activity_main
-    }
+    override fun getContentViewLayoutID(): Int = R.layout.activity_main
 
     private fun showFragment(id: Int) {
         val ft = fm.beginTransaction()

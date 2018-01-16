@@ -16,4 +16,8 @@
     <string name="search">搜索</string>
     <string name="cancel">取消</string>
     <string name="hot_search">- 热门搜索 -</string>
+    <string name="start_read">开始阅读</string>
+    <string name="news">新闻</string>
+    <string name="flash_news">快讯</string>
+    <string name="choose_type">选择类型</string>
 </resources>

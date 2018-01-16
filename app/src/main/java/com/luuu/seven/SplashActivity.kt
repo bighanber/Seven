@@ -3,7 +3,6 @@ package com.luuu.seven
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.animation.AlphaAnimation
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.TimeUnit
@@ -11,7 +10,6 @@ import java.util.concurrent.TimeUnit
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var mSubscriptions: CompositeDisposable
-    private var alphaAnimation: AlphaAnimation?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

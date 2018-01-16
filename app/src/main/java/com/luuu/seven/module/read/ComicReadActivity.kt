@@ -1,5 +1,6 @@
 package com.luuu.seven.module.read
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -182,6 +183,7 @@ class ComicReadActivity : BaseActivity(), ComicReadContract.View {
         if (isOver) onBackPressed() else showToast(gallery_pager, "数据更新失败")
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updataProgress(curPage: Int, totalPage: Int) {
         tv_chapter_page.text = curPage.toString() + " | " + totalPage
     }
@@ -250,7 +252,7 @@ class ComicReadActivity : BaseActivity(), ComicReadContract.View {
                 } else {
                     iv_battery_charge.visibility = View.GONE
                 }
-                var source = when {
+                val source = when {
                     power <= 10 -> R.drawable.ic_battery_10
                     power <= 30 -> R.drawable.ic_battery_30
                     power <= 50 -> R.drawable.ic_battery_50
