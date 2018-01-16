@@ -154,7 +154,7 @@ data class ComicNewsListBean (
         @SerializedName("from_url")
         var fromUrl: String,
         @SerializedName("create_time")
-        var createTime: Int,
+        var createTime: Long,
         @SerializedName("is_foreign")
         var isForeign: Int,
         @SerializedName("foreign_url")
