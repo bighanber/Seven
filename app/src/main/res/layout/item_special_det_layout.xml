@@ -11,7 +11,7 @@
         android:layout_width="100dp"
         android:layout_height="130dp"
         android:scaleType="centerCrop"
-        tools:background="@drawable/error"/>
+        tools:background="@mipmap/ic_launcher"/>
 
     <TextView
         android:id="@+id/tv_special_det_title"
@@ -20,14 +20,14 @@
         android:textSize="16sp"
         android:layout_marginTop="0dp"
         style="@style/sortListItemStyle"
-        tools:text="XXXXXXXXXX"/>
+        tools:text="title"/>
 
     <TextView
         android:id="@+id/tv_special_det_brief"
         android:layout_toEndOf="@id/iv_special_det_cover"
         android:layout_below="@id/tv_special_det_title"
         style="@style/sortListItemStyle"
-        tools:text="xxxxxxx" />
+        tools:text="brief" />
 
     <TextView
         android:layout_width="match_parent"
@@ -39,5 +39,5 @@
         android:textSize="12sp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        tools:text="xxxxxxx"  />
+        tools:text="reason"  />
 </RelativeLayout>

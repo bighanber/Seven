@@ -12,7 +12,7 @@
         android:scaleType="centerCrop"
         android:layout_gravity="center"
         android:layout_marginStart="10dp"
-        tools:background="@drawable/error"/>
+        tools:background="@mipmap/ic_launcher"/>
 
     <TextView
         android:id="@+id/tv_rank_pos"
@@ -35,7 +35,7 @@
         android:maxLines="1"
         android:maxEms="8"
         android:ellipsize="end"
-        tools:text="这里是漫画名字啊"/>
+        tools:text="this is a comic name"/>
 
     <Space
         android:layout_width="0dp"
