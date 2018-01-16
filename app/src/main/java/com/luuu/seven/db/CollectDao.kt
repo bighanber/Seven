@@ -140,7 +140,7 @@ class CollectDao private constructor() {
     }
 
     private fun parseOrder(cursor: Cursor): CollectBean {
-        var collect = CollectBean()
+        val collect = CollectBean()
         collect.comicId = cursor.getInt(cursor.getColumnIndex("comicId"))
         collect.comicTitle = cursor.getString(cursor.getColumnIndex("comicTitle"))
         collect.comicAuthors = cursor.getString(cursor.getColumnIndex("comicAuthors"))

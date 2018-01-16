@@ -12,8 +12,8 @@ import com.luuu.seven.module.read.ComicReadFragment
  */
 class ComicReadPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
-    private var mUrls: MutableList<String> = mutableListOf()//来自网络
-    private var mBytes: MutableList<ByteArray> = mutableListOf()//来自本地下载
+    private var mUrls: MutableList<String> = mutableListOf()
+    private var mBytes: MutableList<ByteArray> = mutableListOf()
 
     private var count = 1
     private var isFromDisk = false

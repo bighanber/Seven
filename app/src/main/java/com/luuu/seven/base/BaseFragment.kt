@@ -20,11 +20,6 @@ import android.view.ViewGroup
 abstract class BaseFragment : Fragment() {
     val TAG_LOG: String = BaseFragment::class.java.simpleName
 
-    //  private //仅在同一个文件中可见
-//    protected //同一个文件中或子类可见
-//    public //所有调用的地方都可见
-//    internal //同一个模块中可见
-
     var mContext: Context? = null
     var fragmentRootView: View? = null
     var isFirstResume = true
@@ -48,7 +43,6 @@ abstract class BaseFragment : Fragment() {
         if (fragmentRootView == null) {
             fragmentRootView = inflater!!.inflate(getContentViewLayoutID(), container, false)
         }
-        //viewGroup 后面不加上?,报错null cannot be cast to non-null type android.view.ViewGroup
         val parent = fragmentRootView!!.parent as ViewGroup?
         parent?.removeView(fragmentRootView)
         return fragmentRootView
