@@ -164,13 +164,15 @@ class ComicIntroActivity : BaseActivity(), ComicIntroContract.View {
         
         mAdapter!!.setOnItemClickListener { _, _, position ->
             val mBundle = Bundle()
-            mBundle.putInt("comicId", comicId)
-            mBundle.putParcelableArrayList("comicChapter", dataBeanList)
-            mBundle.putInt("comicPosition", position)
-            mBundle.putString("comicTagName", dataBeanList[position].chapterTitle)
-            mBundle.putString("comicCover", mComicIntroBean.cover)
-            mBundle.putString("comicTitle", mComicIntroBean.title)
-            mBundle.putInt("historyPosition", if (position + 1 == mHistoryChapterPosition) mHistoryBrowsePosition else 1)
+            mBundle.run {
+                putInt("comicId", comicId)
+                putParcelableArrayList("comicChapter", dataBeanList)
+                putInt("comicPosition", position)
+                putString("comicTagName", dataBeanList[position].chapterTitle)
+                putString("comicCover", mComicIntroBean.cover)
+                putString("comicTitle", mComicIntroBean.title)
+                putInt("historyPosition", if (position + 1 == mHistoryChapterPosition) mHistoryBrowsePosition else 1)
+            }
             startNewActivityForResult(ComicReadActivity::class.java, 10002, mBundle)
         }
     }

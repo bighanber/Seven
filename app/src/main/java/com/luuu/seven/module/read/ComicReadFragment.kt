@@ -77,9 +77,7 @@ class ComicReadFragment : BaseFragment() {
                 .into(pv_read_page)
     }
 
-    override fun getContentViewLayoutID(): Int {
-        return R.layout.fra_read_layout
-    }
+    override fun getContentViewLayoutID(): Int = R.layout.fra_read_layout
 
     override fun onFirstUserInvisible() {
     }

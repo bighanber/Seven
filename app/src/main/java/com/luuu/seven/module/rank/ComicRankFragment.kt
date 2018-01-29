@@ -33,6 +33,7 @@ class ComicRankFragment : BaseFragment(), ComicRankContract.View {
             fragment.arguments = bundle
             return fragment
         }
+
     }
 
     private var mHotComicBeanList: MutableList<HotComicBean>? = null
