@@ -41,10 +41,7 @@ class ComicLoadingFragment : BaseFragment() {
         }
     }
 
-    override fun getContentViewLayoutID(): Int {
-        return R.layout.fra_loading_layout
-    }
-
+    override fun getContentViewLayoutID(): Int = R.layout.fra_loading_layout
     override fun onFirstUserInvisible() {
     }
 }

@@ -47,14 +47,14 @@ class ComicReadPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm)
     fun replaceAll(urls: MutableList<String>, bytes: MutableList<ByteArray>?, isFromDisk: Boolean) {
         this.isFromDisk = isFromDisk
 
-        if (isFromDisk) {
+        count = if (isFromDisk) {
             mBytes.clear()
             mBytes.addAll(bytes!!)
-            count = bytes.size
+            bytes.size
         } else {
             mUrls.clear()
             mUrls.addAll(urls)
-            count = urls.size
+            urls.size
         }
 
         notifyDataSetChanged()
