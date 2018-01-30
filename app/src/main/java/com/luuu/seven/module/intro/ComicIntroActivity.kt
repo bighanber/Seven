@@ -1,9 +1,7 @@
 package com.luuu.seven.module.intro
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatTextView
@@ -11,24 +9,17 @@ import android.support.v7.widget.GridLayoutManager
 import android.text.format.DateFormat
 import android.view.*
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.model.GlideUrl
-import com.bumptech.glide.load.model.LazyHeaders
-import com.bumptech.glide.load.resource.drawable.GlideDrawable
-import com.bumptech.glide.request.animation.GlideAnimation
-import com.bumptech.glide.request.target.SimpleTarget
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.luuu.seven.R
 import com.luuu.seven.base.BaseActivity
 import com.luuu.seven.bean.ChapterDataBean
 import com.luuu.seven.bean.ComicIntroBean
-import com.luuu.seven.http.Api
 import com.luuu.seven.module.read.ComicReadActivity
 import com.luuu.seven.util.BarUtils
 import com.luuu.seven.util.ifNotNull
 import com.luuu.seven.util.loadImg
-import jp.wasabeef.glide.transformations.BlurTransformation
+import com.luuu.seven.util.loadImgWithTransform
 import kotlinx.android.synthetic.main.activity_comic_intro.*
 import kotlinx.android.synthetic.main.intro_middle_layout.*
 import java.util.*
@@ -193,14 +184,7 @@ class ComicIntroActivity : BaseActivity(), ComicIntroContract.View {
         tv_intro_authors.text = "作者: ${comicAuthors}"
         tv_intro_tags.text = "类型: ${comicTags}"
         mUpdate.text = "最后更新: ${DateFormat.format("yyyy-MM-dd", data.lastUpdatetime * 1000)}"
-        Glide.with(this).load(GlideUrl(data.cover, LazyHeaders.Builder().addHeader("Referer", Api.DMZJ).build()))
-                .bitmapTransform(BlurTransformation(this, 50))
-                .into(object : SimpleTarget<GlideDrawable>() {
-                    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-                    override fun onResourceReady(resource: GlideDrawable, glideAnimation: GlideAnimation<in GlideDrawable>) {
-                        iv_cha_img.background = resource
-                    }
-                })
+        iv_cha_img.loadImgWithTransform(data.cover)
         iv_cover.loadImg(data.cover)
 
         comicTitle = data.title

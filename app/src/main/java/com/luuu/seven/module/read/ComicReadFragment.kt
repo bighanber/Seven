@@ -1,19 +1,10 @@
 package com.luuu.seven.module.read
 
 import android.os.Bundle
-import android.view.View
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.model.GlideUrl
-import com.bumptech.glide.load.model.LazyHeaders
-import com.bumptech.glide.load.resource.drawable.GlideDrawable
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
-import com.luuu.seven.MyApplication
 import com.luuu.seven.R
 import com.luuu.seven.base.BaseFragment
-import com.luuu.seven.http.Api
+import com.luuu.seven.util.loadImgWithProgress
 import kotlinx.android.synthetic.main.fra_read_layout.*
-import java.lang.Exception
 
 /**
  * Created by lls on 2017/8/7.
@@ -61,20 +52,7 @@ class ComicReadFragment : BaseFragment() {
             }
         }
 
-        Glide.with(MyApplication.sAppContext)
-                .load(GlideUrl(mImgUrl, LazyHeaders.Builder().addHeader("Referer", Api.DMZJ).build()))
-                .listener(object : RequestListener<GlideUrl, GlideDrawable> {
-                    override fun onResourceReady(resource: GlideDrawable?, model: GlideUrl?, target: Target<GlideDrawable>?, isFromMemoryCache: Boolean, isFirstResource: Boolean): Boolean {
-                        progress.visibility = View.INVISIBLE
-                        return false
-                    }
-
-                    override fun onException(e: Exception?, model: GlideUrl?, target: Target<GlideDrawable>?, isFirstResource: Boolean): Boolean {
-                        return false
-                    }
-
-                })
-                .into(pv_read_page)
+        pv_read_page.loadImgWithProgress(mImgUrl!!,progress)
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_read_layout
