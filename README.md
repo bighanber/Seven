@@ -1,7 +1,5 @@
 # Seven
 
-[APK下载](https://sh-btfs-yun-ftn.weiyun.com/ftn_handler/778ef1efd748d010ff4cdb25757a9056007f498c367e1327197bc9f57585987e317847ba266c0de35ea2518bfa24f42b4293e6aaf953201093908d0d1426e161/seven.apk)
-
 ## 截图
 
 ![img](https://github.com/bighanber/Seven/blob/master/photo/pic_1.png)
