@@ -72,8 +72,8 @@ class MainActivity : BaseActivity() {
     }
 
     private fun hideAllFragment(ft: FragmentTransaction) {
-        if (indexFragment != null) ft.hide(indexFragment)
-        if (shelfFragment != null) ft.hide(shelfFragment)
-        if (newsFragment != null) ft.hide(newsFragment)
+        indexFragment?.let { ft.hide(indexFragment) }
+        shelfFragment?.let { ft.hide(shelfFragment) }
+        newsFragment?.let { ft.hide(newsFragment) }
     }
 }

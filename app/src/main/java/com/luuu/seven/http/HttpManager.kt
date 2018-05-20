@@ -19,21 +19,17 @@ import java.util.concurrent.TimeUnit
  *     version:
  */
 class HttpManager private constructor() {
+
+    companion object {
+        val getInstance: HttpManager by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+            HttpManager() }
+    }
+
     private var mRetrofit: Retrofit? = null
     private var mNetService: DataService? = null
 
     init {
         if (mRetrofit == null) createRetrofit()
-    }
-
-    companion object {
-        fun getInstance(): HttpManager {
-            return Single.Instance
-        }
-    }
-
-    private object Single {
-        val Instance = HttpManager()
     }
 
     fun getService(): DataService = mNetService!!
