@@ -78,12 +78,11 @@ class ComicSearchActivity : BaseActivity(), ComicSearchContract.View {
     }
 
     override fun updateHotSearch(data: List<HotSearchBean>) {
-        mFlexboxLayoutManager = with(FlexboxLayoutManager(this)) {
+        mFlexboxLayoutManager = FlexboxLayoutManager(this).apply {
             flexDirection = FlexDirection.ROW
             flexWrap = FlexWrap.WRAP
             alignItems = AlignItems.CENTER
             justifyContent = JustifyContent.FLEX_START
-            this
         }
 
         mHotAdapter = ComicHotSearchAdapter(R.layout.item_hot_search_layout, data.take(20))

@@ -111,7 +111,7 @@ class ComicSortListFragment : BaseFragment(), ComicSortListContract.View {
     }
 
     private fun initAdapter(sortListBeanList: List<ComicSortListBean>) {
-        mAdapter = with(ComicSortListAdapter(R.layout.item_sort_list_layout, sortListBeanList)) {
+        mAdapter = ComicSortListAdapter(R.layout.item_sort_list_layout, sortListBeanList).apply {
             setEnableLoadMore(true)
             setOnLoadMoreListener({
                 mPageNum++
@@ -122,7 +122,6 @@ class ComicSortListFragment : BaseFragment(), ComicSortListContract.View {
                 mBundle.putInt("comicId", mSortListBeanList!![position].id)
                 startNewActivity(ComicIntroActivity::class.java, mBundle)
             }
-            this
         }
         recycler.layoutManager = mLayoutManager
         recycler.adapter = mAdapter

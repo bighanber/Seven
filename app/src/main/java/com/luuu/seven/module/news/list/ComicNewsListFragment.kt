@@ -94,7 +94,7 @@ class ComicNewsListFragment : BaseFragment(), ComicNewsListContract.View {
     }
 
     private fun initAdapter(newsListBeen: List<ComicNewsListBean>) {
-        mAdapter = with(ComicNewsListAdapter(R.layout.item_news_list_layout, newsListBeen)) {
+        mAdapter = ComicNewsListAdapter(R.layout.item_news_list_layout, newsListBeen).apply {
             setEnableLoadMore(true)
             setOnLoadMoreListener({
                 mPageNum++
@@ -105,7 +105,6 @@ class ComicNewsListFragment : BaseFragment(), ComicNewsListContract.View {
                 mBundle.putString("url", mNewsListBeanList!![position].pageUrl)
                 startNewActivity(WebActivity::class.java, mBundle)
             }
-            this
         }
         recycler.layoutManager = mLayoutManager
         recycler.adapter = mAdapter

@@ -83,7 +83,7 @@ class ComicSpecialActivity : BaseActivity(), ComicSpecialContract.View {
     }
 
     private fun initAdapter(specialListBeanList: List<ComicSpecialBean>) {
-        mAdapter = with(ComicSpecialAdapter(R.layout.item_special_layout, specialListBeanList)) {
+        mAdapter = ComicSpecialAdapter(R.layout.item_special_layout, specialListBeanList).apply {
             setEnableLoadMore(true)
             setOnLoadMoreListener({
                 mPageNum++
@@ -101,7 +101,6 @@ class ComicSpecialActivity : BaseActivity(), ComicSpecialContract.View {
                     startNewActivity(ComicSpecialDetailActivity::class.java, mBundle)
                 }
             }
-            this
         }
         special_recycler.layoutManager = mLayoutManager
         special_recycler.adapter = mAdapter

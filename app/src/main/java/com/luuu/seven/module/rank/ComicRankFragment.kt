@@ -152,7 +152,7 @@ class ComicRankFragment : BaseFragment(), ComicRankContract.View {
     }
 
     private fun initAdapter(hotComicBeanList: List<HotComicBean>) {
-        mAdapter = with(ComicRankAdapter(R.layout.item_rank_layout, hotComicBeanList)) {
+        mAdapter = ComicRankAdapter(R.layout.item_rank_layout, hotComicBeanList).apply {
             addHeaderView(headerView)
             setEnableLoadMore(true)
             setOnLoadMoreListener({
@@ -164,7 +164,6 @@ class ComicRankFragment : BaseFragment(), ComicRankContract.View {
                 mBundle.putInt("comicId", mHotComicBeanList!![position].comicId)
                 startNewActivity(ComicIntroActivity::class.java, mBundle)
             }
-            this
         }
 
 

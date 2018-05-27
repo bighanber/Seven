@@ -127,7 +127,7 @@ class ComicUpdateFragment : BaseFragment(), ComicUpdateContract.View {
     }
 
     private fun initAdapter(updateBeanList: List<ComicUpdateBean>) {
-        mAdapter = with(ComicUpdateAdapter(R.layout.item_comic_layout, updateBeanList)) {
+        mAdapter = ComicUpdateAdapter(R.layout.item_comic_layout, updateBeanList).apply {
             setEnableLoadMore(true)
             setOnLoadMoreListener({
                 mPageNum++
@@ -138,7 +138,6 @@ class ComicUpdateFragment : BaseFragment(), ComicUpdateContract.View {
                 mBundle.putInt("comicId", mUpdateBeanList!![position].id)
                 startNewActivity(ComicIntroActivity::class.java, mBundle)
             }
-            this
         }
         recycler.layoutManager = mLayoutManager
         recycler.adapter = mAdapter
