@@ -164,7 +164,7 @@ class BarUtils private constructor() {
          */
         @JvmOverloads
         fun setColorForDrawerLayout(activity: Activity, drawerLayout: DrawerLayout, color: Int,
-                                                  statusBarAlpha: Int = DEFAULT_STATUS_BAR_ALPHA) {
+                                    statusBarAlpha: Int = DEFAULT_STATUS_BAR_ALPHA) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
                 return
             }
@@ -451,8 +451,14 @@ class BarUtils private constructor() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
                 activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-                activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+
+                var systemUiVisibility = activity.window.decorView.systemUiVisibility
+                systemUiVisibility = systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                systemUiVisibility = systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                activity.window.decorView.systemUiVisibility = systemUiVisibility
                 activity.window.statusBarColor = Color.TRANSPARENT
+                activity.window.navigationBarColor = Color.TRANSPARENT
             } else {
                 activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             }
