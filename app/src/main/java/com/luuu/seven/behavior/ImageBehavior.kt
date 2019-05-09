@@ -20,12 +20,12 @@ class ImageBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.B
     private var mToolBarHeight = 0
     private var percent = 0f
 
-    override fun layoutDependsOn(parent: CoordinatorLayout?, child: ImageView?, dependency: View?): Boolean {
+    override fun layoutDependsOn(parent: CoordinatorLayout, child: ImageView, dependency: View): Boolean {
         return dependency is LinearLayout
     }
 
-    override fun onDependentViewChanged(parent: CoordinatorLayout?, child: ImageView?, dependency: View?): Boolean {
-        init(parent!!, child!!)
+    override fun onDependentViewChanged(parent: CoordinatorLayout, child: ImageView, dependency: View): Boolean {
+        init(parent, child)
         if (child.y <= 0) return false
         var percent = (child.y - mToolBarHeight) / (mStartAvatarY - mToolBarHeight)
 

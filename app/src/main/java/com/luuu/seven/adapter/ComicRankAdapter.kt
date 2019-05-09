@@ -17,11 +17,11 @@ class ComicRankAdapter(layoutResId: Int, data: List<HotComicBean>) :
         BaseQuickAdapter<HotComicBean, BaseViewHolder>(layoutResId, data) {
 
     override fun convert(helper: BaseViewHolder?, item: HotComicBean?) {
-        ifNotNull(helper, item, {helper, item ->
+        ifNotNull(helper, item) { helper, item ->
             helper.setText(R.id.tv_rank_title, item.title)
             helper.setText(R.id.tv_rank_num, item.num.toString())
             helper.setText(R.id.tv_rank_pos, (helper.adapterPosition + 3).toString())
             helper.getView<ImageView>(R.id.iv_rank_cover).loadImg(item.cover)
-        })
+        }
     }
 }

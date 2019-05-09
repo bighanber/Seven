@@ -1,6 +1,8 @@
 package com.luuu.seven.module.index
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.LinearLayoutManager
 import com.luuu.seven.R
 import com.luuu.seven.WebActivity
@@ -16,6 +18,8 @@ import com.luuu.seven.module.special.ComicSpecialActivity
 import com.luuu.seven.module.update.ComicUpdateActivity
 import com.luuu.seven.util.BarUtils
 import com.luuu.seven.util.GlideImageLoader
+import com.luuu.seven.util.addTo
+import com.luuu.seven.util.obtainViewModel
 import com.youth.banner.BannerConfig
 import kotlinx.android.synthetic.main.fra_index_layout.*
 import kotlinx.android.synthetic.main.index_header_search_layout.*
@@ -28,10 +32,11 @@ import kotlinx.android.synthetic.main.list_header_layout.*
  *     desc   :
  *     version:首页
  */
-class ComicIndexFragment : BaseFragment(), ComicIndexContract.View {
+class ComicIndexFragment : BaseFragment() {
 
     private var mAdapter: ComicIndexAdapter? = null
-    private val mPresent by lazy { ComicIndexPresenter(this) }
+
+    private lateinit var viewModel: HomeViewModel
 
     override fun onFirstUserVisible() {
     }
@@ -45,17 +50,35 @@ class ComicIndexFragment : BaseFragment(), ComicIndexContract.View {
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            BarUtils.setTranslucentForCoordinatorLayout(activity, 0)
+            BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
         }
     }
 
     override fun initViews() {
-        BarUtils.setTranslucentForCoordinatorLayout(activity, 0)
-        mPresent.getIndexData()
-        index_refresh.setOnRefreshListener {
-            mPresent.refreshData()
+        BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
+
+        viewModel = obtainViewModel().apply {
+            getHomeData(false).addTo(mSubscription)
+        }.apply {
+            homeData.observe(this@ComicIndexFragment, Observer { data ->
+                data?.let {
+                    updateIndexList(it)
+                }
+            })
+
+            dataLoading.observe(this@ComicIndexFragment, Observer { isRefresh ->
+                isRefresh?.let {
+                    index_refresh.isRefreshing = it
+                }
+
+            })
         }
-        appbar_layout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+
+        index_refresh.setOnRefreshListener {
+            viewModel.getHomeData(true)
+        }
+
+        appbar_layout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val percent = (Math.abs(verticalOffset)).toFloat() / (appBarLayout.totalScrollRange).toFloat()
             toolbar.alpha = percent
             tv_search_bg.alpha = if (percent >= 0.5) percent else 0.5f
@@ -65,9 +88,9 @@ class ComicIndexFragment : BaseFragment(), ComicIndexContract.View {
             } else {
                 index_banner.stopAutoPlay()
             }
-        }
+        })
 
-        tv_search_bg.setOnClickListener{ startNewActivity(ComicSearchActivity::class.java) }
+        tv_search_bg.setOnClickListener { startNewActivity(ComicSearchActivity::class.java) }
         tv_header_update.setOnClickListener { startNewActivity(ComicUpdateActivity::class.java) }
         tv_header_rank.setOnClickListener { startNewActivity(ComicRankActivity::class.java) }
         tv_header_sort.setOnClickListener { startNewActivity(ComicSortActivity::class.java) }
@@ -79,22 +102,8 @@ class ComicIndexFragment : BaseFragment(), ComicIndexContract.View {
     override fun onFirstUserInvisible() {
     }
 
-    override fun onPause() {
-        super.onPause()
-        mPresent.unsubscribe()
-    }
 
-
-    override fun showLoading(isLoading: Boolean) {
-    }
-
-    override fun showError(isError: Boolean) {
-    }
-
-    override fun showEmpty(isEmpty: Boolean) {
-    }
-
-    override fun updateIndexList(data: List<IndexBean>) {
+    private fun updateIndexList(data: List<IndexBean>) {
         initPager(data[0].data)
         val mData = data.filterNot { it.sort == 1 || it.sort == 6 }
         if (mAdapter == null) {
@@ -102,10 +111,6 @@ class ComicIndexFragment : BaseFragment(), ComicIndexContract.View {
         } else {
             mAdapter!!.setNewData(mData)
         }
-    }
-
-    override fun judgeRefresh(isRefresh: Boolean) {
-        index_refresh.isRefreshing = isRefresh
     }
 
     private fun initAdapter(indexBeanList: List<IndexBean>) {
@@ -131,4 +136,6 @@ class ComicIndexFragment : BaseFragment(), ComicIndexContract.View {
         }
         index_banner.setImages(urls).setImageLoader(GlideImageLoader()).start()
     }
+
+    private fun obtainViewModel(): HomeViewModel = obtainViewModel(HomeViewModel::class.java)
 }

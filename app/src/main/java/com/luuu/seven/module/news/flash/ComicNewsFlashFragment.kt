@@ -3,6 +3,8 @@ package com.luuu.seven.module.news.flash
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.luuu.seven.R
+import com.luuu.seven.R.id.recycler
+import com.luuu.seven.R.id.refresh
 import com.luuu.seven.adapter.ComicNewsFlashAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicNewsFlashBean
@@ -32,7 +34,7 @@ class ComicNewsFlashFragment : BaseFragment(), ComicNewsFlashContract.View {
     override fun initViews() {
         mPresenter.getComicData(0)
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 refresh.isEnabled = mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0
             }

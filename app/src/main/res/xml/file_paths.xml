@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+
+    <!--部分手机 相册存放在内存卡里-->
+    <root-path
+        name="root_photos"
+        path=""/>
+    <external-path
+        name="camera_photos"
+        path=""/>
+
+    <!--升级-->
+    <external-cache-path
+        name="mn_update_external_cache"
+        path=""/>
+
+    <cache-path
+        name="mn_update_cache"
+        path=""/>
+
+    <!--<files-path-->
+    <!--name="files"-->
+    <!--path=""/>-->
+    <!--<cache-path-->
+    <!--name="cache"-->
+    <!--path=""/>-->
+</paths>

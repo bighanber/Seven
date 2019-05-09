@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_info_layout"
     android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="right"
     android:paddingTop="2dp"
     android:paddingBottom="2dp"
     android:background="@color/read_page_info_bg">
@@ -20,7 +20,8 @@
         android:ellipsize="end"
         android:textColor="@color/white"
         android:layout_gravity="center"
-        android:textSize="12sp"/>
+        android:textSize="12sp"
+        tools:text="title"/>
 
     <TextView
         android:id="@+id/tv_chapter_page"
@@ -30,7 +31,8 @@
         android:paddingRight="4dp"
         android:textColor="@color/white"
         android:layout_gravity="center"
-        android:textSize="12sp"/>
+        android:textSize="12sp"
+        tools:text="chapter"/>
 
     <com.luuu.seven.widgets.ClockText
         android:layout_width="wrap_content"

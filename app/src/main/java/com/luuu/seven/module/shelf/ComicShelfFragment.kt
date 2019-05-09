@@ -34,13 +34,13 @@ class ComicShelfFragment : BaseFragment() {
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            BarUtils.setColorForToolbarInFragment(activity,
-                    ContextCompat.getColor(mContext, R.color.colorAccent), shelf_tabs)
+            BarUtils.setColorForToolbarInFragment(activity!!,
+                    ContextCompat.getColor(mContext!!, R.color.colorAccent), shelf_tabs)
         }
     }
 
     override fun initViews() {
-        BarUtils.setColorForToolbarInFragment(activity,
+        BarUtils.setColorForToolbarInFragment(activity!!,
                 ContextCompat.getColor(mContext!!, R.color.colorAccent), shelf_tabs)
         val fragments = ArrayList<Fragment>()
         val title = ArrayList<String>()

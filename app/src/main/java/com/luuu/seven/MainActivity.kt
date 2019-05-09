@@ -47,24 +47,24 @@ class MainActivity : BaseActivity() {
 
         when (id) {
             0 -> if (indexFragment != null) {
-                ft.show(indexFragment)
+                ft.show(indexFragment!!)
             } else {
                 indexFragment = ComicIndexFragment()
-                ft.add(R.id.content, indexFragment)
+                ft.add(R.id.content, indexFragment!!)
             }
 
             1 -> if (shelfFragment != null) {
-                ft.show(shelfFragment)
+                ft.show(shelfFragment!!)
             } else {
                 shelfFragment = ComicShelfFragment()
-                ft.add(R.id.content, shelfFragment)
+                ft.add(R.id.content, shelfFragment!!)
             }
 
             2 -> if (newsFragment != null) {
-                ft.show(newsFragment)
+                ft.show(newsFragment!!)
             } else {
                 newsFragment = ComicNewsFragment()
-                ft.add(R.id.content, newsFragment)
+                ft.add(R.id.content, newsFragment!!)
             }
 
         }
@@ -72,8 +72,8 @@ class MainActivity : BaseActivity() {
     }
 
     private fun hideAllFragment(ft: FragmentTransaction) {
-        indexFragment?.let { ft.hide(indexFragment) }
-        shelfFragment?.let { ft.hide(shelfFragment) }
-        newsFragment?.let { ft.hide(newsFragment) }
+        indexFragment?.let { ft.hide(indexFragment!!) }
+        shelfFragment?.let { ft.hide(shelfFragment!!) }
+        newsFragment?.let { ft.hide(newsFragment!!) }
     }
 }

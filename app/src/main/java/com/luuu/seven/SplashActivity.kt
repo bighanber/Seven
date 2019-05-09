@@ -14,11 +14,11 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mSubscriptions = CompositeDisposable()
-        mSubscriptions.add(Observable.timer(4, TimeUnit.SECONDS).subscribe({
+        mSubscriptions.add(Observable.timer(4, TimeUnit.SECONDS).subscribe {
             val toMain = Intent(this, MainActivity::class.java)
             startActivity(toMain)
             finish()
-        }))
+        })
     }
 
     override fun onDestroy() {

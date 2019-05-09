@@ -12,10 +12,12 @@ import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.luuu.seven.R
+import com.luuu.seven.R.id.*
 import com.luuu.seven.base.BaseActivity
 import com.luuu.seven.bean.ChapterDataBean
 import com.luuu.seven.bean.ComicIntroBean
 import com.luuu.seven.module.read.ComicReadActivity
+import com.luuu.seven.module.read.recycler.ComicReadRecyclerActivity
 import com.luuu.seven.util.BarUtils
 import com.luuu.seven.util.ifNotNull
 import com.luuu.seven.util.loadImg
@@ -130,7 +132,7 @@ class ComicIntroActivity : BaseActivity(), ComicIntroContract.View {
         mAdapter = object : BaseQuickAdapter<ChapterDataBean, BaseViewHolder>(R.layout.item_chapter_layout, dataBeanList) {
 
             override fun convert(holder: BaseViewHolder?, item: ChapterDataBean?) {
-                ifNotNull(holder, item, {holder, item ->
+                ifNotNull(holder, item) { holder, item ->
                     holder.setText(R.id.tv_num, item.chapterTitle)
                     if (mComicIntroBean.mReadHistoryBean != null && item.chapterId == mComicIntroBean.mReadHistoryBean!!.chapterId) {
                         holder.itemView.setBackgroundResource(R.drawable.chapter_read_backgroud)
@@ -144,7 +146,7 @@ class ComicIntroActivity : BaseActivity(), ComicIntroContract.View {
                         holder.itemView.setBackgroundResource(R.drawable.chapter_backgroud)
                         (holder.itemView as AppCompatTextView).setTextColor(ContextCompat.getColor(mContext, R.color.content))
                     }
-                })
+                }
             }
 
         }
@@ -162,9 +164,9 @@ class ComicIntroActivity : BaseActivity(), ComicIntroContract.View {
                 putString("comicTagName", dataBeanList[position].chapterTitle)
                 putString("comicCover", mComicIntroBean.cover)
                 putString("comicTitle", mComicIntroBean.title)
-                putInt("historyPosition", if (position + 1 == mHistoryChapterPosition) mHistoryBrowsePosition else 1)
+                putInt("historyPosition", if (position + 1 == mHistoryChapterPosition) mHistoryBrowsePosition else 0)
             }
-            startNewActivityForResult(ComicReadActivity::class.java, 10002, mBundle)
+            startNewActivityForResult(ComicReadRecyclerActivity::class.java, 10002, mBundle)
         }
     }
 

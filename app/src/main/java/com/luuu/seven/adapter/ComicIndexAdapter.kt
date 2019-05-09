@@ -24,11 +24,11 @@ import com.luuu.seven.util.ifNotNull
 class ComicIndexAdapter(layoutResId: Int, data: List<IndexBean>) : BaseQuickAdapter<IndexBean, BaseViewHolder>(layoutResId, data) {
 
     override fun convert(helper: BaseViewHolder?, item: IndexBean?) {
-        ifNotNull(helper, item, {helper, item ->
+        ifNotNull(helper, item) { helper, item ->
             helper.setText(R.id.tv_item_theme, item.title)
             val recyclerView = helper.getView<RecyclerView>(R.id.list_items)
             initOtherRecyclerView(recyclerView, item, mContext, helper)
-        })
+        }
     }
 
     private fun initOtherRecyclerView(recyclerView: RecyclerView, images: IndexBean, context: Context, helper: BaseViewHolder) {

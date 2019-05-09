@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.luuu.seven.R
+import com.luuu.seven.R.id.recycler
+import com.luuu.seven.R.id.refresh
 import com.luuu.seven.WebActivity
 import com.luuu.seven.adapter.ComicNewsListAdapter
 import com.luuu.seven.base.BaseFragment
@@ -35,7 +37,7 @@ class ComicNewsListFragment : BaseFragment(), ComicNewsListContract.View {
     override fun initViews() {
         mPresenter.getComicData(0)
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 refresh.isEnabled = mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0
             }

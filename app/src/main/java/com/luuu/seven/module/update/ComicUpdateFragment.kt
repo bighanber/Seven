@@ -72,7 +72,7 @@ class ComicUpdateFragment : BaseFragment(), ComicUpdateContract.View {
 
     override fun initViews() {
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 refresh.isEnabled = mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0
             }

@@ -9,6 +9,7 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.reactivex.disposables.CompositeDisposable
 
 /**
  *     author : dell
@@ -21,11 +22,13 @@ abstract class BaseFragment : Fragment() {
     val TAG_LOG: String = BaseFragment::class.java.simpleName
 
     var mContext: Context? = null
-    var fragmentRootView: View? = null
-    var isFirstResume = true
-    var isFirstVisible = true
-    var isFirstInvisible = true
-    var isPrepared = false
+    private var fragmentRootView: View? = null
+    private var isFirstResume = true
+    private var isFirstVisible = true
+    private var isFirstInvisible = true
+    private var isPrepared = false
+
+    var mSubscription = CompositeDisposable()
 
     abstract fun onFirstUserVisible()
     abstract fun onUserInvisible()
@@ -39,19 +42,19 @@ abstract class BaseFragment : Fragment() {
         mContext = context
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (fragmentRootView == null) {
-            fragmentRootView = inflater!!.inflate(getContentViewLayoutID(), container, false)
+            fragmentRootView = inflater.inflate(getContentViewLayoutID(), container, false)
         }
         val parent = fragmentRootView!!.parent as ViewGroup?
         parent?.removeView(fragmentRootView)
         return fragmentRootView
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val displayMetrics = DisplayMetrics()
-        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        activity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
         initViews()
     }
 
@@ -108,6 +111,7 @@ abstract class BaseFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         isPrepared = false
+        mSubscription.clear()
     }
 
     override fun onDetach() {
