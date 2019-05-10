@@ -12,16 +12,11 @@ import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.luuu.seven.R
-import com.luuu.seven.R.id.*
 import com.luuu.seven.base.BaseActivity
 import com.luuu.seven.bean.ChapterDataBean
 import com.luuu.seven.bean.ComicIntroBean
-import com.luuu.seven.module.read.ComicReadActivity
 import com.luuu.seven.module.read.recycler.ComicReadRecyclerActivity
-import com.luuu.seven.util.BarUtils
-import com.luuu.seven.util.ifNotNull
-import com.luuu.seven.util.loadImg
-import com.luuu.seven.util.loadImgWithTransform
+import com.luuu.seven.util.*
 import kotlinx.android.synthetic.main.activity_comic_intro.*
 import kotlinx.android.synthetic.main.intro_middle_layout.*
 import java.util.*
@@ -33,9 +28,10 @@ import java.util.*
  *     desc   :
  *     version:漫画详情界面
  */
-class ComicIntroActivity : BaseActivity(), ComicIntroContract.View {
+class ComicIntroActivity : BaseActivity() {
 
-    private val mPresent by lazy { ComicIntroPresenter(this) }
+    private fun obtainViewModel(): IntroViewModel = obtainViewModel(IntroViewModel::class.java)
+    private lateinit var viewModel: IntroViewModel
     private var mLayoutManager: GridLayoutManager = GridLayoutManager(this, 4)
     private var mAdapter: BaseQuickAdapter<ChapterDataBean, BaseViewHolder>? = null
     private lateinit var mComicIntroBean: ComicIntroBean
@@ -61,30 +57,33 @@ class ComicIntroActivity : BaseActivity(), ComicIntroContract.View {
         headerView = LayoutInflater.from(this).inflate(R.layout.intro_list_header_layout, comic_recyclerview.parent as ViewGroup, false)
         mUpdate = headerView.findViewById(R.id.tv_intro_update)
         mIntro = headerView.findViewById(R.id.tv_cha_intro)
-        mPresent.getComicIntro(comicId)
+
+        viewModel = obtainViewModel().apply {
+            getComicIntro(comicId, false).addTo(mSubscription)
+            isFavorite(comicId)
+        }.apply {
+            comicIntroData.observe(this@ComicIntroActivity, android.arch.lifecycle.Observer { data ->
+                data?.let {
+                    updateComicData(it)
+                }
+            })
+
+            updateFavorite.observe(this@ComicIntroActivity, android.arch.lifecycle.Observer { bol ->
+                bol?.let {
+                    updateFavoriteMenu(it)
+                }
+            })
+        }
     }
 
     override fun getIntentExtras(extras: Bundle?) {
         comicId = extras?.getInt("comicId") ?: 0
     }
 
-    override fun onPause() {
-        super.onPause()
-        mPresent.unsubscribe()
-    }
-
     override fun getContentViewLayoutID(): Int = R.layout.activity_comic_intro
 
-    override fun showLoading(isLoading: Boolean) {
-    }
 
-    override fun showError(isError: Boolean) {
-    }
-
-    override fun showEmpty(isEmpty: Boolean) {
-    }
-
-    override fun updateComicData(data: ComicIntroBean) {
+    private fun updateComicData(data: ComicIntroBean) {
         if (mAdapter == null) {
             initAdapter(data.chapters[0].data)
         } else {
@@ -99,11 +98,10 @@ class ComicIntroActivity : BaseActivity(), ComicIntroContract.View {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         mMenu = menu!!
         menuInflater.inflate(R.menu.details, menu)
-        mPresent.isFavorite(comicId)
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun updateFavoriteMenu(isFavorite: Boolean) {
+    private fun updateFavoriteMenu(isFavorite: Boolean) {
         this.isFavorite = isFavorite
         mMenu.findItem(R.id.menu_favorite).setIcon(if (isFavorite) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white)
     }
@@ -111,9 +109,9 @@ class ComicIntroActivity : BaseActivity(), ComicIntroContract.View {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.menu_favorite -> if (isFavorite) {
-                mPresent.unFavoriteComic(comicId)
+                viewModel.unFavoriteComic(comicId)
             } else {
-                mPresent.favoriteComic(comicId, comicTitle, comicAuthors, comicCover, Date().time)
+                viewModel.favoriteComic(comicId, comicTitle, comicAuthors, comicCover, Date().time)
             }
 
         }
@@ -124,7 +122,7 @@ class ComicIntroActivity : BaseActivity(), ComicIntroContract.View {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 10002) {
             isBack = true
-            mPresent.getComicIntro(comicId)
+            viewModel.getComicIntro(comicId, false)
         }
     }
 
@@ -192,4 +190,5 @@ class ComicIntroActivity : BaseActivity(), ComicIntroContract.View {
         comicTitle = data.title
         comicCover = data.cover
     }
+
 }

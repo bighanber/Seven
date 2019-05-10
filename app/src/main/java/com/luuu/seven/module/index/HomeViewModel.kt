@@ -1,17 +1,16 @@
 package com.luuu.seven.module.index
 
-import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.util.Log
 import com.luuu.seven.bean.IndexBean
 import com.luuu.seven.repository.HomeRepository
-import com.luuu.seven.util.*
-import io.reactivex.disposables.CompositeDisposable
+import com.luuu.seven.util.handleLoading
+import com.luuu.seven.util.ioMain
+import com.luuu.seven.util.toast
 import io.reactivex.disposables.Disposable
 
-class HomeViewModel : ViewModel(), LifecycleObserver {
+class HomeViewModel : ViewModel() {
 
     private val mRepository by lazy { HomeRepository() }
 

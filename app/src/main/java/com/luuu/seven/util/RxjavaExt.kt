@@ -19,15 +19,33 @@ fun <T> ioMain(): ObservableTransformer<T, T> {
     }
 }
 
-fun <T> handleLoading(showLoading: Boolean, load: MutableLiveData<Boolean>): ObservableTransformer<T, T> {
+fun <T> handleLoading(
+        showLoading: Boolean,
+        load: MutableLiveData<Boolean>,
+        isRefresh: Boolean = false,
+        refresh: MutableLiveData<Boolean>? = null,
+        isLoadMore: Boolean = false,
+        loadMore: MutableLiveData<Boolean>? = null): ObservableTransformer<T, T> {
     return ObservableTransformer { upstream ->
         upstream.doOnSubscribe {
             if (showLoading) {
                 load.value = true
             }
+            if (isRefresh) {
+                refresh?.value = true
+            }
+            if (isLoadMore) {
+                loadMore?.value = true
+            }
         }.doFinally {
             if (showLoading) {
                 load.value = false
+            }
+            if (isRefresh) {
+                refresh?.value = false
+            }
+            if (isLoadMore) {
+                loadMore?.value = false
             }
         }
     }

@@ -60,13 +60,13 @@ class ComicIndexFragment : BaseFragment() {
         viewModel = obtainViewModel().apply {
             getHomeData(false).addTo(mSubscription)
         }.apply {
-            homeData.observe(this@ComicIndexFragment, Observer { data ->
+            homeData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {
                     updateIndexList(it)
                 }
             })
 
-            dataLoading.observe(this@ComicIndexFragment, Observer { isRefresh ->
+            dataLoading.observe(viewLifecycleOwner, Observer { isRefresh ->
                 isRefresh?.let {
                     index_refresh.isRefreshing = it
                 }

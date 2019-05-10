@@ -1,5 +1,6 @@
-package com.luuu.seven.module.shelf.history
+package com.luuu.seven.module.shelf
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.luuu.seven.R
@@ -7,36 +8,51 @@ import com.luuu.seven.adapter.ComicHistoryAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ReadHistoryBean
 import com.luuu.seven.module.intro.ComicIntroActivity
+import com.luuu.seven.util.addTo
+import com.luuu.seven.util.obtainViewModel
+import com.luuu.seven.util.toast
 import kotlinx.android.synthetic.main.fra_shelf_list_layout.*
 
 /**
  * Created by lls on 2017/8/9.
  * 历史界面
  */
-class ComicHistoryFragment : BaseFragment(), HistoryContract.View {
+class ComicHistoryFragment : BaseFragment() {
 
-    private val mPresenter by lazy { HistoryPresenter(this) }
+    //    private val mPresenter by lazy { HistoryPresenter(this) }
     private var mAdapter: ComicHistoryAdapter? = null
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
+    private lateinit var viewModel: ShelfViewModel
 
     override fun onFirstUserVisible() {
-        mPresenter.getComicData()
+//        mPresenter.getComicData()
+        viewModel = obtainViewModel().apply {
+            getReadHistory(false).addTo(mSubscription)
+        }
+        viewModel.historyData.observe(viewLifecycleOwner, Observer { data ->
+            data?.let {
+                updateComic(it)
+                toast("his")
+            }
+        })
     }
 
     override fun onUserInvisible() {
     }
 
     override fun onUserVisible() {
-        mPresenter.getComicData()
+//        mPresenter.getComicData()
+        viewModel.getReadHistory(false)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mPresenter.unsubscribe()
+//        mPresenter.unsubscribe()
     }
 
     override fun initViews() {
+
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_shelf_list_layout
@@ -44,16 +60,16 @@ class ComicHistoryFragment : BaseFragment(), HistoryContract.View {
     override fun onFirstUserInvisible() {
     }
 
-    override fun showLoading(isLoading: Boolean) {
-    }
+//    override fun showLoading(isLoading: Boolean) {
+//    }
+//
+//    override fun showError(isError: Boolean) {
+//    }
+//
+//    override fun showEmpty(isEmpty: Boolean) {
+//    }
 
-    override fun showError(isError: Boolean) {
-    }
-
-    override fun showEmpty(isEmpty: Boolean) {
-    }
-
-    override fun updateComic(data: List<ReadHistoryBean>) {
+    private fun updateComic(data: List<ReadHistoryBean>) {
         if (mAdapter == null) {
             initAdapter(data)
         } else {
@@ -72,4 +88,6 @@ class ComicHistoryFragment : BaseFragment(), HistoryContract.View {
             startNewActivity(ComicIntroActivity::class.java, mBundle)
         }
     }
+
+    private fun obtainViewModel(): ShelfViewModel = obtainViewModel(ShelfViewModel::class.java)
 }

@@ -5,8 +5,6 @@ import android.support.v4.content.ContextCompat
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicFragmentAdapter
 import com.luuu.seven.base.BaseFragment
-import com.luuu.seven.module.shelf.collect.ComicCollectFragment
-import com.luuu.seven.module.shelf.history.ComicHistoryFragment
 import com.luuu.seven.util.BarUtils
 import kotlinx.android.synthetic.main.fra_shelf_layout.*
 

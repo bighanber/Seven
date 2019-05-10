@@ -3,6 +3,7 @@ package com.luuu.seven.base
 import android.os.Build
 import android.support.v7.widget.Toolbar
 import com.luuu.seven.R
+import io.reactivex.disposables.CompositeDisposable
 
 
 /**
@@ -15,6 +16,7 @@ import com.luuu.seven.R
 abstract class BaseActivity : BaseAppCompatActivity() {
 
     private var mToolbar: Toolbar? = null
+    var mSubscription = CompositeDisposable()
 
     override fun setContentView(layoutResID: Int) {
         super.setContentView(layoutResID)
@@ -42,5 +44,10 @@ abstract class BaseActivity : BaseAppCompatActivity() {
         if (supportActionBar != null) {
             supportActionBar!!.setTitle(strId)
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mSubscription.clear()
     }
 }
