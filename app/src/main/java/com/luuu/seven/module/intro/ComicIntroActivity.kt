@@ -25,8 +25,8 @@ import java.util.*
  *     author : dell
  *     e-mail :
  *     time   : 2017/08/01
- *     desc   :
- *     version:漫画详情界面
+ *     desc   : 漫画详情界面
+ *     version:
  */
 class ComicIntroActivity : BaseActivity() {
 
@@ -87,7 +87,7 @@ class ComicIntroActivity : BaseActivity() {
         if (mAdapter == null) {
             initAdapter(data.chapters[0].data)
         } else {
-            mAdapter!!.setNewData(data.chapters[0].data)
+            mAdapter?.setNewData(data.chapters[0].data)
         }
         mComicIntroBean = data
         if (!isBack) {
@@ -150,10 +150,10 @@ class ComicIntroActivity : BaseActivity() {
         }
 
         comic_recyclerview.layoutManager = mLayoutManager
-        mAdapter!!.addHeaderView(headerView)
+        mAdapter?.addHeaderView(headerView)
         comic_recyclerview.adapter = mAdapter
         
-        mAdapter!!.setOnItemClickListener { _, _, position ->
+        mAdapter?.setOnItemClickListener { _, _, position ->
             val mBundle = Bundle()
             mBundle.run {
                 putInt("comicId", comicId)
@@ -181,8 +181,8 @@ class ComicIntroActivity : BaseActivity() {
         }
         comicAuthors = comicAuthors.substring(0, comicAuthors.length - 1)
         comicTags = comicTags.substring(0, comicTags.length - 1)
-        tv_intro_authors.text = "作者: ${comicAuthors}"
-        tv_intro_tags.text = "类型: ${comicTags}"
+        tv_intro_authors.text = "作者: $comicAuthors"
+        tv_intro_tags.text = "类型: $comicTags"
         mUpdate.text = "最后更新: ${DateFormat.format("yyyy-MM-dd", data.lastUpdatetime * 1000)}"
         iv_cha_img.loadImgWithTransform(data.cover)
         iv_cover.loadImg(data.cover)

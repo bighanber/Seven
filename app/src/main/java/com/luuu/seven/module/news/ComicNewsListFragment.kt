@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fra_tab_layout.*
 
 /**
  * Created by lls on 2017/8/9.
- *新闻界面
+ * 新闻界面
  */
 class ComicNewsListFragment : BaseFragment() {
 
@@ -73,10 +73,6 @@ class ComicNewsListFragment : BaseFragment() {
             mNewsListBeanList.clear()
             viewModel.getComicNewsList(mPageNum, false, isRefresh = true)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_tab_layout

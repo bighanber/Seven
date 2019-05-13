@@ -39,10 +39,6 @@ class ComicNewsFragment : BaseFragment() {
     override fun onUserVisible() {
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
@@ -77,7 +73,7 @@ class ComicNewsFragment : BaseFragment() {
             } else {
                 news_banner.stopAutoPlay()
             }
-                })
+        })
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_news_layout
@@ -89,7 +85,7 @@ class ComicNewsFragment : BaseFragment() {
     private fun updateComicList(data: ComicNewsPicBean) {
         val urls = ArrayList<String>()
         data.data.mapTo(urls) { it.picUrl }
-        news_banner.setOnBannerListener{ position ->
+        news_banner.setOnBannerListener { position ->
             val mBundle = Bundle()
             mBundle.putString("url", data.data[position].objectUrl)
             startNewActivity(WebActivity::class.java, mBundle)

@@ -69,10 +69,6 @@ class ComicNewsFlashFragment : BaseFragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     override fun getContentViewLayoutID(): Int = R.layout.fra_tab_layout
 
     override fun onFirstUserInvisible() {

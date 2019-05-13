@@ -32,7 +32,6 @@ class ComicCollectFragment : BaseFragment(){
         viewModel.collectData.observe(viewLifecycleOwner, Observer { data ->
             data?.let {
                 updateComicCollect(it)
-                toast("collect")
             }
         })
     }
@@ -48,10 +47,6 @@ class ComicCollectFragment : BaseFragment(){
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     override fun getContentViewLayoutID(): Int = R.layout.fra_shelf_list_layout
 
     override fun onFirstUserInvisible() {
@@ -63,7 +58,7 @@ class ComicCollectFragment : BaseFragment(){
         if (mAdapter == null) {
             initAdapter(data)
         } else {
-            mAdapter!!.setNewData(data)
+            mAdapter?.setNewData(data)
         }
     }
 
@@ -71,7 +66,7 @@ class ComicCollectFragment : BaseFragment(){
         mAdapter = ComicCollectAdapter(R.layout.item_search_layout, collectBeanList)
         recycler_shelf.layoutManager = mLayoutManager
         recycler_shelf.adapter = mAdapter
-        mAdapter!!.setOnItemClickListener { _, _, position ->
+        mAdapter?.setOnItemClickListener { _, _, position ->
             val mBundle = Bundle()
             mBundle.putInt("comicId", collectBeanList[position].comicId)
             startNewActivity(ComicIntroActivity::class.java, mBundle)

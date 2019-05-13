@@ -19,21 +19,18 @@ import kotlinx.android.synthetic.main.fra_shelf_list_layout.*
  */
 class ComicHistoryFragment : BaseFragment() {
 
-    //    private val mPresenter by lazy { HistoryPresenter(this) }
     private var mAdapter: ComicHistoryAdapter? = null
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
     private lateinit var viewModel: ShelfViewModel
 
     override fun onFirstUserVisible() {
-//        mPresenter.getComicData()
         viewModel = obtainViewModel().apply {
             getReadHistory(false).addTo(mSubscription)
         }
         viewModel.historyData.observe(viewLifecycleOwner, Observer { data ->
             data?.let {
                 updateComic(it)
-                toast("his")
             }
         })
     }
@@ -42,13 +39,7 @@ class ComicHistoryFragment : BaseFragment() {
     }
 
     override fun onUserVisible() {
-//        mPresenter.getComicData()
         viewModel.getReadHistory(false)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        mPresenter.unsubscribe()
     }
 
     override fun initViews() {
@@ -60,20 +51,11 @@ class ComicHistoryFragment : BaseFragment() {
     override fun onFirstUserInvisible() {
     }
 
-//    override fun showLoading(isLoading: Boolean) {
-//    }
-//
-//    override fun showError(isError: Boolean) {
-//    }
-//
-//    override fun showEmpty(isEmpty: Boolean) {
-//    }
-
     private fun updateComic(data: List<ReadHistoryBean>) {
         if (mAdapter == null) {
             initAdapter(data)
         } else {
-            mAdapter!!.setNewData(data)
+            mAdapter?.setNewData(data)
         }
     }
 
@@ -82,7 +64,7 @@ class ComicHistoryFragment : BaseFragment() {
         recycler_shelf.layoutManager = mLayoutManager
         recycler_shelf.adapter = mAdapter
 
-        mAdapter!!.setOnItemClickListener { _, _, position ->
+        mAdapter?.setOnItemClickListener { _, _, position ->
             val mBundle = Bundle()
             mBundle.putInt("comicId", historyBeanList[position].comicId)
             startNewActivity(ComicIntroActivity::class.java, mBundle)

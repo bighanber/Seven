@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fra_shelf_layout.*
  *     author : dell
  *     e-mail :
  *     time   : 2017/08/01
- *     desc   :
+ *     desc   : 书架
  *     version:
  */
 class ComicShelfFragment : BaseFragment() {
@@ -56,8 +56,7 @@ class ComicShelfFragment : BaseFragment() {
     }
 
     private fun initViewPager(names: List<String>, fragments: List<Fragment>) {
-        val adapter = ComicFragmentAdapter(childFragmentManager,
-                fragments, names)
+        val adapter = ComicFragmentAdapter(childFragmentManager, fragments, names)
         shelf_viewpager.adapter = adapter
         shelf_viewpager.setCurrentItem(0, false)
         shelf_viewpager.offscreenPageLimit = 1

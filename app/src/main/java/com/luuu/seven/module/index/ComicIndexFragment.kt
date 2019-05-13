@@ -29,8 +29,8 @@ import kotlinx.android.synthetic.main.list_header_layout.*
  *     author : dell
  *     e-mail :
  *     time   : 2017/08/01
- *     desc   :
- *     version:首页
+ *     desc   : 首页
+ *     version:
  */
 class ComicIndexFragment : BaseFragment() {
 
@@ -105,11 +105,12 @@ class ComicIndexFragment : BaseFragment() {
 
     private fun updateIndexList(data: List<IndexBean>) {
         initPager(data[0].data)
+        //个别栏目不需要就不展示
         val mData = data.filterNot { it.sort == 1 || it.sort == 6 }
         if (mAdapter == null) {
             initAdapter(mData)
         } else {
-            mAdapter!!.setNewData(mData)
+            mAdapter?.setNewData(mData)
         }
     }
 
@@ -123,6 +124,8 @@ class ComicIndexFragment : BaseFragment() {
     private fun initPager(dataBeanList: List<IndexDataBean>) {
         index_banner.setIndicatorGravity(BannerConfig.RIGHT)
         val urls = dataBeanList.map { it.cover }
+
+        //如果url为空则表示是具体的漫画，不然就是广告或者活动
         index_banner.setOnBannerListener { position ->
             if ("" == dataBeanList[position].url) {
                 val mBundle = Bundle()
