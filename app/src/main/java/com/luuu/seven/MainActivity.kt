@@ -1,8 +1,8 @@
 package com.luuu.seven
 
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.luuu.seven.base.BaseActivity
 import com.luuu.seven.module.index.ComicIndexFragment
 import com.luuu.seven.module.news.ComicNewsFragment
@@ -19,7 +19,7 @@ class MainActivity : BaseActivity() {
 
     override fun initViews() {
         fm = supportFragmentManager
-        navigation.setOnNavigationItemSelectedListener { item ->
+        bottom_navigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_index -> {
                     showFragment(0)

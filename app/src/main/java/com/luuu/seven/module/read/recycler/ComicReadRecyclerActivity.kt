@@ -3,16 +3,13 @@ package com.luuu.seven.module.read.recycler
 import android.graphics.Point
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.PagerSnapHelper
-import android.support.v7.widget.RecyclerView
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.SeekBar
-import com.github.chrisbanes.photoview.PhotoView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicReadAdapter
 import com.luuu.seven.base.BaseActivity
@@ -43,20 +40,20 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         mPresenter.getComicData(mComicId, mChapters!![mCurChapterPosition].chapterId)
 
-//        seek_bar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-//            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-//                intCurPage = p1 + 1
+        seek_bar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                intCurPage = p1 + 1
 //                updateProgressTest(intCurPage, mTotalPage)
-//            }
-//
-//            override fun onStartTrackingTouch(p0: SeekBar?) {
-//            }
-//
-//            override fun onStopTrackingTouch(p0: SeekBar?) {
-//                comic_list.smoothScrollToPosition(intCurPage)
-//            }
-//
-//        })
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+                comic_list.smoothScrollToPosition(intCurPage)
+            }
+
+        })
 
         iv_back.setOnClickListener{
             mPresenter.updateReadHistory(mComicId, mChapters!![mCurChapterPosition].chapterId,
@@ -72,7 +69,7 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
                 intCurPage = position
                 "$position".toast()
                 tv_chapter_page.text = "${position + 1} | $mTotalPage"
-//                dealTopAndBottom(isTop, isBottom)
+                dealTopAndBottom(isTop, isBottom)
             }
 
             override fun onLayoutComplete() {

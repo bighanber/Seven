@@ -1,7 +1,7 @@
 package com.luuu.seven.module.sort.sortlist
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicSortListAdapter
 import com.luuu.seven.base.BaseFragment

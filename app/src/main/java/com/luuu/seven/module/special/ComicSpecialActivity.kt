@@ -1,7 +1,7 @@
 package com.luuu.seven.module.special
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.luuu.seven.R
 import com.luuu.seven.WebActivity
 import com.luuu.seven.adapter.ComicSpecialAdapter

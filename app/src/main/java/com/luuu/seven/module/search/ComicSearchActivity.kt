@@ -2,10 +2,10 @@ package com.luuu.seven.module.search
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.*
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicHotSearchAdapter
@@ -49,7 +49,7 @@ class ComicSearchActivity : BaseActivity(), ComicSearchContract.View {
     override fun onDestroy() {
         super.onDestroy()
         mPresenter.unsubscribe()
-        mSearchDataBeanList = null
+//        mSearchDataBeanList = null
     }
 
     override fun getIntentExtras(extras: Bundle?) {

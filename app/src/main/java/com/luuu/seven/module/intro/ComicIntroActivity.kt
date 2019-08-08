@@ -3,12 +3,13 @@ package com.luuu.seven.module.intro
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.AppCompatTextView
-import android.support.v7.widget.GridLayoutManager
+import androidx.core.content.ContextCompat
 import android.text.format.DateFormat
 import android.view.*
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.luuu.seven.R
@@ -20,6 +21,7 @@ import com.luuu.seven.util.*
 import kotlinx.android.synthetic.main.activity_comic_intro.*
 import kotlinx.android.synthetic.main.intro_middle_layout.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  *     author : dell
@@ -62,13 +64,13 @@ class ComicIntroActivity : BaseActivity() {
             getComicIntro(comicId, false).addTo(mSubscription)
             isFavorite(comicId)
         }.apply {
-            comicIntroData.observe(this@ComicIntroActivity, android.arch.lifecycle.Observer { data ->
+            comicIntroData.observe(this@ComicIntroActivity, Observer { data ->
                 data?.let {
                     updateComicData(it)
                 }
             })
 
-            updateFavorite.observe(this@ComicIntroActivity, android.arch.lifecycle.Observer { bol ->
+            updateFavorite.observe(this@ComicIntroActivity, Observer { bol ->
                 bol?.let {
                     updateFavoriteMenu(it)
                 }
@@ -129,7 +131,7 @@ class ComicIntroActivity : BaseActivity() {
     fun initAdapter(dataBeanList: ArrayList<ChapterDataBean>) {
         mAdapter = object : BaseQuickAdapter<ChapterDataBean, BaseViewHolder>(R.layout.item_chapter_layout, dataBeanList) {
 
-            override fun convert(holder: BaseViewHolder?, item: ChapterDataBean?) {
+            override fun convert(holder: BaseViewHolder, item: ChapterDataBean?) {
                 ifNotNull(holder, item) { holder, item ->
                     holder.setText(R.id.tv_num, item.chapterTitle)
                     if (mComicIntroBean.mReadHistoryBean != null && item.chapterId == mComicIntroBean.mReadHistoryBean!!.chapterId) {
@@ -152,7 +154,7 @@ class ComicIntroActivity : BaseActivity() {
         comic_recyclerview.layoutManager = mLayoutManager
         mAdapter?.addHeaderView(headerView)
         comic_recyclerview.adapter = mAdapter
-        
+
         mAdapter?.setOnItemClickListener { _, _, position ->
             val mBundle = Bundle()
             mBundle.run {

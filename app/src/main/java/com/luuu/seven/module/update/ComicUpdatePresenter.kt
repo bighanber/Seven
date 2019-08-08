@@ -5,7 +5,6 @@ import com.luuu.seven.util.DataLoadType
 import io.reactivex.disposables.CompositeDisposable
 
 
-
 /**
  *     author : dell
  *     e-mail :

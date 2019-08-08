@@ -15,7 +15,7 @@ import com.luuu.seven.util.loadImg
 class ComicUpdateAdapter(layoutResId: Int, data: List<ComicUpdateBean>) :
         BaseQuickAdapter<ComicUpdateBean, BaseViewHolder>(layoutResId, data) {
 
-    override fun convert(helper: BaseViewHolder?, item: ComicUpdateBean?) {
+    override fun convert(helper: BaseViewHolder, item: ComicUpdateBean?) {
         ifNotNull(helper, item, {helper, item ->
             helper.setText(R.id.tv_comic_title, item.title)
             helper.setText(R.id.tv_comic_chapter, item.lastUpdateChapterName)

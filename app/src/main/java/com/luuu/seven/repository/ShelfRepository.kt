@@ -6,6 +6,7 @@ import com.luuu.seven.db.CollectDao
 import com.luuu.seven.db.ReadHistoryDao
 import io.reactivex.Observable
 
+
 class  ShelfRepository {
 
     fun getReadHistory(): Observable<List<ReadHistoryBean>> {

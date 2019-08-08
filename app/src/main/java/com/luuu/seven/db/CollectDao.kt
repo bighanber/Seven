@@ -3,7 +3,7 @@ package com.luuu.seven.db
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.luuu.seven.MyApplication
+import com.luuu.seven.ComicApplication
 import com.luuu.seven.bean.CollectBean
 import com.luuu.seven.util.SchedulerHelper
 import io.reactivex.Observable
@@ -36,7 +36,7 @@ class CollectDao private constructor() {
     }
 
     fun createHelp() {
-        mHelp = CollectHelp(MyApplication.sAppContext)
+        mHelp = CollectHelp(ComicApplication.sAppContext)
     }
 
     fun insert(id: Int, title: String, authors: String, img: String, time: Long): Observable<Boolean> {

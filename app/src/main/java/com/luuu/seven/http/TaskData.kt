@@ -12,9 +12,9 @@ import io.reactivex.Observable
  *     version:
  */
 object TaskData {
-    fun getIndexData(): Observable<List<IndexBean>> {
-        return HttpManager.getInstance.getService().getIndexData().compose(SchedulerHelper.io_main())
-    }
+//    fun getIndexData(): Observable<List<IndexBean>> {
+//        return HttpManager.getInstance.getService().getIndexData())
+//    }
 
     fun getAllUpdateComic(num: Int, page: Int): Observable<List<ComicUpdateBean>> {
         return HttpManager.getInstance.getService().getAllUpdataComic(num, page)

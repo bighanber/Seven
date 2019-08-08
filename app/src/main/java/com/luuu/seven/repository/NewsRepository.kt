@@ -6,6 +6,7 @@ import com.luuu.seven.bean.ComicNewsPicBean
 import com.luuu.seven.http.TaskData
 import io.reactivex.Observable
 
+
 class NewsRepository {
     fun getComicNewsPic(): Observable<ComicNewsPicBean> {
         return TaskData.getComicNewsPic()

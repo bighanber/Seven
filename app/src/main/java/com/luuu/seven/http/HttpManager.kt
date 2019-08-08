@@ -4,6 +4,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.luuu.seven.http.interceptor.HeadInterceptor
 import com.luuu.seven.http.interceptor.LogInterceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -23,9 +24,14 @@ class HttpManager private constructor() {
     }
 
     private object SingletonHolder {
-        val holder= HttpManager()
+        val holder = HttpManager()
     }
 
+    private val httpLoggingInterceptor by lazy {
+        HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+    }
 
     private var mRetrofit: Retrofit? = null
     private var mNetService: DataService? = null
@@ -38,17 +44,17 @@ class HttpManager private constructor() {
 
     private fun createRetrofit() {
         val client = OkHttpClient.Builder()
-                .addInterceptor(LogInterceptor())
-//                .addInterceptor(HeadInterceptor())
-                .retryOnConnectionFailure(true)
-                .connectTimeout(15, TimeUnit.SECONDS)
-                .build()
+            .addNetworkInterceptor(httpLoggingInterceptor)
+//          .addInterceptor(HeadInterceptor())
+            .retryOnConnectionFailure(true)
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .build()
         mRetrofit = Retrofit.Builder()
-                .client(client)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(Api.DMZJ_URL)
-                .build()
+            .client(client)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(Api.DMZJ_URL)
+            .build()
         mNetService = mRetrofit?.create(DataService::class.java)
     }
 

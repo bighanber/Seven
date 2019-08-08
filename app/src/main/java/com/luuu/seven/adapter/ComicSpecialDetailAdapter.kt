@@ -16,7 +16,7 @@ import com.luuu.seven.util.loadImg
 class ComicSpecialDetailAdapter(layoutResId: Int, data: List<ComicsSpecialDetInBean> ) :
         BaseQuickAdapter<ComicsSpecialDetInBean, BaseViewHolder>(layoutResId, data) {
 
-    override fun convert(helper: BaseViewHolder?, item: ComicsSpecialDetInBean?) {
+    override fun convert(helper: BaseViewHolder, item: ComicsSpecialDetInBean?) {
         ifNotNull(helper, item, {helper, item ->
             helper.setText(R.id.tv_special_det_title, item.name)
             helper.setText(R.id.tv_special_det_brief, item.recommendBrief)

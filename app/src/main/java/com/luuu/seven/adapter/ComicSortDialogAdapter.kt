@@ -13,7 +13,7 @@ import com.luuu.seven.util.ifNotNull
 class ComicSortDialogAdapter(layoutResId: Int, data: List<ComicSortBean>) :
         BaseQuickAdapter<ComicSortBean, BaseViewHolder>(layoutResId, data) {
 
-    override fun convert(helper: BaseViewHolder?, item: ComicSortBean?) {
+    override fun convert(helper: BaseViewHolder, item: ComicSortBean?) {
         ifNotNull(helper, item, {helper, item ->
             helper.setText(R.id.tv_num, item.title)
         })

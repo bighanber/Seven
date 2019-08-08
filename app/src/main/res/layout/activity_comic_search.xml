@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <Toolbar
         android:id="@+id/toolbar"
         android:background="@color/colorPrimary"
         android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                 android:layout_marginStart="10dp"
                 android:text="@string/cancel" />
         </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    </Toolbar>
 
     <TextView
         android:id="@+id/tv_hot_search"
@@ -60,7 +60,7 @@
         android:textColor="@color/black"
         android:textSize="14sp" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

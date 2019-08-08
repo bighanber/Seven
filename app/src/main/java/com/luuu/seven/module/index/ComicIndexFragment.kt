@@ -1,9 +1,9 @@
 package com.luuu.seven.module.index
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.v7.widget.LinearLayoutManager
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.appbar.AppBarLayout
 import com.luuu.seven.R
 import com.luuu.seven.WebActivity
 import com.luuu.seven.adapter.ComicIndexAdapter
@@ -17,10 +17,7 @@ import com.luuu.seven.module.sort.ComicSortActivity
 import com.luuu.seven.module.special.ComicSpecialActivity
 import com.luuu.seven.module.update.ComicUpdateActivity
 import com.luuu.seven.util.BarUtils
-import com.luuu.seven.util.GlideImageLoader
-import com.luuu.seven.util.addTo
 import com.luuu.seven.util.obtainViewModel
-import com.youth.banner.BannerConfig
 import kotlinx.android.synthetic.main.fra_index_layout.*
 import kotlinx.android.synthetic.main.index_header_search_layout.*
 import kotlinx.android.synthetic.main.list_header_layout.*
@@ -58,7 +55,7 @@ class ComicIndexFragment : BaseFragment() {
         BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
 
         viewModel = obtainViewModel().apply {
-            getHomeData(false).addTo(mSubscription)
+            getHomeData(false)
         }.apply {
             homeData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {
@@ -83,11 +80,11 @@ class ComicIndexFragment : BaseFragment() {
             toolbar.alpha = percent
             tv_search_bg.alpha = if (percent >= 0.5) percent else 0.5f
             index_refresh.isEnabled = verticalOffset == 0
-            if (verticalOffset == 0) {
-                index_banner.startAutoPlay()
-            } else {
-                index_banner.stopAutoPlay()
-            }
+//            if (verticalOffset == 0) {
+//                index_banner.startAutoPlay()
+//            } else {
+//                index_banner.stopAutoPlay()
+//            }
         })
 
         tv_search_bg.setOnClickListener { startNewActivity(ComicSearchActivity::class.java) }
@@ -122,22 +119,22 @@ class ComicIndexFragment : BaseFragment() {
     }
 
     private fun initPager(dataBeanList: List<IndexDataBean>) {
-        index_banner.setIndicatorGravity(BannerConfig.RIGHT)
-        val urls = dataBeanList.map { it.cover }
-
-        //如果url为空则表示是具体的漫画，不然就是广告或者活动
-        index_banner.setOnBannerListener { position ->
-            if ("" == dataBeanList[position].url) {
-                val mBundle = Bundle()
-                mBundle.putInt("comicId", dataBeanList[position].objId)
-                startNewActivity(ComicIntroActivity::class.java, mBundle)
-            } else {
-                val mBundle = Bundle()
-                mBundle.putString("url", dataBeanList[position].url)
-                startNewActivity(WebActivity::class.java, mBundle)
-            }
-        }
-        index_banner.setImages(urls).setImageLoader(GlideImageLoader()).start()
+//        index_banner.setIndicatorGravity(BannerConfig.RIGHT)
+//        val urls = dataBeanList.map { it.cover }
+//
+//        //如果url为空则表示是具体的漫画，不然就是广告或者活动
+//        index_banner.setOnBannerListener { position ->
+//            if ("" == dataBeanList[position].url) {
+//                val mBundle = Bundle()
+//                mBundle.putInt("comicId", dataBeanList[position].objId)
+//                startNewActivity(ComicIntroActivity::class.java, mBundle)
+//            } else {
+//                val mBundle = Bundle()
+//                mBundle.putString("url", dataBeanList[position].url)
+//                startNewActivity(WebActivity::class.java, mBundle)
+//            }
+//        }
+//        index_banner.setImages(urls).setImageLoader(GlideImageLoader()).start()
     }
 
     private fun obtainViewModel(): HomeViewModel = obtainViewModel(HomeViewModel::class.java)

@@ -8,6 +8,7 @@ import com.luuu.seven.http.TaskData
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 
+
 class IntroRepository {
 
     fun getComicIntro(comicId: Int): Observable<ComicIntroBean> {

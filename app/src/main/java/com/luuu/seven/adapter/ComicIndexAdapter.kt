@@ -3,8 +3,8 @@ package com.luuu.seven.adapter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.luuu.seven.R
@@ -23,7 +23,7 @@ import com.luuu.seven.util.ifNotNull
  */
 class ComicIndexAdapter(layoutResId: Int, data: List<IndexBean>) : BaseQuickAdapter<IndexBean, BaseViewHolder>(layoutResId, data) {
 
-    override fun convert(helper: BaseViewHolder?, item: IndexBean?) {
+    override fun convert(helper: BaseViewHolder, item: IndexBean?) {
         ifNotNull(helper, item) { helper, item ->
             helper.setText(R.id.tv_item_theme, item.title)
             val recyclerView = helper.getView<RecyclerView>(R.id.list_items)

@@ -9,13 +9,13 @@ import android.graphics.Point
 import android.os.BatteryManager
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.view.ViewPager
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.SeekBar
+import androidx.viewpager.widget.ViewPager
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicReadPagerAdapter
 import com.luuu.seven.base.BaseActivity

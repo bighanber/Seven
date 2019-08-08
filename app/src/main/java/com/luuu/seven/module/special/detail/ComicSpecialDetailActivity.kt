@@ -1,7 +1,7 @@
 package com.luuu.seven.module.special.detail
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicSpecialDetailAdapter
 import com.luuu.seven.base.BaseActivity

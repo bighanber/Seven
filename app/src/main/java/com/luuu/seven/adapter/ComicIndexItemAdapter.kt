@@ -18,7 +18,7 @@ import com.luuu.seven.util.loadImg
  */
 class ComicIndexItemAdapter(layoutResId: Int, data: List<IndexDataBean>) : BaseQuickAdapter<IndexDataBean, BaseViewHolder>(layoutResId, data) {
 
-    override fun convert(helper: BaseViewHolder?, item: IndexDataBean?) {
+    override fun convert(helper: BaseViewHolder, item: IndexDataBean?) {
         ifNotNull(helper, item) { helper, item ->
             helper.setText(R.id.tv_grid_title, item.title)
             helper.addOnClickListener(R.id.grid_cardview)

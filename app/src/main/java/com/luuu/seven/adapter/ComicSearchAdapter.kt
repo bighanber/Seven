@@ -15,7 +15,7 @@ import com.luuu.seven.util.loadImg
 class ComicSearchAdapter(layoutResId: Int, data: List<SearchDataBean>) :
         BaseQuickAdapter<SearchDataBean, BaseViewHolder>(layoutResId, data) {
 
-    override fun convert(helper: BaseViewHolder?, item: SearchDataBean?) {
+    override fun convert(helper: BaseViewHolder, item: SearchDataBean?) {
         ifNotNull(helper, item, {helper, item ->
             helper.setText(R.id.tv_comic_title, item.title)
             helper.setText(R.id.tv_comic_authors, "作者: ${item.authors}")

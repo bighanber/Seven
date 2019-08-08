@@ -1,7 +1,7 @@
 package com.luuu.seven.base
 
 import android.os.Build
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 import com.luuu.seven.R
 import io.reactivex.disposables.CompositeDisposable
 

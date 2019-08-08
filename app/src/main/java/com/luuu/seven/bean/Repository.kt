@@ -2,6 +2,7 @@ package com.luuu.seven.bean
 
 import com.google.gson.annotations.SerializedName
 
+
 /**
  *     author : dell
  *     e-mail :
@@ -10,7 +11,7 @@ import com.google.gson.annotations.SerializedName
  *     version:
  */
 data class IndexBean(
-        @SerializedName("category_id")
+//        @SerializedName("category_id")
         val categoryId: Int,
         val title: String,
         val sort: Int,

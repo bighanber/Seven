@@ -45,14 +45,14 @@ class ComicReadFragment : BaseFragment() {
             isFromDisk = it.getBoolean("disk")
         }
 
-        pv_read_page.setOnPhotoTapListener { _, x, y ->
-            val act = activity
-            if (act is ComicReadActivity) {
-                (activity as ComicReadActivity).clickEvents(x, y)
-            }
-        }
-
-        pv_read_page.loadImgWithProgress(mImgUrl!!,progress)
+//        pv_read_page.setOnPhotoTapListener { _, x, y ->
+//            val act = activity
+//            if (act is ComicReadActivity) {
+//                (activity as ComicReadActivity).clickEvents(x, y)
+//            }
+//        }
+//
+//        pv_read_page.loadImgWithProgress(mImgUrl!!,progress)
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_read_layout

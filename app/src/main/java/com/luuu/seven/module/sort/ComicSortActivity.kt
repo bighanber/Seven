@@ -1,14 +1,14 @@
 package com.luuu.seven.module.sort
 
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.BottomSheetDialog
-import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicFragmentAdapter
 import com.luuu.seven.adapter.ComicSortDialogAdapter
@@ -97,7 +97,7 @@ class ComicSortActivity : BaseActivity(), ComicSortContract.View {
             mBottomSheetDialog!!.setContentView(view)
 
             // 解决下滑隐藏dialog 后，再次调用show 方法显示时，不能弹出Dialog
-            val view1 = mBottomSheetDialog!!.delegate.findViewById<View>(android.support.design.R.id.design_bottom_sheet)
+            val view1 = mBottomSheetDialog!!.delegate.findViewById<View>(R.id.design_bottom_sheet)
             val bottomSheetBehavior = BottomSheetBehavior.from(view1)
             bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {

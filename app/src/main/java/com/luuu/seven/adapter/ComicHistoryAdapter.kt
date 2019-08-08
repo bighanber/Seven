@@ -15,7 +15,7 @@ import com.luuu.seven.util.loadImg
 class ComicHistoryAdapter(layoutResId: Int, data: List<ReadHistoryBean>) :
         BaseQuickAdapter<ReadHistoryBean, BaseViewHolder>(layoutResId, data) {
 
-    override fun convert(helper: BaseViewHolder?, item: ReadHistoryBean?) {
+    override fun convert(helper: BaseViewHolder, item: ReadHistoryBean?) {
         ifNotNull(helper, item, { helper, item ->
             helper.setText(R.id.tv_shelf_title, item.comicTitle)
             helper.setText(R.id.tv_shelf_other, "看到 ${item.chapterTitle}")

@@ -3,12 +3,12 @@ package com.luuu.seven.base
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import io.reactivex.disposables.CompositeDisposable
 
 /**
@@ -37,7 +37,7 @@ abstract class BaseFragment : Fragment() {
     abstract fun getContentViewLayoutID(): Int
     abstract fun onFirstUserInvisible()
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
     }
@@ -46,15 +46,13 @@ abstract class BaseFragment : Fragment() {
         if (fragmentRootView == null) {
             fragmentRootView = inflater.inflate(getContentViewLayoutID(), container, false)
         }
-        val parent = fragmentRootView!!.parent as ViewGroup?
-        parent?.removeView(fragmentRootView)
         return fragmentRootView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val displayMetrics = DisplayMetrics()
-        activity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
+//        val displayMetrics = DisplayMetrics()
+//        activity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
         initViews()
     }
 
@@ -100,7 +98,7 @@ abstract class BaseFragment : Fragment() {
         }
     }
 
-    @Synchronized private fun initPrepare() {
+    private fun initPrepare() {
         if (isPrepared) {
             onFirstUserVisible()
         } else {

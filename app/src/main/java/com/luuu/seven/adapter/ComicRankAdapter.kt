@@ -16,7 +16,7 @@ import com.luuu.seven.util.loadImg
 class ComicRankAdapter(layoutResId: Int, data: List<HotComicBean>) :
         BaseQuickAdapter<HotComicBean, BaseViewHolder>(layoutResId, data) {
 
-    override fun convert(helper: BaseViewHolder?, item: HotComicBean?) {
+    override fun convert(helper: BaseViewHolder, item: HotComicBean?) {
         ifNotNull(helper, item) { helper, item ->
             helper.setText(R.id.tv_rank_title, item.title)
             helper.setText(R.id.tv_rank_num, item.num.toString())

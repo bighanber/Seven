@@ -1,8 +1,8 @@
 package com.luuu.seven.module.news
 
-import android.arch.lifecycle.Observer
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicNewsFlashAdapter
 import com.luuu.seven.base.BaseFragment

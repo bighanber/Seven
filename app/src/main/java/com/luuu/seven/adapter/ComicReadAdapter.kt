@@ -2,7 +2,6 @@ package com.luuu.seven.adapter
 
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.github.chrisbanes.photoview.PhotoView
 import com.luuu.seven.R
 import com.luuu.seven.util.ifNotNull
 import com.luuu.seven.util.loadImgWithProgress
@@ -19,12 +18,12 @@ class ComicReadAdapter(data: List<String>) :
         this.tapCallBack = tapCallBack
     }
 
-    override fun convert(helper: BaseViewHolder?, item: String?) {
+    override fun convert(helper: BaseViewHolder, item: String?) {
         ifNotNull(helper, item) { helper, item ->
-            helper.getView<PhotoView>(R.id.read_page).loadImgWithProgress(item, helper.getView(R.id.progress))
-            helper.getView<PhotoView>(R.id.read_page).setOnPhotoTapListener { view, x, y ->
-                tapCallBack.invoke(x, y)
-            }
+//            helper.getView<PhotoView>(R.id.read_page).loadImgWithProgress(item, helper.getView(R.id.progress))
+//            helper.getView<PhotoView>(R.id.read_page).setOnPhotoTapListener { view, x, y ->
+//                tapCallBack.invoke(x, y)
+//            }
         }
     }
 }

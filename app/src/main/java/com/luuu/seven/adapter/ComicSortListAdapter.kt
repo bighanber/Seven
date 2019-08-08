@@ -16,7 +16,7 @@ import com.luuu.seven.util.loadImg
 class ComicSortListAdapter(layoutResId: Int, data: List<ComicSortListBean>) :
         BaseQuickAdapter<ComicSortListBean, BaseViewHolder>(layoutResId, data) {
 
-    override fun convert(helper: BaseViewHolder?, item: ComicSortListBean?) {
+    override fun convert(helper: BaseViewHolder, item: ComicSortListBean?) {
         ifNotNull(helper, item, {helper, item ->
             helper.setText(R.id.tv_sort_list_title, item.title)
             helper.setText(R.id.tv_sort_list_authors, item.authors)

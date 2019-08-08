@@ -3,7 +3,7 @@ package com.luuu.seven.db
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.luuu.seven.MyApplication
+import com.luuu.seven.ComicApplication
 import com.luuu.seven.bean.ReadHistoryBean
 import com.luuu.seven.util.SchedulerHelper
 import io.reactivex.Observable
@@ -36,7 +36,7 @@ class ReadHistoryDao {
     }
 
     fun createHelp() {
-        mHelp = ReadHistoryHelp(MyApplication.sAppContext)
+        mHelp = ReadHistoryHelp(ComicApplication.sAppContext)
     }
 
     fun insertHistory(id: Int, chapterId: Int,

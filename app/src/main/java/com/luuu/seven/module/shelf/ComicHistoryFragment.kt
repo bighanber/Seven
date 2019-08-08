@@ -1,8 +1,8 @@
 package com.luuu.seven.module.shelf
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicHistoryAdapter
 import com.luuu.seven.base.BaseFragment

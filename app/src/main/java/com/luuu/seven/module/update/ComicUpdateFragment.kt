@@ -1,8 +1,8 @@
 package com.luuu.seven.module.update
 
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicUpdateAdapter
 import com.luuu.seven.base.BaseFragment
@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.fra_tab_layout.*
  *     version:
  */
 class ComicUpdateFragment : BaseFragment(), ComicUpdateContract.View {
+
     companion object {
         private val Comic_TYPE = "type"
 
