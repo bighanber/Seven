@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.fra_tab_layout.*
  */
 class ComicNewsListFragment : BaseFragment() {
 
+
     private var mPageNum = 0
     private val mLayoutManager: LinearLayoutManager = LinearLayoutManager(mContext)
     private var mAdapter: ComicNewsListAdapter? = null
@@ -26,13 +27,7 @@ class ComicNewsListFragment : BaseFragment() {
 
     private lateinit var viewModel: NewsViewModel
 
-    override fun onFirstUserVisible() {
-    }
-
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
+    override fun onFragmentVisibleChange(isVisible: Boolean) {
     }
 
     override fun initViews() {

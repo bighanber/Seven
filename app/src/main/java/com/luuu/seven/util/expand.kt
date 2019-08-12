@@ -54,14 +54,6 @@ fun ImageView.loadImgWithProgress(imageUrl: String, view: ProgressBar) {
 //            })
 //            .into(this)
 }
-
-fun String.toast(isShortToast: Boolean = true) = toast(this, isShortToast)
-
-fun toast(msg: Any?, isShort: Boolean = true) {
-    msg?.let {
-        Toast.makeText(ComicApplication.sAppContext, msg.toString(), if (isShort) Toast.LENGTH_SHORT else Toast.LENGTH_LONG).show()
-    }
-}
 //fun Fragment.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
 //    Toast.makeText(context, message, duration).show()
 //}

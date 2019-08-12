@@ -67,7 +67,7 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
             override fun onPageSelected(position: Int, isTop: Boolean, isBottom: Boolean) {
                 seek_bar.progress = position
                 intCurPage = position
-                "$position".toast()
+                toast("$position")
                 tv_chapter_page.text = "${position + 1} | $mTotalPage"
                 dealTopAndBottom(isTop, isBottom)
             }

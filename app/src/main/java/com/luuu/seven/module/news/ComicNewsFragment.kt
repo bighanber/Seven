@@ -9,7 +9,6 @@ import com.luuu.seven.R
 import com.luuu.seven.WebActivity
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicNewsPicBean
-import com.luuu.seven.util.BarUtils
 import com.luuu.seven.util.addTo
 import com.luuu.seven.util.obtainViewModel
 import kotlinx.android.synthetic.main.fra_news_layout.*
@@ -23,30 +22,25 @@ import kotlinx.android.synthetic.main.fra_news_layout.*
  */
 class ComicNewsFragment : BaseFragment() {
 
+
     private lateinit var fm: FragmentManager
     private var mNewsListFragment: ComicNewsListFragment? = null
     private var mNewsFlashFragment: ComicNewsFlashFragment? = null
 
     private lateinit var viewModel: NewsViewModel
 
-    override fun onFirstUserVisible() {
-    }
-
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
+    override fun onFragmentVisibleChange(isVisible: Boolean) {
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
+//            BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
         }
     }
 
     override fun initViews() {
-        BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
+//        BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
 
         viewModel = obtainViewModel().apply {
             getComicNewsPic(false).addTo(mSubscription)

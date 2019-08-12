@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.fra_loading_layout.*
  */
 class ComicLoadingFragment : BaseFragment() {
 
+
     private var pos = 0
 
     companion object {
@@ -24,13 +25,7 @@ class ComicLoadingFragment : BaseFragment() {
         }
     }
 
-    override fun onFirstUserVisible() {
-    }
-
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
+    override fun onFragmentVisibleChange(isVisible: Boolean) {
     }
 
     override fun initViews() {

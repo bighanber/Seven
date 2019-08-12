@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.fra_tab_layout.*
  */
 class ComicRankFragment : BaseFragment(), ComicRankContract.View {
 
+
     companion object {
         private val Comic_TYPE = "type"
 
@@ -47,13 +48,6 @@ class ComicRankFragment : BaseFragment(), ComicRankContract.View {
     private var mAdapter: ComicRankAdapter? = null
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
-    override fun onFirstUserVisible() {
-        mHotComicBeanList = ArrayList()
-        mHotComicTopList = ArrayList()
-        mPageNum = 0
-        mPresent.getComicData(num, 0)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -73,10 +67,13 @@ class ComicRankFragment : BaseFragment(), ComicRankContract.View {
         mHotComicBeanList = null
     }
 
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
+    override fun onFragmentVisibleChange(isVisible: Boolean) {
+        if (isVisible) {
+            mHotComicBeanList = ArrayList()
+            mHotComicTopList = ArrayList()
+            mPageNum = 0
+            mPresent.getComicData(num, 0)
+        }
     }
 
     override fun initViews() {

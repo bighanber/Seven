@@ -35,12 +35,6 @@ class ComicSortListFragment : BaseFragment(), ComicSortListContract.View {
     private var mAdapter: ComicSortListAdapter? = null
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
-    override fun onFirstUserVisible() {
-        mSortListBeanList = ArrayList()
-        mPageNum = 0
-        mPresent.getComicSortList(sortId, 0)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -54,10 +48,12 @@ class ComicSortListFragment : BaseFragment(), ComicSortListContract.View {
         mSortListBeanList = null
     }
 
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
+    override fun onFragmentVisibleChange(isVisible: Boolean) {
+        if (isVisible) {
+            mSortListBeanList = ArrayList()
+            mPageNum = 0
+            mPresent.getComicSortList(sortId, 0)
+        }
     }
 
     override fun initViews() {

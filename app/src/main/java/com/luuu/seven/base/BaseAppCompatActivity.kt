@@ -28,7 +28,6 @@ abstract class BaseAppCompatActivity : AppCompatActivity() {
         getIntentExtras(extra)
         mContext = this
         if (getContentViewLayoutID() != 0) {
-
             setContentView(getContentViewLayoutID())
         } else {
             throw IllegalArgumentException("返回一个正确的ContentView")

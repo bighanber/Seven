@@ -41,12 +41,6 @@ class ComicUpdateFragment : BaseFragment(), ComicUpdateContract.View {
     private var mAdapter: ComicUpdateAdapter? = null
     private val mLayoutManager by lazy { GridLayoutManager(mContext, 3) }
 
-    override fun onFirstUserVisible() {
-        mUpdateBeanList = ArrayList()
-        mPageNum = 0
-        mPresent.getComicUpdate(num, 0)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -59,16 +53,18 @@ class ComicUpdateFragment : BaseFragment(), ComicUpdateContract.View {
         }
     }
 
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         mPresent.unsubscribe()
         mUpdateBeanList = null
+    }
+
+    override fun onFragmentVisibleChange(isVisible: Boolean) {
+        if (isVisible) {
+            mUpdateBeanList = ArrayList()
+            mPageNum = 0
+            mPresent.getComicUpdate(num, 0)
+        }
     }
 
     override fun initViews() {

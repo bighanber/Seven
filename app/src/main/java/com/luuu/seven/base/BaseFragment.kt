@@ -27,12 +27,11 @@ abstract class BaseFragment : Fragment() {
     private var isFirstVisible = true
     private var isFirstInvisible = true
     private var isPrepared = false
+    private var isFragmentVisible: Boolean = false
 
     var mSubscription = CompositeDisposable()
 
-    abstract fun onFirstUserVisible()
-    abstract fun onUserInvisible()
-    abstract fun onUserVisible()
+    abstract fun onFragmentVisibleChange(isVisible: Boolean)
     abstract fun initViews()
     abstract fun getContentViewLayoutID(): Int
     abstract fun onFirstUserInvisible()
@@ -51,79 +50,35 @@ abstract class BaseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        val displayMetrics = DisplayMetrics()
-//        activity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
         initViews()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        initPrepare()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (isFirstResume) {
-            isFirstResume = false
-            return
-        }
-        if (userVisibleHint) {
-            onUserVisible()
+        if (isFragmentVisible) {
+            onFragmentVisibleChange(true)
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (userVisibleHint) {
-            onUserInvisible()
-        }
-    }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser) {
-            if (isFirstVisible) {
-                isFirstVisible = false
-                initPrepare()
-            } else {
-                onUserVisible()
-            }
-        } else {
-            if (isFirstInvisible) {
-                isFirstInvisible = false
-                onFirstUserInvisible()
-            } else {
-                onUserInvisible()
-            }
+        isFragmentVisible = isVisibleToUser
+        if (fragmentRootView == null) {
+            return
         }
-    }
-
-    private fun initPrepare() {
-        if (isPrepared) {
-            onFirstUserVisible()
+        if (isFragmentVisible) {
+            onFragmentVisibleChange(true)
         } else {
-            isPrepared = true
+            onFragmentVisibleChange(false)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        isPrepared = false
-        mSubscription.clear()
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        try {
-            val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
-            childFragmentManager.isAccessible = true
-            childFragmentManager.set(this, null)
-        } catch (e: NoSuchFieldException) {
-            throw RuntimeException(e)
-        } catch (e: IllegalAccessException) {
-            throw RuntimeException(e)
+        if (!mSubscription.isDisposed) {
+            mSubscription.clear()
         }
-
     }
 
     protected fun startNewActivity(clazz: Class<*>) {

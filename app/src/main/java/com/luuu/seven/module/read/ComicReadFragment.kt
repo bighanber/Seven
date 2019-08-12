@@ -29,13 +29,7 @@ class ComicReadFragment : BaseFragment() {
         }
     }
 
-    override fun onFirstUserVisible() {
-    }
-
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
+    override fun onFragmentVisibleChange(isVisible: Boolean) {
     }
 
     override fun initViews() {

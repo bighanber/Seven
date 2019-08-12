@@ -17,19 +17,14 @@ import kotlinx.android.synthetic.main.fra_tab_layout.*
  */
 class ComicNewsFlashFragment : BaseFragment() {
 
+
     private var mPageNum = 0
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
     private var mAdapter: ComicNewsFlashAdapter? = null
     private var mFlashList: ArrayList<ComicNewsFlashBean> = ArrayList()
     private lateinit var viewModel: NewsViewModel
 
-    override fun onFirstUserVisible() {
-    }
-
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
+    override fun onFragmentVisibleChange(isVisible: Boolean) {
     }
 
     override fun initViews() {

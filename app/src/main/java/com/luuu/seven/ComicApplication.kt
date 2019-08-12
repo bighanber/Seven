@@ -13,12 +13,12 @@ import kotlin.properties.Delegates
 class ComicApplication : Application() {
 
     companion object {
-        var sAppContext: ComicApplication by Delegates.notNull()
+        var mApp: ComicApplication by Delegates.notNull()
         lateinit var cacheDir: String
     }
 
     init {
-        sAppContext = this
+        mApp = this
     }
 
     override fun onCreate() {

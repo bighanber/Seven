@@ -36,7 +36,7 @@ class CollectDao private constructor() {
     }
 
     fun createHelp() {
-        mHelp = CollectHelp(ComicApplication.sAppContext)
+        mHelp = CollectHelp(ComicApplication.mApp)
     }
 
     fun insert(id: Int, title: String, authors: String, img: String, time: Long): Observable<Boolean> {

@@ -1,13 +1,12 @@
 package com.luuu.seven.module.index
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.luuu.seven.bean.IndexBean
 import com.luuu.seven.repository.HomeRepository
 import com.luuu.seven.util.launch
 import com.luuu.seven.util.toast
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class HomeViewModel : ViewModel() {
 
@@ -21,23 +20,17 @@ class HomeViewModel : ViewModel() {
     val dataLoading: LiveData<Boolean>
         get() = _dataLoading
 
-    fun getHomeData(showLoading: Boolean) {
-//        launch<List<IndexBean>> {
-//            request { mRepository.getHomeData() }
-//        }
-        viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
+    fun getHomeData() {
+        launch<List<IndexBean>> {
+            request {
                 mRepository.getHomeData()
             }
-            _homeData.value = result
+            onSuccess { result ->
+                _homeData.value = result
+            }
+            onFailed { error, code ->
+                toast(error)
+            }
         }
-//        return mRepository.getHomeData()
-//                .compose(ioMain())
-//                .compose(handleLoading(showLoading, _dataLoading))
-//                .subscribe({
-//                    _homeData.value = it
-//                }, {
-//                    toast(it.message)
-//                }, {})
     }
 }

@@ -36,7 +36,7 @@ class ReadHistoryDao {
     }
 
     fun createHelp() {
-        mHelp = ReadHistoryHelp(ComicApplication.sAppContext)
+        mHelp = ReadHistoryHelp(ComicApplication.mApp)
     }
 
     fun insertHistory(id: Int, chapterId: Int,

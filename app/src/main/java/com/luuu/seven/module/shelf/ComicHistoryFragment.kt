@@ -24,22 +24,17 @@ class ComicHistoryFragment : BaseFragment() {
 
     private lateinit var viewModel: ShelfViewModel
 
-    override fun onFirstUserVisible() {
-        viewModel = obtainViewModel().apply {
-            getReadHistory(false).addTo(mSubscription)
-        }
-        viewModel.historyData.observe(viewLifecycleOwner, Observer { data ->
-            data?.let {
-                updateComic(it)
+    override fun onFragmentVisibleChange(isVisible: Boolean) {
+        if (isVisible) {
+            viewModel = obtainViewModel().apply {
+                getReadHistory(false).addTo(mSubscription)
             }
-        })
-    }
-
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
-        viewModel.getReadHistory(false)
+            viewModel.historyData.observe(viewLifecycleOwner, Observer { data ->
+                data?.let {
+                    updateComic(it)
+                }
+            })
+        }
     }
 
     override fun initViews() {

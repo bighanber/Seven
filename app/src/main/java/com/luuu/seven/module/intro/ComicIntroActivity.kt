@@ -55,7 +55,7 @@ class ComicIntroActivity : BaseActivity() {
     private lateinit var mIntro: TextView
 
     override fun initViews() {
-        BarUtils.setTranslucentForCoordinatorLayout(this, 0)
+//        BarUtils.setTranslucentForCoordinatorLayout(this, 0)
         headerView = LayoutInflater.from(this).inflate(R.layout.intro_list_header_layout, comic_recyclerview.parent as ViewGroup, false)
         mUpdate = headerView.findViewById(R.id.tv_intro_update)
         mIntro = headerView.findViewById(R.id.tv_cha_intro)

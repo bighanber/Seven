@@ -19,28 +19,23 @@ import kotlinx.android.synthetic.main.fra_shelf_list_layout.*
  */
 class ComicCollectFragment : BaseFragment(){
 
+
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
     private var mAdapter: ComicCollectAdapter? = null
 
     private lateinit var viewModel: ShelfViewModel
 
-    override fun onFirstUserVisible() {
-//
-        viewModel = obtainViewModel().apply {
-            getCollect(false).addTo(mSubscription)
-        }
-        viewModel.collectData.observe(viewLifecycleOwner, Observer { data ->
-            data?.let {
-                updateComicCollect(it)
+    override fun onFragmentVisibleChange(isVisible: Boolean) {
+        if (isVisible) {
+            viewModel = obtainViewModel().apply {
+                getCollect(false).addTo(mSubscription)
             }
-        })
-    }
-
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
-        viewModel.getCollect(false)
+            viewModel.collectData.observe(viewLifecycleOwner, Observer { data ->
+                data?.let {
+                    updateComicCollect(it)
+                }
+            })
+        }
     }
 
     override fun initViews() {

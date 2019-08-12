@@ -7,6 +7,7 @@ import com.luuu.seven.R
 import com.luuu.seven.bean.IndexDataBean
 import com.luuu.seven.util.ifNotNull
 import com.luuu.seven.util.loadImg
+import com.luuu.seven.util.loadWithHead
 
 
 /**
@@ -16,14 +17,12 @@ import com.luuu.seven.util.loadImg
  *     desc   :
  *     version:首页嵌套的数据列表适配器
  */
-class ComicIndexItemAdapter(layoutResId: Int, data: List<IndexDataBean>) : BaseQuickAdapter<IndexDataBean, BaseViewHolder>(layoutResId, data) {
+class ComicIndexItemAdapter(layoutResId: Int, data: List<IndexDataBean>?) : BaseQuickAdapter<IndexDataBean, BaseViewHolder>(layoutResId, data) {
 
     override fun convert(helper: BaseViewHolder, item: IndexDataBean?) {
-        ifNotNull(helper, item) { helper, item ->
-            helper.setText(R.id.tv_grid_title, item.title)
-            helper.addOnClickListener(R.id.grid_cardview)
-            helper.getView<ImageView>(R.id.iv_grid_img).loadImg(item.cover)
-        }
+        helper.setText(R.id.tv_grid_title, item?.title)
+        helper.addOnClickListener(R.id.grid_cardview)
+        helper.getView<ImageView>(R.id.iv_grid_img).loadWithHead(item?.cover ?: "")
     }
 
 }

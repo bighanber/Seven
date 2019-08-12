@@ -3,6 +3,7 @@ package com.luuu.seven.base
 import android.os.Build
 import androidx.appcompat.widget.Toolbar
 import com.luuu.seven.R
+import com.luuu.seven.util.BarUtils
 import io.reactivex.disposables.CompositeDisposable
 
 
@@ -31,6 +32,14 @@ abstract class BaseActivity : BaseAppCompatActivity() {
             }
 
             mToolbar!!.setNavigationOnClickListener { onBackPressed() }
+        }
+        setStatusBar()
+    }
+
+    open fun setStatusBar() {
+        BarUtils.setTransparentForWindow(this)
+        mToolbar?.let {
+            BarUtils.setPaddingTop(this, it)
         }
     }
 

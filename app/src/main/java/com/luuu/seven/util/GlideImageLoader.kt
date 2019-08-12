@@ -2,7 +2,7 @@ package com.luuu.seven.util
 
 import android.content.Context
 import android.widget.ImageView
-
+import com.youth.banner.loader.ImageLoader
 
 
 /**
@@ -12,8 +12,8 @@ import android.widget.ImageView
  *     desc   :
  *     version:
  */
-//class GlideImageLoader : ImageLoader() {
-//    override fun displayImage(context: Context?, path: Any?, imageView: ImageView?) {
-//        imageView?.loadImg(path as String)
-//    }
-//}
+class GlideImageLoader : ImageLoader() {
+    override fun displayImage(context: Context?, path: Any?, imageView: ImageView?) {
+        imageView?.loadWithHead(path as String)
+    }
+}

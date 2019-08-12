@@ -21,27 +21,25 @@ import com.luuu.seven.util.ifNotNull
  *     desc   :
  *     version:首页数据列表的适配器
  */
-class ComicIndexAdapter(layoutResId: Int, data: List<IndexBean>) : BaseQuickAdapter<IndexBean, BaseViewHolder>(layoutResId, data) {
+class ComicIndexAdapter(data: List<IndexBean>) : BaseQuickAdapter<IndexBean, BaseViewHolder>(R.layout.list_index_item_layout, data) {
 
     override fun convert(helper: BaseViewHolder, item: IndexBean?) {
-        ifNotNull(helper, item) { helper, item ->
-            helper.setText(R.id.tv_item_theme, item.title)
-            val recyclerView = helper.getView<RecyclerView>(R.id.list_items)
-            initOtherRecyclerView(recyclerView, item, mContext, helper)
-        }
+        helper.setText(R.id.tv_item_theme, item?.title)
+        val recyclerView = helper.getView<RecyclerView>(R.id.list_items)
+        initOtherRecyclerView(recyclerView, item, mContext, helper)
     }
 
-    private fun initOtherRecyclerView(recyclerView: RecyclerView, images: IndexBean, context: Context, helper: BaseViewHolder) {
+    private fun initOtherRecyclerView(recyclerView: RecyclerView, images: IndexBean?, context: Context, helper: BaseViewHolder) {
         val layoutId: Int
         val gridLayoutManager: GridLayoutManager
-        if (images.sort == 4 || images.sort == 8 || images.sort == 10) {
+        if (images?.sort == 4 || images?.sort == 8 || images?.sort == 10) {
             layoutId = R.layout.linear_item_layout
             gridLayoutManager = GridLayoutManager(context, 2)
         } else {
             layoutId = R.layout.grid_item_layout
             gridLayoutManager = GridLayoutManager(context, 3)
         }
-        val imageAdapter = ComicIndexItemAdapter(layoutId, images.data)
+        val imageAdapter = ComicIndexItemAdapter(layoutId, images?.data)
         with(recyclerView) {
             layoutManager = gridLayoutManager
             setHasFixedSize(true)
@@ -49,7 +47,7 @@ class ComicIndexAdapter(layoutResId: Int, data: List<IndexBean>) : BaseQuickAdap
             isNestedScrollingEnabled = false
         }
         imageAdapter.setOnItemChildClickListener { _, _, position ->
-            if (images.sort == 4) {
+            if (images?.sort == 4) {
                 if ("" == images.data[position].url) {
                     val mBundle = Bundle()
                     mBundle.putInt("tagId", images.data[position].objId)
@@ -66,7 +64,7 @@ class ComicIndexAdapter(layoutResId: Int, data: List<IndexBean>) : BaseQuickAdap
                 }
             } else {
                 val mBundle = Bundle()
-                mBundle.putInt("comicId", images.data[position].objId)
+                mBundle.putInt("comicId", images!!.data[position].objId)
                 val intent = Intent(mContext, ComicIntroActivity::class.java)
                 intent.putExtras(mBundle)
                 mContext.startActivity(intent)
