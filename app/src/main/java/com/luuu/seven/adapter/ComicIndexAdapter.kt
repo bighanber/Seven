@@ -26,10 +26,10 @@ class ComicIndexAdapter(data: List<IndexBean>) : BaseQuickAdapter<IndexBean, Bas
     override fun convert(helper: BaseViewHolder, item: IndexBean?) {
         helper.setText(R.id.tv_item_theme, item?.title)
         val recyclerView = helper.getView<RecyclerView>(R.id.list_items)
-        initOtherRecyclerView(recyclerView, item, mContext, helper)
+        initOtherRecyclerView(recyclerView, item, mContext)
     }
 
-    private fun initOtherRecyclerView(recyclerView: RecyclerView, images: IndexBean?, context: Context, helper: BaseViewHolder) {
+    private fun initOtherRecyclerView(recyclerView: RecyclerView, images: IndexBean?, context: Context) {
         val layoutId: Int
         val gridLayoutManager: GridLayoutManager
         if (images?.sort == 4 || images?.sort == 8 || images?.sort == 10) {
@@ -48,7 +48,7 @@ class ComicIndexAdapter(data: List<IndexBean>) : BaseQuickAdapter<IndexBean, Bas
         }
         imageAdapter.setOnItemChildClickListener { _, _, position ->
             if (images?.sort == 4) {
-                if ("" == images.data[position].url) {
+                if (images.data[position].url.isEmpty()) {
                     val mBundle = Bundle()
                     mBundle.putInt("tagId", images.data[position].objId)
                     mBundle.putString("title", images.data[position].subTitle)

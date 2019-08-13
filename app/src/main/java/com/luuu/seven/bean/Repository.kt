@@ -36,15 +36,6 @@ data class CollectBean(
         var collectTime: Long = 0
 )
 
-data class ReadHistoryBean(
-        var comicId: Int = 0,
-        var chapterId: Int = 0,
-        var chapterTitle: String = "",
-        var browsePosition: Int = 0,
-        var comicCover: String = "",
-        var comicTitle: String = ""
-)
-
 data class ComicUpdateBean(
         var id: Int,
         var title: String,

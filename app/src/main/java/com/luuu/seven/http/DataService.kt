@@ -61,7 +61,7 @@ interface DataService {
 
     //漫画介绍以及章节
     @GET("comic/{comicid}.json")
-    fun getComicIntro(@Path("comicid") comicid: Int): Observable<ComicIntroBean>
+    suspend fun getComicIntro(@Path("comicid") comicid: Int): ComicIntroBean
 
     //漫画阅读
     @GET("chapter/{comicid}/{chapterid}.json")

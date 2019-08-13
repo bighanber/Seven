@@ -39,35 +39,7 @@ class ReadHistoryDao {
         mHelp = ReadHistoryHelp(ComicApplication.mApp)
     }
 
-    fun insertHistory(id: Int, chapterId: Int,
-                      chapterTitle: String, browsePosition: Int,
-                      comicCover: String, comicTitle: String): Observable<Boolean> {
-        return Observable.defer{  Observable.just(addHistory(id, chapterId, chapterTitle, browsePosition,
-                comicCover, comicTitle)) }
-                .compose(SchedulerHelper.io_main())
-    }
-
-    fun isReadInChapter(id: Int): Observable<Boolean> {
-        return Observable.defer{  Observable.just(isRead(id)) }
-                .compose(SchedulerHelper.io_main())
-    }
-
-    fun updateReadHistory(id: Int, chapterId: Int,
-                          chapterTitle: String, browsePosition: Int,
-                          comicCover: String, comicTitle: String): Observable<Boolean> {
-        return Observable.defer { Observable.just(updateHistory(id, chapterId, chapterTitle, browsePosition,
-                comicCover, comicTitle)) }.compose(SchedulerHelper.io_main())
-    }
-
-    fun getReadHistory(): Observable<List<ReadHistoryBean>> {
-        return Observable.defer { Observable.just(getAllHistory()) }.compose(SchedulerHelper.io_main())
-    }
-
-    fun queryByComicId(comicId: Int): Observable<List<ReadHistoryBean>?> {
-        return Observable.defer { Observable.just(getHistoryById(comicId)) }.compose(SchedulerHelper.io_main())
-    }
-
-    private fun addHistory(comicId: Int, chapterId: Int, chapterTitle: String, browsePosition: Int,
+    suspend fun insertHistory(comicId: Int, chapterId: Int, chapterTitle: String, browsePosition: Int,
                            comicCover: String, comicTitle: String): Boolean {
         try {
             db = mHelp!!.writableDatabase
@@ -91,7 +63,7 @@ class ReadHistoryDao {
         return false
     }
 
-    private fun updateHistory(comicId: Int, chapterId: Int, chapterTitle: String, browsePosition: Int,
+    suspend fun updateReadHistory(comicId: Int, chapterId: Int, chapterTitle: String, browsePosition: Int,
                               comicCover: String, comicTitle: String): Boolean {
         try {
             db = mHelp!!.writableDatabase
@@ -117,7 +89,7 @@ class ReadHistoryDao {
         return false
     }
 
-    private fun isRead(comicId: Int): Boolean {
+    suspend fun isReadInChapter(comicId: Int): Boolean {
         var cursor: Cursor? = null
 
         try {
@@ -139,7 +111,7 @@ class ReadHistoryDao {
         return false
     }
 
-    private fun getHistoryById(comicId: Int): List<ReadHistoryBean>? {
+    suspend fun queryByComicId(comicId: Int): List<ReadHistoryBean> {
         var cursor: Cursor? = null
         val orderList = ArrayList<ReadHistoryBean>()
         try {
@@ -166,7 +138,7 @@ class ReadHistoryDao {
     }
 
 
-    private fun getAllHistory(): List<ReadHistoryBean> {
+    suspend fun getReadHistory(): List<ReadHistoryBean> {
         var cursor: Cursor? = null
         val orderList = ArrayList<ReadHistoryBean>()
         try {

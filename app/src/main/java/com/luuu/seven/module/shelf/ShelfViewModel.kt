@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.luuu.seven.bean.CollectBean
+import com.luuu.seven.bean.ComicIntroBean
 import com.luuu.seven.bean.ReadHistoryBean
 import com.luuu.seven.repository.ShelfRepository
 import com.luuu.seven.util.handleLoading
 import com.luuu.seven.util.ioMain
+import com.luuu.seven.util.launch
 import com.luuu.seven.util.toast
 import io.reactivex.disposables.Disposable
 
@@ -26,25 +28,31 @@ class ShelfViewModel : ViewModel() {
     val dataLoading: LiveData<Boolean>
         get() = _dataLoading
 
-    fun getReadHistory(showLoading: Boolean): Disposable {
-        return mRepository.getReadHistory()
-                .compose(ioMain())
-                .compose(handleLoading(showLoading, _dataLoading))
-                .subscribe({
-                    _historyData.value = it
-                }, {
-                    toast(it.message)
-                }, {})
+    fun getReadHistory() {
+        launch<List<ReadHistoryBean>> {
+            request {
+                mRepository.getReadHistory()
+            }
+            onSuccess { result ->
+                _historyData.value = result
+            }
+            onFailed { error, code ->
+                toast(error)
+            }
+        }
     }
 
-    fun getCollect(showLoading: Boolean): Disposable {
-        return mRepository.getCollect()
-                .compose(ioMain())
-                .compose(handleLoading(showLoading, _dataLoading))
-                .subscribe({
-                    _collectData.value = it
-                }, {
-                    toast(it.message)
-                }, {})
+    fun getCollect() {
+        launch<List<CollectBean>> {
+            request {
+                mRepository.getCollect()
+            }
+            onSuccess { result ->
+                _collectData.value = result
+            }
+            onFailed { error, code ->
+                toast(error)
+            }
+        }
     }
 }

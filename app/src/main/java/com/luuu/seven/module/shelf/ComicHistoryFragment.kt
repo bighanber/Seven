@@ -27,7 +27,7 @@ class ComicHistoryFragment : BaseFragment() {
     override fun onFragmentVisibleChange(isVisible: Boolean) {
         if (isVisible) {
             viewModel = obtainViewModel().apply {
-                getReadHistory(false).addTo(mSubscription)
+                getReadHistory()
             }
             viewModel.historyData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {

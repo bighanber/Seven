@@ -9,11 +9,11 @@ import io.reactivex.Observable
 
 class  ShelfRepository {
 
-    fun getReadHistory(): Observable<List<ReadHistoryBean>> {
+    suspend fun getReadHistory(): List<ReadHistoryBean> {
         return ReadHistoryDao.get().getReadHistory()
     }
 
-    fun getCollect(): Observable<List<CollectBean>> {
+    suspend fun getCollect(): List<CollectBean> {
         return CollectDao.get().getCollect()
     }
 }

@@ -46,10 +46,10 @@ object TaskData {
                 .compose(SchedulerHelper.io_main())
     }
 
-    fun getIntro(comicId: Int): Observable<ComicIntroBean> {
-        return HttpManager.getInstance.getService().getComicIntro(comicId)
-                .compose(SchedulerHelper.io_main())
-    }
+//    fun getIntro(comicId: Int): Observable<ComicIntroBean> {
+//        return HttpManager.getInstance.getService().getComicIntro(comicId)
+//                .compose(SchedulerHelper.io_main())
+//    }
 
     fun getComicReadPage(comicId: Int, chapterId: Int): Observable<ComicReadBean> {
         return HttpManager.getInstance.getService().getComicReadPage(comicId, chapterId)

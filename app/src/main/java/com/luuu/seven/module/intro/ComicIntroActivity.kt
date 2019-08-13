@@ -16,6 +16,7 @@ import com.luuu.seven.R
 import com.luuu.seven.base.BaseActivity
 import com.luuu.seven.bean.ChapterDataBean
 import com.luuu.seven.bean.ComicIntroBean
+import com.luuu.seven.bean.ReadHistoryBean
 import com.luuu.seven.module.read.recycler.ComicReadRecyclerActivity
 import com.luuu.seven.util.*
 import kotlinx.android.synthetic.main.activity_comic_intro.*
@@ -32,7 +33,6 @@ import kotlin.collections.ArrayList
  */
 class ComicIntroActivity : BaseActivity() {
 
-    private fun obtainViewModel(): IntroViewModel = obtainViewModel(IntroViewModel::class.java)
     private lateinit var viewModel: IntroViewModel
     private var mLayoutManager: GridLayoutManager = GridLayoutManager(this, 4)
     private var mAdapter: BaseQuickAdapter<ChapterDataBean, BaseViewHolder>? = null
@@ -54,16 +54,18 @@ class ComicIntroActivity : BaseActivity() {
     private lateinit var mUpdate: TextView
     private lateinit var mIntro: TextView
 
+    private var readList = ArrayList<ReadHistoryBean>()
+
     override fun initViews() {
 //        BarUtils.setTranslucentForCoordinatorLayout(this, 0)
         headerView = LayoutInflater.from(this).inflate(R.layout.intro_list_header_layout, comic_recyclerview.parent as ViewGroup, false)
         mUpdate = headerView.findViewById(R.id.tv_intro_update)
         mIntro = headerView.findViewById(R.id.tv_cha_intro)
 
-        viewModel = obtainViewModel().apply {
-            getComicIntro(comicId, false).addTo(mSubscription)
+        viewModel = obtainViewModel(IntroViewModel::class.java).apply {
+            getReadHistory(comicId)
             isFavorite(comicId)
-        }.apply {
+
             comicIntroData.observe(this@ComicIntroActivity, Observer { data ->
                 data?.let {
                     updateComicData(it)
@@ -74,6 +76,11 @@ class ComicIntroActivity : BaseActivity() {
                 bol?.let {
                     updateFavoriteMenu(it)
                 }
+            })
+
+            readHistory.observe(this@ComicIntroActivity, Observer {
+                readList.addAll(it)
+                getComicIntro(comicId)
             })
         }
     }
@@ -124,7 +131,7 @@ class ComicIntroActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 10002) {
             isBack = true
-            viewModel.getComicIntro(comicId, false)
+            viewModel.getComicIntro(comicId)
         }
     }
 

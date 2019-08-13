@@ -34,7 +34,7 @@
 
             <include layout="@layout/intro_middle_layout" />
 
-            <Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/common_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"

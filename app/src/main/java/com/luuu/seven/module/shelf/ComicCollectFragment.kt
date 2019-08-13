@@ -28,7 +28,7 @@ class ComicCollectFragment : BaseFragment(){
     override fun onFragmentVisibleChange(isVisible: Boolean) {
         if (isVisible) {
             viewModel = obtainViewModel().apply {
-                getCollect(false).addTo(mSubscription)
+                getCollect()
             }
             viewModel.collectData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {

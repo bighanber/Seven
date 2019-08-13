@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.luuu.seven.bean.ComicIntroBean
+import com.luuu.seven.bean.IndexBean
+import com.luuu.seven.bean.ReadHistoryBean
 import com.luuu.seven.repository.IntroRepository
 import com.luuu.seven.util.handleLoading
 import com.luuu.seven.util.ioMain
+import com.luuu.seven.util.launch
 import com.luuu.seven.util.toast
 import io.reactivex.disposables.Disposable
 
@@ -22,48 +25,81 @@ class IntroViewModel : ViewModel() {
     val updateFavorite: LiveData<Boolean>
         get() = _updateFavorite
 
+    private val _readHistory = MutableLiveData<List<ReadHistoryBean>>()
+    val readHistory: LiveData<List<ReadHistoryBean>>
+        get() = _readHistory
+
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean>
         get() = _dataLoading
 
-    fun getComicIntro(comicId: Int, showLoading: Boolean): Disposable {
-        return mRepository.getComicIntro(comicId)
-                .compose(ioMain())
-                .compose(handleLoading(showLoading, _dataLoading))
-                .subscribe({
-                    _comicIntroData.value = it
-                }, {
-                    toast(it.message)
-                }, {})
+    fun getComicIntro(comicId: Int) {
+        launch<ComicIntroBean> {
+            request {
+                mRepository.getComicIntro(comicId)
+            }
+            onSuccess { result ->
+                _comicIntroData.value = result
+            }
+            onFailed { error, code ->
+                toast(error)
+            }
+        }
     }
 
-    fun favoriteComic(comicId: Int, comicTitle: String, comicAuthors: String, comicCover: String, time: Long): Disposable {
-        return mRepository.favoriteComic(comicId, comicTitle, comicAuthors, comicCover, time)
-                .compose(ioMain())
-                .subscribe({
-                    _updateFavorite.value = it
-                }, {
-                    toast(it.message)
-                }, {})
+    fun getReadHistory(comicId: Int) {
+        launch<List<ReadHistoryBean>> {
+            request {
+                mRepository.getReadHistory(comicId)
+            }
+            onSuccess { result ->
+                _readHistory.value = result
+            }
+            onFailed { error, code ->
+                toast(error)
+            }
+        }
     }
 
-    fun isFavorite(comicId: Int): Disposable {
-        return mRepository.isFavorite(comicId)
-                .compose(ioMain())
-                .subscribe({
-                    _updateFavorite.value = it
-                }, {
-                    toast(it.message)
-                }, {})
+    fun favoriteComic(comicId: Int, comicTitle: String, comicAuthors: String, comicCover: String, time: Long) {
+        launch<Boolean> {
+            request {
+                mRepository.favoriteComic(comicId, comicTitle, comicAuthors, comicCover, time)
+            }
+            onSuccess { result ->
+                _updateFavorite.value = result
+            }
+            onFailed { error, code ->
+                toast(error)
+            }
+        }
     }
 
-    fun unFavoriteComic(comicId: Int): Disposable {
-        return mRepository.unFavoriteComic(comicId)
-                .compose(ioMain())
-                .subscribe({
-                    _updateFavorite.value = it
-                }, {
-                    toast(it.message)
-                }, {})
+    fun isFavorite(comicId: Int) {
+        launch<Boolean> {
+            request {
+                mRepository.isFavorite(comicId)
+            }
+            onSuccess { result ->
+                _updateFavorite.value = result
+            }
+            onFailed { error, code ->
+                toast(error)
+            }
+        }
+    }
+
+    fun unFavoriteComic(comicId: Int) {
+        launch<Boolean> {
+            request {
+                mRepository.unFavoriteComic(comicId)
+            }
+            onSuccess { result ->
+                _updateFavorite.value = result
+            }
+            onFailed { error, code ->
+                toast(error)
+            }
+        }
     }
 }
