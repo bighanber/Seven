@@ -29,13 +29,14 @@
             android:textSize="17sp"/>
 
         <TextView
-            android:id="@+id/tv_intro_authors"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="120dp"
-            android:layout_marginTop="10dp"
-            tools:text="authors"
-            android:textColor="@color/item_text"/>
+                android:id="@+id/tv_intro_authors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="120dp"
+                android:layout_marginTop="10dp"
+                tools:text="author"
+                android:textColor="@color/item_text"
+                android:fontFamily="@font/kanit"/>
 
         <TextView
             android:id="@+id/tv_intro_tags"
