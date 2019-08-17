@@ -23,14 +23,19 @@ abstract class BaseFragment : Fragment() {
 
     var mContext: Context? = null
     private var fragmentRootView: View? = null
-    private var isFragmentVisible: Boolean = false
+//    private var isFragmentVisible: Boolean = false
 
     var mSubscription = CompositeDisposable()
 
-    abstract fun onFragmentVisibleChange(isVisible: Boolean)
+    open fun onFragmentVisibleChange(isVisible: Boolean) {
+
+    }
     abstract fun initViews()
     abstract fun getContentViewLayoutID(): Int
-    abstract fun onFirstUserInvisible()
+
+    open fun onFirstUserInvisible() {
+
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -51,23 +56,23 @@ abstract class BaseFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (isFragmentVisible) {
-            onFragmentVisibleChange(true)
-        }
+//        if (isFragmentVisible) {
+//            onFragmentVisibleChange(true)
+//        }
     }
 
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        isFragmentVisible = isVisibleToUser
-        if (fragmentRootView == null) {
-            return
-        }
-        if (isFragmentVisible) {
-            onFragmentVisibleChange(true)
-        } else {
-            onFragmentVisibleChange(false)
-        }
+//        isFragmentVisible = isVisibleToUser
+//        if (fragmentRootView == null) {
+//            return
+//        }
+//        if (isFragmentVisible) {
+//            onFragmentVisibleChange(true)
+//        } else {
+//            onFragmentVisibleChange(false)
+//        }
     }
 
     override fun onDestroyView() {

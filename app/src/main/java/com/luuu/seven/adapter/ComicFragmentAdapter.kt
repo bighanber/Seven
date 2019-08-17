@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentPagerAdapter
  *     desc   :
  *     version:
  */
-class ComicFragmentAdapter(fm: FragmentManager, private var fragments: List<Fragment>, private var titles: List<String>) : FragmentPagerAdapter(fm) {
+class ComicFragmentAdapter(fm: FragmentManager, private var fragments: List<Fragment>, private var titles: List<String>) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
 //    private var mFragmentManager: FragmentManager = fm
 //    private var mFragments: List<BaseFragment> = fragments

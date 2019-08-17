@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.luuu.seven.base.BaseActivity
+import com.luuu.seven.module.index.ComicHomeFragment
 import com.luuu.seven.module.index.ComicIndexFragment
 import com.luuu.seven.module.news.ComicNewsFragment
 import com.luuu.seven.module.shelf.ComicShelfFragment
@@ -13,7 +14,7 @@ class MainActivity : BaseActivity() {
 
     private lateinit var fm: FragmentManager
 
-    private var indexFragment: ComicIndexFragment? = null
+    private var indexFragment: ComicHomeFragment? = null
     private var shelfFragment: ComicShelfFragment? = null
     private var newsFragment: ComicNewsFragment? = null
 
@@ -49,7 +50,7 @@ class MainActivity : BaseActivity() {
             0 -> if (indexFragment != null) {
                 ft.show(indexFragment!!)
             } else {
-                indexFragment = ComicIndexFragment()
+                indexFragment = ComicHomeFragment.newInstance()
                 ft.add(R.id.content, indexFragment!!)
             }
 

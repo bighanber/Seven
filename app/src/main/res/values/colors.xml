@@ -15,4 +15,5 @@
     <color name="item_line_bg">#e0e0e0</color>
     <color name="itemBg">#ccffffff</color>
     <color name="colorBg">#f5f5f5</color>
+    <color name="transparent">#00000000</color>
 </resources>

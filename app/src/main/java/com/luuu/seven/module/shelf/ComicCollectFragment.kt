@@ -1,6 +1,7 @@
 package com.luuu.seven.module.shelf
 
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.luuu.seven.R
@@ -47,6 +48,15 @@ class ComicCollectFragment : BaseFragment(){
     override fun onFirstUserInvisible() {
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.e("asd", "coll - onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.e("asd", "coll - onResume")
+    }
 
 
     private fun updateComicCollect(data: List<CollectBean>) {

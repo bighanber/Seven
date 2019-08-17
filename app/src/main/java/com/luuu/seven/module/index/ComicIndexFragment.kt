@@ -1,6 +1,7 @@
 package com.luuu.seven.module.index
 
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
@@ -46,6 +47,16 @@ class ComicIndexFragment : BaseFragment() {
     override fun onFragmentVisibleChange(isVisible: Boolean) {
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.e("asd", "index - onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.e("asd", "index - onResume")
+    }
+
 
     override fun initViews() {
 //        BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
@@ -72,8 +83,8 @@ class ComicIndexFragment : BaseFragment() {
 
         appbar_layout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val percent = (abs(verticalOffset)).toFloat() / (appBarLayout.totalScrollRange).toFloat()
-            toolbar.alpha = percent
-            tv_search_bg.alpha = if (percent >= 0.5) percent else 0.5f
+//            toolbar.alpha = percent
+//            tv_search_bg.alpha = if (percent >= 0.5) percent else 0.5f
             index_refresh.isEnabled = verticalOffset == 0
             if (verticalOffset == 0) {
                 index_banner.startAutoPlay()
@@ -82,11 +93,11 @@ class ComicIndexFragment : BaseFragment() {
             }
         })
 
-        tv_search_bg.setOnClickListener { startNewActivity(ComicSearchActivity::class.java) }
-        tv_header_update.setOnClickListener { startNewActivity(ComicUpdateActivity::class.java) }
-        tv_header_rank.setOnClickListener { startNewActivity(ComicRankActivity::class.java) }
-        tv_header_sort.setOnClickListener { startNewActivity(ComicSortActivity::class.java) }
-        tv_header_special.setOnClickListener { startNewActivity(ComicSpecialActivity::class.java) }
+//        tv_search_bg.setOnClickListener { startNewActivity(ComicSearchActivity::class.java) }
+//        tv_header_update.setOnClickListener { startNewActivity(ComicUpdateActivity::class.java) }
+//        tv_header_rank.setOnClickListener { startNewActivity(ComicRankActivity::class.java) }
+//        tv_header_sort.setOnClickListener { startNewActivity(ComicSortActivity::class.java) }
+//        tv_header_special.setOnClickListener { startNewActivity(ComicSpecialActivity::class.java) }
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_index_layout

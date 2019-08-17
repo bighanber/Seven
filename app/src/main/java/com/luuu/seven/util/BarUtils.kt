@@ -52,6 +52,13 @@ object BarUtils {
         }
     }
 
+    fun addStatusBarView(view: View, context: Context, color: Int) {
+        val layoutParamsStatusBlock = view.layoutParams
+        layoutParamsStatusBlock.height = getStatusBarHeight(context)
+        view.setBackgroundColor(color)
+        view.layoutParams = layoutParamsStatusBlock
+    }
+
     /**
      * 设置状态栏渐变颜色
      *

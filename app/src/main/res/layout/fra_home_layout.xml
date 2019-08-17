@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:background="@color/colorFont">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/home_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <View
+        android:id="@+id/status_bg"
+        android:layout_width="match_parent"
+        android:layout_height="0.01dp"
+        android:background="#00000000"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/tool_bg"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/transparent"
+        app:layout_constraintTop_toBottomOf="@+id/status_bg" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/home_tabs"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/tv_search"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tool_bg"
+        app:layout_constraintBottom_toBottomOf="@+id/tool_bg"
+        app:tabIndicatorColor="@color/white"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorHeight="0dp"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@color/item_text" />
+
+    <TextView
+        android:id="@+id/tv_search"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="15dp"
+        android:alpha="0.5"
+        android:background="@drawable/search_bg"
+        android:gravity="center"
+        android:text="@string/comic_search"
+        android:textColor="#90000000"
+        app:layout_constraintBottom_toBottomOf="@+id/home_tabs"
+        app:layout_constraintEnd_toStartOf="@+id/iv_history"
+        app:layout_constraintTop_toTopOf="@+id/home_tabs" />
+
+    <ImageView
+        android:id="@+id/iv_history"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="15dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="@+id/home_tabs"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/home_tabs" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

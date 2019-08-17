@@ -1,6 +1,7 @@
 package com.luuu.seven.module.shelf
 
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.luuu.seven.R
@@ -24,12 +25,9 @@ class ComicHistoryFragment : BaseFragment() {
 
     private lateinit var viewModel: ShelfViewModel
 
-    override fun onFragmentVisibleChange(isVisible: Boolean) {
-        if (isVisible) {
-            viewModel = obtainViewModel().apply {
-                getReadHistory()
-            }
-            viewModel.historyData.observe(viewLifecycleOwner, Observer { data ->
+    override fun initViews() {
+        viewModel = obtainViewModel().apply {
+            historyData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {
                     updateComic(it)
                 }
@@ -37,14 +35,18 @@ class ComicHistoryFragment : BaseFragment() {
         }
     }
 
-    override fun initViews() {
+    override fun onStart() {
+        super.onStart()
+        Log.e("asd", "his - onStart")
+    }
 
+    override fun onResume() {
+        super.onResume()
+        Log.e("asd", "his - onResume")
+        viewModel.getReadHistory()
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_shelf_list_layout
-
-    override fun onFirstUserInvisible() {
-    }
 
     private fun updateComic(data: List<ReadHistoryBean>) {
         if (mAdapter == null) {

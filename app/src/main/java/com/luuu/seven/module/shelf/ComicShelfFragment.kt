@@ -1,6 +1,5 @@
 package com.luuu.seven.module.shelf
 
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicFragmentAdapter
@@ -45,9 +44,6 @@ class ComicShelfFragment : BaseFragment() {
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_shelf_layout
-
-    override fun onFirstUserInvisible() {
-    }
 
     private fun initViewPager(names: List<String>, fragments: List<Fragment>) {
         val adapter = ComicFragmentAdapter(childFragmentManager, fragments, names)
