@@ -5,7 +5,7 @@
     <color name="colorAccent">#FFF1EB</color>
 
     <color name="colorFont">#282828</color>
-
+    <color name="colorSubFont">#C3C3C3</color>
     <color name="item_text">#434343</color>
     <color name="content">#333333</color>
     <color name="white">#FFF</color>

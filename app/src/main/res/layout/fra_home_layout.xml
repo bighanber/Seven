@@ -40,6 +40,7 @@
         app:tabIndicatorFullWidth="false"
         app:tabIndicatorHeight="0dp"
         app:tabMode="fixed"
+        app:tabTextAppearance="@style/TabLayoutTextStyle"
         app:tabSelectedTextColor="@color/white"
         app:tabTextColor="@color/item_text" />
 

@@ -298,7 +298,7 @@ object BarUtils {
      *
      * @param context 目标Context
      */
-    private fun getStatusBarHeight(context: Context): Int {
+    fun getStatusBarHeight(context: Context): Int {
         // 获得状态栏高度
         val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
         return context.resources.getDimensionPixelSize(resourceId)

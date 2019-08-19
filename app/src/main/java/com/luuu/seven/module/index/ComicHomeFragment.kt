@@ -8,6 +8,7 @@ import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.module.shelf.ComicCollectFragment
 import com.luuu.seven.module.shelf.ComicHistoryFragment
 import com.luuu.seven.util.BarUtils
+import com.luuu.seven.util.pageChangeListener
 import kotlinx.android.synthetic.main.fra_home_layout.*
 
 class ComicHomeFragment : BaseFragment() {
@@ -24,8 +25,8 @@ class ComicHomeFragment : BaseFragment() {
         BarUtils.addStatusBarView(status_bg, mContext!!, ContextCompat.getColor(mContext!!, R.color.transparent))
         val fragments = ArrayList<Fragment>()
         val title = ArrayList<String>()
-        fragments.add(ComicHistoryFragment())
-        fragments.add(ComicIndexFragment())
+        fragments.add(ComicUpdateFragment.newInstance())
+        fragments.add(ComicIndexFragment.newInstance())
         fragments.add(ComicCollectFragment())
         title.add(mTabs[0])
         title.add(mTabs[1])
@@ -43,5 +44,13 @@ class ComicHomeFragment : BaseFragment() {
             currentItem = 1
             offscreenPageLimit = 1
         })
+        home_viewpager.pageChangeListener {
+            onPageSelected {  pos ->
+                if (pos != 1) {
+                    tool_bg.setBackgroundColor(ContextCompat.getColor(mContext!!, R.color.colorPrimary))
+                    status_bg.setBackgroundColor(ContextCompat.getColor(mContext!!, R.color.colorPrimary))
+                }
+            }
+        }
     }
 }

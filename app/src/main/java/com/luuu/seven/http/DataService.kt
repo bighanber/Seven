@@ -21,7 +21,7 @@ interface DataService {
 
     //漫画更新 num: 100 全部漫画, 1 原创漫画, 0 译制漫画
     @GET("latest/{num}/{id}.json")
-    fun getAllUpdataComic(@Path("num") num: Int, @Path("id") id: Int): Observable<List<ComicUpdateBean>>
+    suspend fun getAllUpdataComic(@Path("num") num: Int, @Path("id") id: Int): List<ComicUpdateBean>
 
     //漫画排行 type: 0 人气排行, 1 吐槽排行, 2 订阅排行
     @GET("rank/0/0/{type}/{id}.json")

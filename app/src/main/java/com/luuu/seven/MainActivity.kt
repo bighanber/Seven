@@ -5,7 +5,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.luuu.seven.base.BaseActivity
 import com.luuu.seven.module.index.ComicHomeFragment
-import com.luuu.seven.module.index.ComicIndexFragment
 import com.luuu.seven.module.news.ComicNewsFragment
 import com.luuu.seven.module.shelf.ComicShelfFragment
 import kotlinx.android.synthetic.main.activity_main.*

@@ -2,6 +2,7 @@ package com.luuu.seven.module.index
 
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
@@ -12,18 +13,13 @@ import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.IndexBean
 import com.luuu.seven.bean.IndexDataBean
 import com.luuu.seven.module.intro.ComicIntroActivity
-import com.luuu.seven.module.rank.ComicRankActivity
-import com.luuu.seven.module.search.ComicSearchActivity
-import com.luuu.seven.module.sort.ComicSortActivity
-import com.luuu.seven.module.special.ComicSpecialActivity
-import com.luuu.seven.module.update.ComicUpdateActivity
+import com.luuu.seven.util.BarUtils
 import com.luuu.seven.util.GlideImageLoader
 import com.luuu.seven.util.obtainViewModel
 import com.youth.banner.BannerConfig
 import kotlinx.android.synthetic.main.fra_index_layout.*
-import kotlinx.android.synthetic.main.index_header_search_layout.*
-import kotlinx.android.synthetic.main.list_header_layout.*
 import kotlin.math.abs
+
 
 /**
  *     author : dell
@@ -37,14 +33,10 @@ class ComicIndexFragment : BaseFragment() {
     private lateinit var mViewModel: HomeViewModel
     private var mAdapter: ComicIndexAdapter? = null
 
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-//            BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
+    companion object {
+        fun newInstance(): ComicIndexFragment {
+            return ComicIndexFragment()
         }
-    }
-
-    override fun onFragmentVisibleChange(isVisible: Boolean) {
     }
 
     override fun onStart() {
@@ -59,7 +51,13 @@ class ComicIndexFragment : BaseFragment() {
 
 
     override fun initViews() {
-//        BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
+        val typedValue = TypedValue()
+        val mActonBarHeight = if (context!!.theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true))
+            TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics)
+        else 0
+        val mTopPadding = BarUtils.getStatusBarHeight(activity!!) + mActonBarHeight
+        appbar_layout.setPadding(0, mTopPadding, 0, 0)
+
         mViewModel = obtainViewModel(HomeViewModel::class.java).apply {
             getHomeData()
         }.apply {

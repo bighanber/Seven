@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicFragmentAdapter
 import com.luuu.seven.base.BaseActivity
+import com.luuu.seven.module.index.ComicUpdateFragment
 import kotlinx.android.synthetic.main.activity_comic_tab.*
 
 
@@ -17,14 +18,14 @@ class ComicUpdateActivity : BaseActivity() {
     private val mTabs = arrayOf("全部", "原创", "译制")
 
     override fun initViews() {
-        setToolbarTitle(" ")
-        val fragments = ArrayList<Fragment>()
-        val title = ArrayList<String>()
-        for (i in mTabs.indices) {
-            fragments.add(ComicUpdateFragment.newInstance(mTabs[i]))
-            title.add(mTabs[i])
-        }
-        initViewPager(title, fragments)
+//        setToolbarTitle(" ")
+//        val fragments = ArrayList<Fragment>()
+//        val title = ArrayList<String>()
+//        for (i in mTabs.indices) {
+//            fragments.add(ComicUpdateFragment.newInstance(mTabs[i]))
+//            title.add(mTabs[i])
+//        }
+//        initViewPager(title, fragments)
     }
 
     override fun getIntentExtras(extras: Bundle?) {

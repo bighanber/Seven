@@ -16,10 +16,10 @@ object TaskData {
 //        return HttpManager.getInstance.getService().getIndexData())
 //    }
 
-    fun getAllUpdateComic(num: Int, page: Int): Observable<List<ComicUpdateBean>> {
-        return HttpManager.getInstance.getService().getAllUpdataComic(num, page)
-                .compose(SchedulerHelper.io_main())
-    }
+//    fun getAllUpdateComic(num: Int, page: Int): Observable<List<ComicUpdateBean>> {
+//        return HttpManager.getInstance.getService().getAllUpdataComic(num, page)
+//                .compose(SchedulerHelper.io_main())
+//    }
 
     fun getRankComic(type: Int, page: Int): Observable<List<HotComicBean>> {
         return HttpManager.getInstance.getService().getRankComic(type, page)

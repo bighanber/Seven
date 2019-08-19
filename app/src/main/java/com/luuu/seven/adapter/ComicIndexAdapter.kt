@@ -13,6 +13,7 @@ import com.luuu.seven.bean.IndexBean
 import com.luuu.seven.module.intro.ComicIntroActivity
 import com.luuu.seven.module.special.detail.ComicSpecialDetailActivity
 import com.luuu.seven.util.ifNotNull
+import com.luuu.seven.widgets.SpaceItemDecoration
 
 /**
  *     author : dell
@@ -40,11 +41,13 @@ class ComicIndexAdapter(data: List<IndexBean>) : BaseQuickAdapter<IndexBean, Bas
             gridLayoutManager = GridLayoutManager(context, 3)
         }
         val imageAdapter = ComicIndexItemAdapter(layoutId, images?.data)
+
         with(recyclerView) {
             layoutManager = gridLayoutManager
             setHasFixedSize(true)
             adapter = imageAdapter
             isNestedScrollingEnabled = false
+            addItemDecoration(SpaceItemDecoration(mContext).setSpace(10))
         }
         imageAdapter.setOnItemChildClickListener { _, _, position ->
             if (images?.sort == 4) {
