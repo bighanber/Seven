@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.luuu.seven.bean.ComicUpdateBean
+import com.luuu.seven.bean.HotComicBean
 import com.luuu.seven.bean.IndexBean
 import com.luuu.seven.repository.HomeRepository
 import com.luuu.seven.util.launch
@@ -20,6 +21,10 @@ class HomeViewModel : ViewModel() {
     private val _updateData = MutableLiveData<List<ComicUpdateBean>>()
     val updateData: LiveData<List<ComicUpdateBean>>
         get() = _updateData
+
+    private val _rankData = MutableLiveData<List<HotComicBean>>()
+    val rankData: LiveData<List<HotComicBean>>
+        get() = _rankData
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean>
@@ -46,6 +51,20 @@ class HomeViewModel : ViewModel() {
             }
             onSuccess {
                 _updateData.value = it
+            }
+            onFailed { error, code ->
+                toast(error)
+            }
+        }
+    }
+
+    fun getRankComic(type: Int, page: Int) {
+        launch<List<HotComicBean>> {
+            request {
+                mRepository.getRankComic(type, page)
+            }
+            onSuccess {
+                _rankData.value = it
             }
             onFailed { error, code ->
                 toast(error)

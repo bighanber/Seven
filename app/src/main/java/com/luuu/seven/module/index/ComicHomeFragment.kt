@@ -27,7 +27,7 @@ class ComicHomeFragment : BaseFragment() {
         val title = ArrayList<String>()
         fragments.add(ComicUpdateFragment.newInstance())
         fragments.add(ComicIndexFragment.newInstance())
-        fragments.add(ComicCollectFragment())
+        fragments.add(ComicRankFragment.newInstance())
         title.add(mTabs[0])
         title.add(mTabs[1])
         title.add(mTabs[2])

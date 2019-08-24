@@ -25,7 +25,7 @@ interface DataService {
 
     //漫画排行 type: 0 人气排行, 1 吐槽排行, 2 订阅排行
     @GET("rank/0/0/{type}/{id}.json")
-    fun getRankComic(@Path("type") type: Int, @Path("id") id: Int): Observable<List<HotComicBean>>
+    suspend fun getRankComic(@Path("type") type: Int, @Path("id") id: Int): List<HotComicBean>
 
     //专题
     @GET("subject/0/{id}.json")

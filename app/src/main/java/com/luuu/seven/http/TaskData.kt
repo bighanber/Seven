@@ -21,10 +21,10 @@ object TaskData {
 //                .compose(SchedulerHelper.io_main())
 //    }
 
-    fun getRankComic(type: Int, page: Int): Observable<List<HotComicBean>> {
-        return HttpManager.getInstance.getService().getRankComic(type, page)
-                .compose(SchedulerHelper.io_main())
-    }
+//    fun getRankComic(type: Int, page: Int): Observable<List<HotComicBean>> {
+//        return HttpManager.getInstance.getService().getRankComic(type, page)
+//                .compose(SchedulerHelper.io_main())
+//    }
 
     fun getSortComic(): Observable<List<ComicSortBean>> {
         return HttpManager.getInstance.getService().getSortComic()

@@ -20,7 +20,7 @@ class ComicRankActivity : BaseActivity() {
         val fragments = ArrayList<Fragment>()
         val title = ArrayList<String>()
         for (i in mTabs.indices) {
-            fragments.add(ComicRankFragment.newInstance(mTabs[i]))
+            fragments.add(ComicRankInnerFragment.newInstance(mTabs[i]))
             title.add(mTabs[i])
         }
         initViewPager(title, fragments)
