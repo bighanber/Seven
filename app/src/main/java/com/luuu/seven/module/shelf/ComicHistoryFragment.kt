@@ -26,7 +26,7 @@ class ComicHistoryFragment : BaseFragment() {
     private lateinit var viewModel: ShelfViewModel
 
     override fun initViews() {
-        viewModel = obtainViewModel().apply {
+        viewModel = obtainViewModel(ShelfViewModel::class.java).apply {
             historyData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {
                     updateComic(it)
@@ -68,5 +68,4 @@ class ComicHistoryFragment : BaseFragment() {
         }
     }
 
-    private fun obtainViewModel(): ShelfViewModel = obtainViewModel(ShelfViewModel::class.java)
 }

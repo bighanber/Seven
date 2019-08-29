@@ -7,6 +7,7 @@ import com.luuu.seven.R
 import com.luuu.seven.bean.ReadHistoryBean
 import com.luuu.seven.util.ifNotNull
 import com.luuu.seven.util.loadImg
+import com.luuu.seven.util.loadWithHead
 
 /**
  * Created by lls on 2017/8/9.
@@ -16,11 +17,11 @@ class ComicHistoryAdapter(layoutResId: Int, data: List<ReadHistoryBean>) :
         BaseQuickAdapter<ReadHistoryBean, BaseViewHolder>(layoutResId, data) {
 
     override fun convert(helper: BaseViewHolder, item: ReadHistoryBean?) {
-        ifNotNull(helper, item, { helper, item ->
-            helper.setText(R.id.tv_shelf_title, item.comicTitle)
-            helper.setText(R.id.tv_shelf_other, "看到 ${item.chapterTitle}")
-            helper.getView<ImageView>(R.id.iv_shelf_cover).loadImg(item.comicCover)
-        })
 
+        helper.apply {
+            setText(R.id.tv_shelf_title, item?.comicTitle)
+            setText(R.id.tv_shelf_other, "看到 ${item?.chapterTitle}")
+            getView<ImageView>(R.id.iv_shelf_cover).loadWithHead(item?.comicCover ?: "")
+        }
     }
 }

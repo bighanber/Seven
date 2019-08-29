@@ -1,57 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clipChildren="false"
-    >
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/iv_shelf_cover"
+        android:layout_width="80dp"
         android:layout_height="100dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        tools:ignore="UselessParent">
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="@color/black" />
 
-        <ImageView
-            android:id="@+id/iv_shelf_cover"
-            android:layout_width="100dp"
-            android:layout_height="120dp"
-            android:layout_gravity="bottom"
-            android:layout_marginEnd="18dp"
-            android:scaleType="centerCrop"
-            tools:background="@mipmap/ic_launcher" />
+    <TextView
+        android:id="@+id/tv_shelf_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/colorFont"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_shelf_cover"
+        app:layout_constraintTop_toTopOf="@+id/iv_shelf_cover"
+        tools:text="title" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:layout_marginStart="20dp">
+    <TextView
+        android:id="@+id/tv_shelf_other"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/colorSubFont"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_shelf_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_shelf_title"
+        tools:text="shelf" />
 
-            <TextView
-                android:id="@+id/tv_shelf_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="16sp"
-                android:layout_marginTop="10dp"
-                tools:text="tile"/>
-
-            <TextView
-                android:id="@+id/tv_shelf_other"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lines="1"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="20dp"
-                android:textColor="?android:textColorSecondary"
-                tools:text="shelf"/>
-        </RelativeLayout>
-    </LinearLayout>
-
-</RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/bg_color_primary_2r"
+        android:paddingStart="20dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="2dp"
+        android:text="续看"
+        android:textColor="@color/colorPrimary"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_shelf_cover"
+        app:layout_constraintStart_toEndOf="@+id/iv_shelf_cover" />
+</androidx.constraintlayout.widget.ConstraintLayout>

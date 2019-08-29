@@ -10,22 +10,26 @@ import com.luuu.seven.R
 import com.luuu.seven.bean.CollectBean
 import com.luuu.seven.util.ifNotNull
 import com.luuu.seven.util.loadImg
+import com.luuu.seven.util.loadWithHead
 
 /**
  * Created by lls on 2017/8/9.
  * 收藏界面列表适配器
  */
 class ComicCollectAdapter(layoutResId: Int, data: List<CollectBean>) :
-        BaseQuickAdapter<CollectBean, BaseViewHolder>(layoutResId, data) {
+    BaseQuickAdapter<CollectBean, BaseViewHolder>(layoutResId, data) {
 
     override fun convert(helper: BaseViewHolder, item: CollectBean?) {
 
-        ifNotNull(helper, item, {helper, item ->
-            helper.setText(R.id.tv_comic_title, item.comicTitle)
-            helper.setText(R.id.tv_comic_authors, item.comicAuthors)
-            helper.setText(R.id.tv_last_name, "收藏时间: ${DateFormat.format("yyyy-MM-dd", item.collectTime)}")
-            helper.getView<TextView>(R.id.tv_comic_types).visibility = View.GONE
-            helper.getView<ImageView>(R.id.iv_comic_cover).loadImg(item.comicCover)
-        })
+        helper.apply {
+            setText(R.id.tv_comic_title, item?.comicTitle)
+            setText(R.id.tv_comic_authors, item?.comicAuthors)
+            setText(
+                R.id.tv_last_name,
+                "收藏时间: ${DateFormat.format("yyyy-MM-dd", item?.collectTime ?: 0L)}"
+            )
+            getView<TextView>(R.id.tv_comic_types).visibility = View.GONE
+            getView<ImageView>(R.id.iv_comic_cover).loadWithHead(item?.comicCover ?: "")
+        }
     }
 }

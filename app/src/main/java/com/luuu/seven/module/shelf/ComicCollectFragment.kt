@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.fra_shelf_list_layout.*
  * Created by lls on 2017/8/9.
  * 收藏界面
  */
-class ComicCollectFragment : BaseFragment(){
+class ComicCollectFragment : BaseFragment() {
 
 
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
@@ -26,12 +26,10 @@ class ComicCollectFragment : BaseFragment(){
 
     private lateinit var viewModel: ShelfViewModel
 
-    override fun onFragmentVisibleChange(isVisible: Boolean) {
-        if (isVisible) {
-            viewModel = obtainViewModel().apply {
-                getCollect()
-            }
-            viewModel.collectData.observe(viewLifecycleOwner, Observer { data ->
+    override fun initViews() {
+        viewModel = obtainViewModel(ShelfViewModel::class.java).apply {
+
+            collectData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {
                     updateComicCollect(it)
                 }
@@ -39,14 +37,7 @@ class ComicCollectFragment : BaseFragment(){
         }
     }
 
-    override fun initViews() {
-
-    }
-
     override fun getContentViewLayoutID(): Int = R.layout.fra_shelf_list_layout
-
-    override fun onFirstUserInvisible() {
-    }
 
     override fun onStart() {
         super.onStart()
@@ -56,6 +47,7 @@ class ComicCollectFragment : BaseFragment(){
     override fun onResume() {
         super.onResume()
         Log.e("asd", "coll - onResume")
+        viewModel.getCollect()
     }
 
 
@@ -77,6 +69,4 @@ class ComicCollectFragment : BaseFragment(){
             startNewActivity(ComicIntroActivity::class.java, mBundle)
         }
     }
-
-    private fun obtainViewModel(): ShelfViewModel = obtainViewModel(ShelfViewModel::class.java)
 }
