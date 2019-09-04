@@ -1,5 +1,6 @@
 package com.luuu.seven.util
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -9,6 +10,18 @@ import io.reactivex.schedulers.Schedulers
 
 fun Disposable.addTo(cd: CompositeDisposable) {
     cd.add(this)
+}
+
+fun Disposable.dispose(lifecycleOwner: LifecycleOwner): Disposable {
+    var mObserver = DisposableManager.getLifecycleObserver(lifecycleOwner.toString())
+
+    if (mObserver == null) {
+        mObserver = DestroyObserver(lifecycleOwner)
+        DisposableManager.addLifecycleObserver(mObserver)
+    }
+
+    mObserver.addToDisposable(this)
+    return this
 }
 
 fun <T> ioMain(): ObservableTransformer<T, T> {
