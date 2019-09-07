@@ -193,8 +193,8 @@ class ComicIntroActivity : BaseActivity() {
         tv_intro_authors.text = "作者: $comicAuthors"
         tv_intro_tags.text = "类型: $comicTags"
         mUpdate.text = "最后更新: ${DateFormat.format("yyyy-MM-dd", data.lastUpdatetime * 1000)}"
-        iv_cha_img.loadImgWithTransform(data.cover)
-        iv_cover.loadImg(data.cover)
+        iv_cha_img.loadWithHead(data.cover)
+//        iv_cover.loadImg(data.cover)
 
         comicTitle = data.title
         comicCover = data.cover
