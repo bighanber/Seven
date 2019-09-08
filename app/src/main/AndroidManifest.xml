@@ -16,7 +16,6 @@
             tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".MainActivity"/>
         <activity android:name=".module.update.ComicUpdateActivity"/>
-        <activity android:name=".module.rank.ComicRankActivity"/>
         <activity android:name=".module.sort.ComicSortActivity"/>
         <activity android:name=".module.special.ComicSpecialActivity"/>
         <activity android:name=".module.special.detail.ComicSpecialDetailActivity"/>

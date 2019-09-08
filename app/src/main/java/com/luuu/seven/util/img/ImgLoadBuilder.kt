@@ -41,6 +41,10 @@ class ImgLoadBuilder(strategy: ImgLoadStrategy, builder: Builder) {
         this.strategy.loadImg(this)
     }
 
+    fun url2Bitmap(): Bitmap {
+        return this.strategy.getBitmap(this)
+    }
+
     class Builder private constructor() {
 
         constructor(context: Context): this() {

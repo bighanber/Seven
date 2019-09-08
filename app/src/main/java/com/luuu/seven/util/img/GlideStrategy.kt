@@ -1,10 +1,15 @@
 package com.luuu.seven.util.img
 
+import android.graphics.Bitmap
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 
 class GlideStrategy : ImgLoadStrategy {
+
+    override fun getBitmap(config: ImgLoadBuilder): Bitmap {
+        return Glide.with(config.context).asBitmap().load(config.url).submit().get()
+    }
 
     override fun loadImg(config: ImgLoadBuilder) {
 

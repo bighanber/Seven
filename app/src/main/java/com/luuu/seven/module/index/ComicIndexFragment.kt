@@ -1,10 +1,14 @@
 package com.luuu.seven.module.index
 
+import android.graphics.Bitmap
+import android.os.AsyncTask
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.appbar.AppBarLayout
 import com.luuu.seven.R
 import com.luuu.seven.WebActivity
@@ -16,8 +20,12 @@ import com.luuu.seven.module.intro.ComicIntroActivity
 import com.luuu.seven.util.BarUtils
 import com.luuu.seven.util.GlideImageLoader
 import com.luuu.seven.util.obtainViewModel
+import com.luuu.seven.util.url2Bitmap
 import com.youth.banner.BannerConfig
 import kotlinx.android.synthetic.main.fra_index_layout.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 
@@ -32,6 +40,8 @@ class ComicIndexFragment : BaseFragment() {
 
     private lateinit var mViewModel: HomeViewModel
     private var mAdapter: ComicIndexAdapter? = null
+    private lateinit var mJob: Job
+    private lateinit var mBitmapGet: AsyncTask<Bitmap, Void, Palette>
 
     companion object {
         fun newInstance(): ComicIndexFragment {
@@ -39,28 +49,23 @@ class ComicIndexFragment : BaseFragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.e("asd", "index - onStart")
-    }
-
     override fun onResume() {
         super.onResume()
-        Log.e("asd", "index - onResume")
+        index_banner?.startAutoPlay()
     }
-
 
     override fun initViews() {
         val typedValue = TypedValue()
-        val mActonBarHeight = if (context!!.theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true))
-            TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics)
-        else 0
+        val mActonBarHeight =
+            if (context!!.theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true))
+                TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics)
+            else 0
         val mTopPadding = BarUtils.getStatusBarHeight(activity!!) + mActonBarHeight
         appbar_layout.setPadding(0, mTopPadding, 0, 0)
 
         mViewModel = obtainViewModel(HomeViewModel::class.java).apply {
             getHomeData()
-        }.apply {
+
             homeData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {
                     updateIndexList(it)
@@ -80,7 +85,8 @@ class ComicIndexFragment : BaseFragment() {
         }
 
         appbar_layout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            val percent = (abs(verticalOffset)).toFloat() / (appBarLayout.totalScrollRange).toFloat()
+            val percent =
+                (abs(verticalOffset)).toFloat() / (appBarLayout.totalScrollRange).toFloat()
 //            toolbar.alpha = percent
 //            tv_search_bg.alpha = if (percent >= 0.5) percent else 0.5f
             index_refresh.isEnabled = verticalOffset == 0
@@ -139,6 +145,46 @@ class ComicIndexFragment : BaseFragment() {
             }
         }
         index_banner.setImages(urls).setImageLoader(GlideImageLoader()).start()
+        index_banner.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                mJob = GlobalScope.launch {
+                    mBitmapGet =
+                        Palette.from(url2Bitmap(mContext!!, urls[position])).generate { palette ->
+                            palette?.let {
+                                val mColor = it.getVibrantColor(
+                                    ContextCompat.getColor(
+                                        mContext!!,
+                                        R.color.colorPrimary
+                                    )
+                                )
+                                appbar_layout?.setBackgroundColor(mColor)
+                            }
+                        }
+                }
+            }
+
+        })
+
     }
 
+    override fun onPause() {
+        super.onPause()
+        if (this::mJob.isInitialized) {
+            mJob.cancel()
+            mBitmapGet.cancel(true)
+        }
+        index_banner.stopAutoPlay()
+    }
 }
