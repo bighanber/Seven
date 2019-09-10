@@ -27,7 +27,7 @@ class ComicCollectFragment : BaseFragment() {
     private lateinit var viewModel: ShelfViewModel
 
     override fun initViews() {
-        viewModel = obtainViewModel(ShelfViewModel::class.java).apply {
+        viewModel = obtainViewModel<ShelfViewModel>().apply {
 
             collectData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {

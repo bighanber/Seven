@@ -3,8 +3,10 @@ package com.luuu.seven.module.index
 import android.graphics.Bitmap
 import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import androidx.core.content.ContextCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,10 +19,7 @@ import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.IndexBean
 import com.luuu.seven.bean.IndexDataBean
 import com.luuu.seven.module.intro.ComicIntroActivity
-import com.luuu.seven.util.BarUtils
-import com.luuu.seven.util.GlideImageLoader
-import com.luuu.seven.util.obtainViewModel
-import com.luuu.seven.util.url2Bitmap
+import com.luuu.seven.util.*
 import com.youth.banner.BannerConfig
 import kotlinx.android.synthetic.main.fra_index_layout.*
 import kotlinx.coroutines.GlobalScope
@@ -49,21 +48,23 @@ class ComicIndexFragment : BaseFragment() {
         }
     }
 
+
+
     override fun onResume() {
         super.onResume()
         index_banner?.startAutoPlay()
     }
 
     override fun initViews() {
-        val typedValue = TypedValue()
-        val mActonBarHeight =
-            if (context!!.theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true))
-                TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics)
-            else 0
-        val mTopPadding = BarUtils.getStatusBarHeight(activity!!) + mActonBarHeight
-        appbar_layout.setPadding(0, mTopPadding, 0, 0)
+//        val typedValue = TypedValue()
+//        val mActonBarHeight =
+//            if (context!!.theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true))
+//                TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics)
+//            else 0
+//        val mTopPadding = BarUtils.getStatusBarHeight(activity!!) + mActonBarHeight
+        appbar_layout.updatePadding(top = paddingTop(context!!))
 
-        mViewModel = obtainViewModel(HomeViewModel::class.java).apply {
+        mViewModel = obtainViewModel<HomeViewModel>().apply {
             getHomeData()
 
             homeData.observe(viewLifecycleOwner, Observer { data ->
@@ -105,10 +106,6 @@ class ComicIndexFragment : BaseFragment() {
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_index_layout
-
-    override fun onFirstUserInvisible() {
-    }
-
 
     private fun updateIndexList(data: List<IndexBean>) {
         initPager(data[0].data)
@@ -183,7 +180,10 @@ class ComicIndexFragment : BaseFragment() {
         super.onPause()
         if (this::mJob.isInitialized) {
             mJob.cancel()
+
+        if (this::mBitmapGet.isInitialized) {
             mBitmapGet.cancel(true)
+        }
         }
         index_banner.stopAutoPlay()
     }

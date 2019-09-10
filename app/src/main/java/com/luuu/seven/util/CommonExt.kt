@@ -1,6 +1,7 @@
 package com.luuu.seven.util
 
 import android.content.Context
+import android.os.Parcel
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,10 @@ import android.widget.Toast
 import androidx.annotation.DimenRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
+import androidx.core.os.ParcelCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.luuu.seven.ComicApplication
 
 fun Context.dp2px(value: Int): Int = (value * resources.displayMetrics.density).toInt()
@@ -47,4 +52,16 @@ fun toast(msg: String? = "error", duration: Int = Toast.LENGTH_SHORT) {
 fun toast(@StringRes msg: Int, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(ComicApplication.mApp, ComicApplication.mApp.resources.getString(msg), duration).show()
 }
+
+fun <X, Y> LiveData<X>.map(body: (X) -> Y): LiveData<Y> {
+    return Transformations.map(this, body)
+}
+
+fun <T> MutableLiveData<T>.setValueIfNew(newValue: T) {
+    if (this.value != newValue) value = newValue
+}
+
+fun Parcel.writeBooleanUsingCompat(value: Boolean) = ParcelCompat.writeBoolean(this, value)
+
+fun Parcel.readBooleanUsingCompat() = ParcelCompat.readBoolean(this)
 

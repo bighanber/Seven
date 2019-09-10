@@ -92,5 +92,5 @@ class ComicNewsFlashFragment : BaseFragment() {
         recycler.adapter = mAdapter
     }
 
-    private fun obtainViewModel(): NewsViewModel = obtainViewModel(NewsViewModel::class.java)
+    private fun obtainViewModel(): NewsViewModel = obtainViewModel<NewsViewModel>()
 }

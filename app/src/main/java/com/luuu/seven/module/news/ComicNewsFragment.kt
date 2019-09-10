@@ -111,5 +111,5 @@ class ComicNewsFragment : BaseFragment() {
         if (mNewsFlashFragment != null) ft.hide(mNewsFlashFragment!!)
     }
 
-    private fun obtainViewModel(): NewsViewModel = obtainViewModel(NewsViewModel::class.java)
+    private fun obtainViewModel(): NewsViewModel = obtainViewModel<NewsViewModel>()
 }

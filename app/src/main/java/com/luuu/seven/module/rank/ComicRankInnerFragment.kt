@@ -89,7 +89,7 @@ class ComicRankInnerFragment : BaseFragment() {
             mViewModel.getRankComic(num, mPageNum)
         }
 
-        mViewModel = obtainViewModel(HomeViewModel::class.java).apply {
+        mViewModel = obtainViewModel<HomeViewModel>().apply {
 
             rankData.observe(viewLifecycleOwner, Observer { data ->
                 mRankBeanList.addAll(data)

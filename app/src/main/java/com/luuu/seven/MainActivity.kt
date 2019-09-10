@@ -3,10 +3,16 @@ package com.luuu.seven
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
 import com.luuu.seven.base.BaseActivity
 import com.luuu.seven.module.index.ComicHomeFragment
 import com.luuu.seven.module.news.ComicNewsFragment
 import com.luuu.seven.module.shelf.ComicShelfFragment
+import com.luuu.seven.theme.Theme
+import com.luuu.seven.theme.ThemedActivityDelegateImpl
+import com.luuu.seven.util.SharedPreferenceStorage
+import com.luuu.seven.util.click
+import com.luuu.seven.util.updateForTheme
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
@@ -18,6 +24,9 @@ class MainActivity : BaseActivity() {
     private var newsFragment: ComicNewsFragment? = null
 
     override fun initViews() {
+//        updateForTheme(ThemedActivityDelegateImpl().currentTheme)
+//        ThemedActivityDelegateImpl().theme.observe(this, Observer(::updateForTheme))
+//
         fm = supportFragmentManager
         bottom_navigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {

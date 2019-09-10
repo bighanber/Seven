@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -47,5 +48,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <fragment
+        android:id="@+id/chapter_sheet"
+        android:name="com.luuu.seven.module.intro.ComicChapterFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="4dp"
+        app:layout_behavior="com.luuu.seven.widgets.BottomSheetBehavior"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="48dp"
+        app:behavior_skipCollapsed="true"
+        tools:layout="@layout/fra_chapter_layout"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

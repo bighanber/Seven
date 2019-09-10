@@ -1,8 +1,12 @@
 package com.luuu.seven.util
 
+import android.content.Context
 import android.os.Looper
+import android.util.TypedValue
 import android.view.View
 import androidx.annotation.RestrictTo
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.MainThreadDisposable
@@ -130,4 +134,49 @@ fun View.clickFilter(mCompositeDisposable: CompositeDisposable, callback: () -> 
     this.click().debounce(500, TimeUnit.MILLISECONDS)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe { callback.invoke() }.addTo(mCompositeDisposable)
+}
+
+fun View.requestApplyInsetsWhenAttached() {
+    if (isAttachedToWindow) {
+        requestApplyInsets()
+    } else {
+        addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewDetachedFromWindow(v: View?) {
+            }
+
+            override fun onViewAttachedToWindow(v: View?) {
+                v?.requestApplyInsets()
+            }
+        })
+    }
+}
+
+fun View.doOnApplyWindowInsets(f: (View, WindowInsetsCompat, ViewPaddingState) -> Unit) {
+    val paddingState = createStateForView(this)
+    ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+        f(v, insets, paddingState)
+        insets
+    }
+    requestApplyInsetsWhenAttached()
+}
+
+data class ViewPaddingState(
+    val left: Int,
+    val top: Int,
+    val right: Int,
+    val bottom: Int,
+    val start: Int,
+    val end: Int
+)
+
+private fun createStateForView(view: View) = ViewPaddingState(view.paddingLeft,
+    view.paddingTop, view.paddingRight, view.paddingBottom, view.paddingStart, view.paddingEnd)
+
+fun paddingTop(context: Context): Int {
+    val typedValue = TypedValue()
+    val mActonBarHeight =
+        if (context.theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true))
+            TypedValue.complexToDimensionPixelSize(typedValue.data, context.resources.displayMetrics)
+        else 0
+    return BarUtils.getStatusBarHeight(context) + mActonBarHeight
 }

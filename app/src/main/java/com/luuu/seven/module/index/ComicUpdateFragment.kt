@@ -57,7 +57,7 @@ class ComicUpdateFragment : BaseFragment() {
         val mTopPadding = BarUtils.getStatusBarHeight(activity!!) + mActonBarHeight
         recycler.setPadding(mContext!!.dp2px(15), mTopPadding, mContext!!.dp2px(15), 0)
 
-        mViewModel = obtainViewModel(HomeViewModel::class.java).apply {
+        mViewModel = obtainViewModel<HomeViewModel>().apply {
             updateData.observe(viewLifecycleOwner, Observer { data ->
                 mUpdateBeanList.addAll(data)
 

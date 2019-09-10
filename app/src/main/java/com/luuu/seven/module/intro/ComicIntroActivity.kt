@@ -19,6 +19,10 @@ import com.luuu.seven.bean.ComicIntroBean
 import com.luuu.seven.bean.ReadHistoryBean
 import com.luuu.seven.module.read.recycler.ComicReadRecyclerActivity
 import com.luuu.seven.util.*
+import com.luuu.seven.widgets.BottomSheetBehavior
+import com.luuu.seven.widgets.BottomSheetBehavior.Companion.STATE_COLLAPSED
+import com.luuu.seven.widgets.BottomSheetBehavior.Companion.STATE_EXPANDED
+import com.luuu.seven.widgets.BottomSheetBehavior.Companion.STATE_HIDDEN
 import kotlinx.android.synthetic.main.activity_comic_intro.*
 import kotlinx.android.synthetic.main.intro_middle_layout.*
 import java.util.*
@@ -62,7 +66,29 @@ class ComicIntroActivity : BaseActivity() {
         mUpdate = headerView.findViewById(R.id.tv_intro_update)
         mIntro = headerView.findViewById(R.id.tv_cha_intro)
 
-        viewModel = obtainViewModel(IntroViewModel::class.java).apply {
+        val bottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.chapter_sheet))
+
+        tv_intro_title.click {
+            bottomSheetBehavior.state = STATE_EXPANDED
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                val a11yState = if (newState == STATE_EXPANDED) {
+                    View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+                } else {
+                    View.IMPORTANT_FOR_ACCESSIBILITY_AUTO
+                }
+                comic_recyclerview.importantForAccessibility = a11yState
+            }
+        })
+        bottomSheetBehavior.isHideable = true
+        bottomSheetBehavior.skipCollapsed = true
+        if (bottomSheetBehavior.state == STATE_COLLAPSED) {
+            bottomSheetBehavior.state = STATE_HIDDEN
+        }
+
+        viewModel = obtainViewModel<IntroViewModel>().apply {
             getReadHistory(comicId)
             isFavorite(comicId)
 

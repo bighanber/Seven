@@ -1,13 +1,14 @@
 package com.luuu.seven.util
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.luuu.seven.theme.Theme
 
 /**
  * Created by lls on 2019-05-09
@@ -43,14 +44,24 @@ fun AppCompatActivity.hideFragment(fragment: Fragment) {
     }
 }
 
+fun AppCompatActivity.updateForTheme(theme: Theme) = when(theme) {
+    Theme.DARK -> delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    Theme.LIGHT -> delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+    Theme.SYSTEM -> delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+    Theme.AUTO -> delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_AUTO)
+}
+
 private inline fun FragmentManager.transact(action: FragmentTransaction.() -> Unit) {
     beginTransaction().apply {
         action()
     }.commit()
 }
 
-fun <T : ViewModel> AppCompatActivity.obtainViewModel(viewModelClass: Class<T>) =
-    ViewModelProviders.of(this).get(viewModelClass)
+inline fun <reified T : ViewModel> AppCompatActivity.obtainViewModel() =
+    ViewModelProviders.of(this).get(T::class.java)
 
-fun <T : ViewModel> Fragment.obtainViewModel(viewModelClass: Class<T>) =
-    ViewModelProviders.of(this).get(viewModelClass)
+inline fun <reified T : ViewModel> Fragment.obtainViewModel() =
+    ViewModelProviders.of(this).get(T::class.java)
+
+inline fun <reified T : ViewModel> Fragment.activityViewModel() =
+    ViewModelProviders.of(requireActivity()).get(T::class.java)
