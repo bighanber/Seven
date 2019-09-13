@@ -39,9 +39,12 @@
 
     <TextView
         android:id="@+id/tv_comic_chapter"
-        android:layout_width="50dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/kanit"
+        android:maxLines="1"
         android:textColor="@color/colorSubFont"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"

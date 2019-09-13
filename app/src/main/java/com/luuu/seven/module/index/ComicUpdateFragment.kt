@@ -2,6 +2,7 @@ package com.luuu.seven.module.index
 
 import android.os.Bundle
 import android.util.TypedValue
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +14,7 @@ import com.luuu.seven.module.intro.ComicIntroActivity
 import com.luuu.seven.util.BarUtils
 import com.luuu.seven.util.dp2px
 import com.luuu.seven.util.obtainViewModel
+import com.luuu.seven.util.paddingTop
 import com.luuu.seven.widgets.SpaceItemDecoration
 import kotlinx.android.synthetic.main.fra_tab_layout.*
 
@@ -43,19 +45,13 @@ class ComicUpdateFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        mUpdateBeanList = ArrayList()
         mPageNum = 0
         mViewModel.getComicUpdate(num, 0)
     }
 
     override fun initViews() {
 
-        val typedValue = TypedValue()
-        val mActonBarHeight = if (context!!.theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true))
-            TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics)
-        else 0
-        val mTopPadding = BarUtils.getStatusBarHeight(activity!!) + mActonBarHeight
-        recycler.setPadding(mContext!!.dp2px(15), mTopPadding, mContext!!.dp2px(15), 0)
+        recycler.updatePadding(left = mContext!!.dp2px(15), top = paddingTop(mContext!!), right = mContext!!.dp2px(15))
 
         mViewModel = obtainViewModel<HomeViewModel>().apply {
             updateData.observe(viewLifecycleOwner, Observer { data ->

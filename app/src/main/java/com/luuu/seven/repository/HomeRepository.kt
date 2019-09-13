@@ -4,7 +4,6 @@ import com.luuu.seven.bean.ComicUpdateBean
 import com.luuu.seven.bean.HotComicBean
 import com.luuu.seven.bean.IndexBean
 import com.luuu.seven.http.HttpManager
-import com.luuu.seven.http.TaskData
 
 
 class HomeRepository {

@@ -3,8 +3,6 @@ package com.luuu.seven.module.index
 import android.graphics.Bitmap
 import android.os.AsyncTask
 import android.os.Bundle
-import android.util.Log
-import android.util.TypedValue
 import androidx.core.content.ContextCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
@@ -19,7 +17,10 @@ import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.IndexBean
 import com.luuu.seven.bean.IndexDataBean
 import com.luuu.seven.module.intro.ComicIntroActivity
-import com.luuu.seven.util.*
+import com.luuu.seven.util.GlideImageLoader
+import com.luuu.seven.util.obtainViewModel
+import com.luuu.seven.util.paddingTop
+import com.luuu.seven.util.url2Bitmap
 import com.youth.banner.BannerConfig
 import kotlinx.android.synthetic.main.fra_index_layout.*
 import kotlinx.coroutines.GlobalScope
@@ -48,20 +49,12 @@ class ComicIndexFragment : BaseFragment() {
         }
     }
 
-
-
     override fun onResume() {
         super.onResume()
         index_banner?.startAutoPlay()
     }
 
     override fun initViews() {
-//        val typedValue = TypedValue()
-//        val mActonBarHeight =
-//            if (context!!.theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true))
-//                TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics)
-//            else 0
-//        val mTopPadding = BarUtils.getStatusBarHeight(activity!!) + mActonBarHeight
         appbar_layout.updatePadding(top = paddingTop(context!!))
 
         mViewModel = obtainViewModel<HomeViewModel>().apply {
@@ -77,7 +70,6 @@ class ComicIndexFragment : BaseFragment() {
                 isRefresh?.let {
                     index_refresh.isRefreshing = it
                 }
-
             })
         }
 
@@ -110,70 +102,67 @@ class ComicIndexFragment : BaseFragment() {
     private fun updateIndexList(data: List<IndexBean>) {
         initPager(data[0].data)
         //个别栏目不需要就不展示
-        val mData = data.filterNot { it.sort == 1 || it.sort == 6 }
-        if (mAdapter == null) {
-            initAdapter(mData)
-        } else {
-            mAdapter?.setNewData(mData)
-        }
+        val mData = data.filterNot { it.sort == 1 || it.sort == 4 }
+
+        mAdapter?.setNewData(mData) ?: initAdapter(mData)
     }
 
     private fun initAdapter(indexBeanList: List<IndexBean>) {
-        val mLayoutManager = LinearLayoutManager(mContext)
         mAdapter = ComicIndexAdapter(indexBeanList)
-        recycler.layoutManager = mLayoutManager
+        recycler.layoutManager = LinearLayoutManager(mContext)
         recycler.adapter = mAdapter
     }
 
     private fun initPager(dataBeanList: List<IndexDataBean>) {
-        index_banner.setIndicatorGravity(BannerConfig.RIGHT)
         val urls = dataBeanList.map { it.cover }
 
-        //如果url为空则表示是具体的漫画，不然就是广告或者活动
-        index_banner.setOnBannerListener { position ->
-            if ("" == dataBeanList[position].url) {
-                val mBundle = Bundle()
-                mBundle.putInt("comicId", dataBeanList[position].objId)
-                startNewActivity(ComicIntroActivity::class.java, mBundle)
-            } else {
-                val mBundle = Bundle()
-                mBundle.putString("url", dataBeanList[position].url)
-                startNewActivity(WebActivity::class.java, mBundle)
-            }
-        }
-        index_banner.setImages(urls).setImageLoader(GlideImageLoader()).start()
-        index_banner.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
-
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-
-            }
-
-            override fun onPageSelected(position: Int) {
-                mJob = GlobalScope.launch {
-                    mBitmapGet =
-                        Palette.from(url2Bitmap(mContext!!, urls[position])).generate { palette ->
-                            palette?.let {
-                                val mColor = it.getVibrantColor(
-                                    ContextCompat.getColor(
-                                        mContext!!,
-                                        R.color.colorPrimary
-                                    )
-                                )
-                                appbar_layout?.setBackgroundColor(mColor)
-                            }
-                        }
+        index_banner.apply {
+            setIndicatorGravity(BannerConfig.RIGHT)
+            //如果url为空则表示是具体的漫画，不然就是广告或者活动
+            setOnBannerListener { position ->
+                if ("" == dataBeanList[position].url) {
+                    val mBundle = Bundle()
+                    mBundle.putInt("comicId", dataBeanList[position].objId)
+                    startNewActivity(ComicIntroActivity::class.java, mBundle)
+                } else {
+                    val mBundle = Bundle()
+                    mBundle.putString("url", dataBeanList[position].url)
+                    startNewActivity(WebActivity::class.java, mBundle)
                 }
             }
+            setImages(urls).setImageLoader(GlideImageLoader()).start()
+            setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                override fun onPageScrollStateChanged(state: Int) {
 
-        })
+                }
 
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {
+
+                }
+
+                override fun onPageSelected(position: Int) {
+                    mJob = GlobalScope.launch {
+                        mBitmapGet =
+                            Palette.from(url2Bitmap(mContext!!, urls[position])).generate { palette ->
+                                palette?.let {
+                                    val mColor = it.getVibrantColor(
+                                        ContextCompat.getColor(
+                                            mContext!!,
+                                            R.color.colorPrimary
+                                        )
+                                    )
+                                    appbar_layout?.setBackgroundColor(mColor)
+                                }
+                            }
+                    }
+                }
+
+            })
+        }
     }
 
     override fun onPause() {

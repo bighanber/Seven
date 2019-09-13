@@ -23,7 +23,6 @@ abstract class BaseFragment : Fragment() {
 
     var mContext: Context? = null
     private var fragmentRootView: View? = null
-//    private var isFragmentVisible: Boolean = false
 
     var mSubscription = CompositeDisposable()
 
