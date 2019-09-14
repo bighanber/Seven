@@ -65,3 +65,6 @@ fun Parcel.writeBooleanUsingCompat(value: Boolean) = ParcelCompat.writeBoolean(t
 
 fun Parcel.readBooleanUsingCompat() = ParcelCompat.readBoolean(this)
 
+val <T> T.checkAllMatched: T
+    get() = this
+

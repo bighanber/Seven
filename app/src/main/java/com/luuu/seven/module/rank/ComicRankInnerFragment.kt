@@ -18,11 +18,12 @@ import com.luuu.seven.bean.HotComicBean
 import com.luuu.seven.module.index.HomeViewModel
 import com.luuu.seven.module.intro.ComicIntroActivity
 import com.luuu.seven.util.*
+import com.luuu.seven.widgets.RankItemDecoration
 import kotlinx.android.synthetic.main.fra_tab_layout.*
 
 /**
  * Created by lls on 2017/8/4.
- *
+ * 排行二级fragment
  */
 class ComicRankInnerFragment : BaseFragment() {
 
@@ -32,35 +33,24 @@ class ComicRankInnerFragment : BaseFragment() {
     private var mHotComicTopList: MutableList<HotComicBean>? = null
     private var mPageNum = 0
     private var pos = 0
-    private var num = 0
-    private var type = " "
-    private lateinit var headerView: View
+    private val num by lazy {
+        arguments?.getInt(COMIC_TYPE)
+    }
+//    private lateinit var headerView: View
     private var mAdapter: ComicRankAdapter? = null
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
     companion object {
-        private val Comic_TYPE = "type"
+        const val COMIC_TYPE = "type"
 
-        fun newInstance(type: String): ComicRankInnerFragment {
+        fun newInstance(type: Int): ComicRankInnerFragment {
             val fragment = ComicRankInnerFragment()
             val bundle = Bundle()
-            bundle.putString(Comic_TYPE, type)
+            bundle.putInt(COMIC_TYPE, type)
             fragment.arguments = bundle
             return fragment
         }
 
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            type = it.getString(Comic_TYPE)
-            num = when(type) {
-                "人气" -> 0
-                "吐槽" -> 1
-                else -> 2
-            }
-        }
     }
 
     override fun onResume() {
@@ -68,7 +58,7 @@ class ComicRankInnerFragment : BaseFragment() {
         mHotComicBeanList = ArrayList()
         mHotComicTopList = ArrayList()
         mPageNum = 0
-        mViewModel.getRankComic(num, 0)
+        mViewModel.getRankComic(num ?: 0, 0)
     }
 
     override fun onDestroy() {
@@ -86,7 +76,7 @@ class ComicRankInnerFragment : BaseFragment() {
         })
         refresh.setOnRefreshListener {
             mPageNum = 0
-            mViewModel.getRankComic(num, mPageNum)
+            mViewModel.getRankComic(num ?: 0, mPageNum)
         }
 
         mViewModel = obtainViewModel<HomeViewModel>().apply {
@@ -94,17 +84,17 @@ class ComicRankInnerFragment : BaseFragment() {
             rankData.observe(viewLifecycleOwner, Observer { data ->
                 mRankBeanList.addAll(data)
 
-                headerView = getHeaderView(data, View.OnClickListener { view ->
-                    pos = when(view.id) {
-                        R.id.iv_rank_top -> 0
-                        R.id.iv_rank_sec -> 1
-                        R.id.iv_rank_thr -> 2
-                        else -> 0
-                    }
-                    val mBundle = Bundle()
-                    mBundle.putInt("comicId", mHotComicTopList!![pos].comicId)
-                    startNewActivity(ComicIntroActivity::class.java, mBundle)
-                })
+//                headerView = getHeaderView(data, View.OnClickListener { view ->
+//                    pos = when(view.id) {
+//                        R.id.iv_rank_top -> 0
+//                        R.id.iv_rank_sec -> 1
+//                        R.id.iv_rank_thr -> 2
+//                        else -> 0
+//                    }
+//                    val mBundle = Bundle()
+//                    mBundle.putInt("comicId", mHotComicTopList!![pos].comicId)
+//                    startNewActivity(ComicIntroActivity::class.java, mBundle)
+//                })
 
                 mAdapter?.let { adapter ->
                     adapter.loadMoreComplete()
@@ -127,11 +117,11 @@ class ComicRankInnerFragment : BaseFragment() {
 
     private fun initAdapter() {
         mAdapter = ComicRankAdapter(R.layout.item_rank_layout, mRankBeanList).apply {
-            addHeaderView(headerView)
+//            addHeaderView(headerView)
             setEnableLoadMore(true)
             setOnLoadMoreListener({
                 mPageNum++
-                mViewModel.getRankComic(num, mPageNum)
+                mViewModel.getRankComic(num ?: 0, mPageNum)
             }, recycler)
             setOnItemClickListener { _, _, position ->
                 val mBundle = Bundle()
@@ -141,7 +131,7 @@ class ComicRankInnerFragment : BaseFragment() {
         }
 
         recycler.layoutManager = mLayoutManager
-        recycler.addItemDecoration(DividerItemDecoration(mContext!!, mLayoutManager.orientation))
+        recycler.addItemDecoration(RankItemDecoration(mContext!!))
         recycler.adapter = mAdapter
 
 

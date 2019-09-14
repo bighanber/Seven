@@ -21,7 +21,10 @@ class ComicRankAdapter(layoutResId: Int, data: List<HotComicBean>) :
             helper.apply {
                 setText(R.id.tv_rank_title, item?.title)
                 setText(R.id.tv_rank_num, item?.num.toString())
-                setText(R.id.tv_rank_pos, (adapterPosition + 3).toString())
+//                setText(R.id.tv_rank_pos, (adapterPosition + 3).toString())
+                setText(R.id.comic_status, item?.status)
+                setText(R.id.comic_type, item?.types)
+                setText(R.id.comic_authors, item?.authors)
                 getView<ImageView>(R.id.iv_rank_cover).loadWithHead(item?.cover ?: "")
             }
     }

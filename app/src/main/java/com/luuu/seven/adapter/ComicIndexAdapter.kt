@@ -1,6 +1,5 @@
 package com.luuu.seven.adapter
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -13,7 +12,6 @@ import com.luuu.seven.WebActivity
 import com.luuu.seven.bean.IndexBean
 import com.luuu.seven.module.intro.ComicIntroActivity
 import com.luuu.seven.module.special.detail.ComicSpecialDetailActivity
-import com.luuu.seven.util.ifNotNull
 import com.luuu.seven.widgets.SpaceItemDecoration
 
 /**
