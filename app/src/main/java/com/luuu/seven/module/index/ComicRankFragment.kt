@@ -14,13 +14,15 @@ import kotlinx.android.synthetic.main.fra_inner_viewpager.*
  */
 class ComicRankFragment : BaseFragment() {
 
+    private val rankPages = arrayListOf(
+        ComicRankInnerFragment.newInstance(ComicConst.RANK_POPULARTY),
+        ComicRankInnerFragment.newInstance(ComicConst.RANK_ROAST),
+        ComicRankInnerFragment.newInstance(ComicConst.RANK_SUBSCRIBE)
+    )
+
     companion object {
         private val RANK_TITLE = arrayListOf("人气","吐槽","订阅")
-        private val RANK_PAGES = arrayListOf(
-            ComicRankInnerFragment.newInstance(ComicConst.RANK_POPULARTY),
-            ComicRankInnerFragment.newInstance(ComicConst.RANK_ROAST),
-            ComicRankInnerFragment.newInstance(ComicConst.RANK_SUBSCRIBE)
-        )
+
         fun newInstance(): ComicRankFragment {
             return ComicRankFragment()
         }
@@ -30,7 +32,7 @@ class ComicRankFragment : BaseFragment() {
 
         sort_layout.updatePadding(top = paddingTop(mContext!!))
 
-        val mAdapter = ComicFragmentAdapter(childFragmentManager, RANK_PAGES, RANK_TITLE)
+        val mAdapter = ComicFragmentAdapter(childFragmentManager, rankPages, RANK_TITLE)
 
         sort_tabs.setupWithViewPager(sort_viewpager.apply {
             adapter = mAdapter

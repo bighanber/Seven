@@ -28,7 +28,6 @@ class SpaceItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     fun setEdgeSpace(edgeSpace: Int): SpaceItemDecoration {
 
         mEdgeSpace = (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, edgeSpace.toFloat(), mDisplayMetrics) + 0.5f).toInt()
-        mDividerPaint.color = Color.RED
         return this
     }
 

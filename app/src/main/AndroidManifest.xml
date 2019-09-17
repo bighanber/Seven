@@ -39,7 +39,9 @@
                 <data android:scheme="android_secret_code" android:host="77"/>
             </intent-filter>
         </receiver>
-        <meta-data android:name="preloaded_fonts" android:resource="@array/preloaded_fonts"/>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

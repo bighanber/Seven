@@ -13,14 +13,15 @@ import kotlinx.android.synthetic.main.fra_home_layout.*
 
 class ComicHomeFragment : BaseFragment() {
 
+    private val homePages = arrayListOf(
+        ComicUpdateFragment.newInstance(),
+        ComicIndexFragment.newInstance(),
+        ComicRankFragment.newInstance()
+    )
 
     companion object {
         private val HOME_TITLES = arrayListOf("更新", "推荐", "排行")
-        private val HOME_PAGES = arrayListOf(
-            ComicUpdateFragment.newInstance(),
-            ComicIndexFragment.newInstance(),
-            ComicRankFragment.newInstance()
-        )
+
         fun newInstance(): ComicHomeFragment {
             return ComicHomeFragment()
         }
@@ -29,11 +30,11 @@ class ComicHomeFragment : BaseFragment() {
     override fun initViews() {
         BarUtils.addStatusBarView(status_bg, mContext!!, ContextCompat.getColor(mContext!!, R.color.transparent))
 
-        val mAdapter = ComicFragmentAdapter(childFragmentManager, HOME_PAGES, HOME_TITLES)
+        val mAdapter = ComicFragmentAdapter(childFragmentManager, homePages, HOME_TITLES)
         home_tabs.setupWithViewPager(home_viewpager.apply {
             adapter = mAdapter
             currentItem = 1
-            offscreenPageLimit = HOME_PAGES.size
+            offscreenPageLimit = homePages.size
         })
         home_viewpager.pageChangeListener {
             onPageSelected {  pos ->

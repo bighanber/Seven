@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import android.util.Log
 import android.view.View
 import androidx.core.content.res.*
 import androidx.core.view.isEmpty
@@ -20,6 +19,8 @@ class RankItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     private var topThreeTextSize: Int
     private var normalTextSize: Int
     private var marginTop: Int
+    private var paddingStart = 0
+    private var mContext: Context
 
     init {
         val attrs = context.obtainStyledAttributes(R.style.RankStyle, R.styleable.RankHead)
@@ -33,6 +34,8 @@ class RankItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         normalTextSize = attrs.getDimensionPixelSizeOrThrow(R.styleable.RankHead_normalTextSize)
         attrs.recycle()
         marginTop = context.dp2px(15)
+        mContext = context
+        paddingStart = context.dp2px(10)
     }
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
@@ -48,20 +51,18 @@ class RankItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
 
             val position = parent.getChildAdapterPosition(child)
             if (position < 0) continue
-            Log.v("asd", "positon: $position - childY: ${child.y} - parentH: ${parent.height} - childH: ${child.height} - childTop: ${child.top} - childBottom: ${child.bottom}")
-
-            drawRankHeader(c, child, position, position < 4)
+            drawRankHeader(c, child, position + 1, position < 3)
         }
     }
 
     private fun drawRankHeader(canvas: Canvas, child: View, pos: Int, isTopThree: Boolean) {
-        paint.textSize = if (isTopThree) {
-            topThreeTextSize.toFloat()
+        if (isTopThree) {
+            paint.textSize = topThreeTextSize.toFloat()
         } else {
-            normalTextSize.toFloat()
+            paint.textSize = normalTextSize.toFloat()
         }
 
         paint.getTextBounds("$pos", 0, "$pos".length, textBounds)
-        canvas.drawText("$pos", (headWidth - textBounds.width()).toFloat(), child.y + textBounds.height() + marginTop, paint)
+        canvas.drawText("$pos", (headWidth - textBounds.width() + paddingStart).toFloat(), child.y + textBounds.height() + marginTop, paint)
     }
 }

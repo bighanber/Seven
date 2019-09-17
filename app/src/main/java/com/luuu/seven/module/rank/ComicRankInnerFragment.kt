@@ -1,6 +1,7 @@
 package com.luuu.seven.module.rank
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +37,6 @@ class ComicRankInnerFragment : BaseFragment() {
     private val num by lazy {
         arguments?.getInt(COMIC_TYPE)
     }
-//    private lateinit var headerView: View
     private var mAdapter: ComicRankAdapter? = null
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
@@ -84,18 +84,6 @@ class ComicRankInnerFragment : BaseFragment() {
             rankData.observe(viewLifecycleOwner, Observer { data ->
                 mRankBeanList.addAll(data)
 
-//                headerView = getHeaderView(data, View.OnClickListener { view ->
-//                    pos = when(view.id) {
-//                        R.id.iv_rank_top -> 0
-//                        R.id.iv_rank_sec -> 1
-//                        R.id.iv_rank_thr -> 2
-//                        else -> 0
-//                    }
-//                    val mBundle = Bundle()
-//                    mBundle.putInt("comicId", mHotComicTopList!![pos].comicId)
-//                    startNewActivity(ComicIntroActivity::class.java, mBundle)
-//                })
-
                 mAdapter?.let { adapter ->
                     adapter.loadMoreComplete()
 
@@ -117,7 +105,6 @@ class ComicRankInnerFragment : BaseFragment() {
 
     private fun initAdapter() {
         mAdapter = ComicRankAdapter(R.layout.item_rank_layout, mRankBeanList).apply {
-//            addHeaderView(headerView)
             setEnableLoadMore(true)
             setOnLoadMoreListener({
                 mPageNum++
@@ -135,21 +122,5 @@ class ComicRankInnerFragment : BaseFragment() {
         recycler.adapter = mAdapter
 
 
-    }
-
-    private fun getHeaderView(hotComicBeanList: List<HotComicBean>, listener: View.OnClickListener) : View {
-        val view = LayoutInflater.from(mContext).inflate(R.layout.item_rank_header_layout, recycler.parent as ViewGroup, false)
-        val imageView = view.findViewById<View>(R.id.iv_rank_top) as ImageView
-        imageView.loadWithHead(hotComicBeanList[0].cover)
-
-        val imageView1 = view.findViewById<View>(R.id.iv_rank_sec) as ImageView
-        imageView1.loadWithHead(hotComicBeanList[1].cover)
-
-        val imageView2 = view.findViewById<View>(R.id.iv_rank_thr) as ImageView
-        imageView2.loadWithHead(hotComicBeanList[2].cover)
-        imageView.setOnClickListener(listener)
-        imageView1.setOnClickListener(listener)
-        imageView2.setOnClickListener(listener)
-        return view
     }
 }

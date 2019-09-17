@@ -1,6 +1,7 @@
 package com.luuu.seven.module.index
 
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
@@ -51,7 +52,7 @@ class ComicUpdateFragment : BaseFragment() {
 
     override fun initViews() {
 
-        recycler.updatePadding(left = mContext!!.dp2px(15), top = paddingTop(mContext!!), right = mContext!!.dp2px(15))
+        recycler.updatePadding(left = dp2px(15), top = paddingTop(mContext!!), right = dp2px(15))
 
         mViewModel = obtainViewModel<HomeViewModel>().apply {
             updateData.observe(viewLifecycleOwner, Observer { data ->

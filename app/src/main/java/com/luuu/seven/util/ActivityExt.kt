@@ -48,7 +48,7 @@ fun AppCompatActivity.updateForTheme(theme: Theme) = when(theme) {
     Theme.DARK -> delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
     Theme.LIGHT -> delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     Theme.SYSTEM -> delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-    Theme.AUTO -> delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_AUTO)
+    Theme.AUTO -> delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
 }
 
 private inline fun FragmentManager.transact(action: FragmentTransaction.() -> Unit) {
@@ -58,10 +58,10 @@ private inline fun FragmentManager.transact(action: FragmentTransaction.() -> Un
 }
 
 inline fun <reified T : ViewModel> AppCompatActivity.obtainViewModel() =
-    ViewModelProviders.of(this).get(T::class.java)
+    ViewModelProvider(this).get(T::class.java)
 
 inline fun <reified T : ViewModel> Fragment.obtainViewModel() =
-    ViewModelProviders.of(this).get(T::class.java)
+    ViewModelProvider(this).get(T::class.java)
 
 inline fun <reified T : ViewModel> Fragment.activityViewModel() =
-    ViewModelProviders.of(requireActivity()).get(T::class.java)
+    ViewModelProvider(requireActivity()).get(T::class.java)

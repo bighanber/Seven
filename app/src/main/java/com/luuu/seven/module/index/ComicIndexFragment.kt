@@ -3,6 +3,7 @@ package com.luuu.seven.module.index
 import android.graphics.Bitmap
 import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
@@ -54,8 +55,11 @@ class ComicIndexFragment : BaseFragment() {
         index_banner?.startAutoPlay()
     }
 
+
+
     override fun initViews() {
         appbar_layout.updatePadding(top = paddingTop(context!!))
+
 
         mViewModel = obtainViewModel<HomeViewModel>().apply {
             getHomeData()

@@ -85,4 +85,11 @@ class MainActivity : BaseActivity() {
         shelfFragment?.let { ft.hide(shelfFragment!!) }
         newsFragment?.let { ft.hide(newsFragment!!) }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        indexFragment?.un
+//        shelfFragment = null
+//        newsFragment = null
+    }
 }

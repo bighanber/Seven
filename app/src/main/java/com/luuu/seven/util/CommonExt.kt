@@ -10,6 +10,7 @@ import androidx.annotation.DimenRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.core.os.ParcelCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -44,6 +45,12 @@ fun View.sp2px(value: Float): Int = (value * resources.displayMetrics.scaledDens
 fun View.px2dp(px: Int): Float = px.toFloat() / resources.displayMetrics.density
 fun View.px2sp(px: Int): Float = px.toFloat() / resources.displayMetrics.scaledDensity
 fun View.dimen2px(@DimenRes resource: Int): Int = resources.getDimensionPixelSize(resource)
+
+fun Fragment.dp2px(value: Int): Int = context!!.dp2px(value)
+fun Fragment.px2dp(value: Int): Float = context!!.px2dp(value)
+fun Fragment.sp2px(value: Float): Int = context!!.sp2px(value)
+fun Fragment.px2sp(value: Int): Float = context!!.px2sp(value)
+
 
 fun toast(msg: String? = "error", duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(ComicApplication.mApp, msg, duration).show()
