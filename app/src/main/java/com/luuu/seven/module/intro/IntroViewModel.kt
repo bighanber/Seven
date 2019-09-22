@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.luuu.seven.bean.ComicIntroBean
+import com.luuu.seven.bean.ComicRelatedInfoBean
 import com.luuu.seven.bean.IndexBean
 import com.luuu.seven.bean.ReadHistoryBean
 import com.luuu.seven.repository.IntroRepository
@@ -29,6 +30,10 @@ class IntroViewModel : ViewModel() {
     val readHistory: LiveData<List<ReadHistoryBean>>
         get() = _readHistory
 
+    private val _comicRelatedData = MutableLiveData<ComicRelatedInfoBean>()
+    val comicRelatedData: LiveData<ComicRelatedInfoBean>
+        get() = _comicRelatedData
+
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean>
         get() = _dataLoading
@@ -40,6 +45,20 @@ class IntroViewModel : ViewModel() {
             }
             onSuccess { result ->
                 _comicIntroData.value = result
+            }
+            onFailed { error, code ->
+                toast(error)
+            }
+        }
+    }
+
+    fun getComicRelated(comicId: Int) {
+        launch<ComicRelatedInfoBean> {
+            request {
+                mRepository.getComicRelated(comicId)
+            }
+            onSuccess { result ->
+                _comicRelatedData.value = result
             }
             onFailed { error, code ->
                 toast(error)

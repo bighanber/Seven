@@ -1,13 +1,12 @@
 package com.luuu.seven.module.intro
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.content.ContextCompat
-import android.text.format.DateFormat
-import android.view.*
-import android.widget.TextView
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -24,6 +23,7 @@ import com.luuu.seven.widgets.BottomSheetBehavior.Companion.STATE_COLLAPSED
 import com.luuu.seven.widgets.BottomSheetBehavior.Companion.STATE_EXPANDED
 import com.luuu.seven.widgets.BottomSheetBehavior.Companion.STATE_HIDDEN
 import kotlinx.android.synthetic.main.activity_comic_intro.*
+import kotlinx.android.synthetic.main.include_comic_intro.*
 import kotlinx.android.synthetic.main.intro_middle_layout.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -47,24 +47,18 @@ class ComicIntroActivity : BaseActivity() {
     private var isBack = false
 
     private var comicTitle = ""
-    private var comicAuthors = ""
+    private val comicAuthors: StringBuilder by lazy { StringBuilder() }
     private var comicCover = ""
-    private var comicTags = ""
-    private var comicUpdataTime: Long? = null
+    private val comicTags: StringBuilder by lazy { StringBuilder() }
     private var isFavorite = false
     private lateinit var mMenu: Menu
-
-    private lateinit var headerView: View
-    private lateinit var mUpdate: TextView
-    private lateinit var mIntro: TextView
+    private var mFilterChapterList: List<ChapterDataBean>? = null
+    private var mChapterList: ArrayList<ChapterDataBean>? = null
+    private var isMoreThanEight = false
 
     private var readList = ArrayList<ReadHistoryBean>()
 
     override fun initViews() {
-//        BarUtils.setTranslucentForCoordinatorLayout(this, 0)
-        headerView = LayoutInflater.from(this).inflate(R.layout.intro_list_header_layout, comic_recyclerview.parent as ViewGroup, false)
-        mUpdate = headerView.findViewById(R.id.tv_intro_update)
-        mIntro = headerView.findViewById(R.id.tv_cha_intro)
 
         val bottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.chapter_sheet))
 
@@ -72,14 +66,15 @@ class ComicIntroActivity : BaseActivity() {
             bottomSheetBehavior.state = STATE_EXPANDED
         }
 
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback {
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 val a11yState = if (newState == STATE_EXPANDED) {
                     View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
                 } else {
                     View.IMPORTANT_FOR_ACCESSIBILITY_AUTO
                 }
-                comic_recyclerview.importantForAccessibility = a11yState
+//                comic_recyclerview.importantForAccessibility = a11yState
             }
         })
         bottomSheetBehavior.isHideable = true
@@ -90,7 +85,8 @@ class ComicIntroActivity : BaseActivity() {
 
         viewModel = obtainViewModel<IntroViewModel>().apply {
             getReadHistory(comicId)
-            isFavorite(comicId)
+//            isFavorite(comicId)
+//            getComicRelated(comicId)
 
             comicIntroData.observe(this@ComicIntroActivity, Observer { data ->
                 data?.let {
@@ -108,6 +104,10 @@ class ComicIntroActivity : BaseActivity() {
                 readList.addAll(it)
                 getComicIntro(comicId)
             })
+
+            comicRelatedData.observe(this@ComicIntroActivity, Observer {
+
+            })
         }
     }
 
@@ -119,12 +119,15 @@ class ComicIntroActivity : BaseActivity() {
 
 
     private fun updateComicData(data: ComicIntroBean) {
-        if (mAdapter == null) {
-            initAdapter(data.chapters[0].data)
-        } else {
-            mAdapter?.setNewData(data.chapters[0].data)
-        }
+        mChapterList = data.chapters[0].data
+        filterChapter(data.chapters[0].data)
         mComicIntroBean = data
+
+        if (mAdapter == null) {
+            initAdapter()
+        } else {
+            mAdapter?.notifyDataSetChanged()
+        }
         if (!isBack) {
             setData(data)
         }
@@ -138,7 +141,8 @@ class ComicIntroActivity : BaseActivity() {
 
     private fun updateFavoriteMenu(isFavorite: Boolean) {
         this.isFavorite = isFavorite
-        mMenu.findItem(R.id.menu_favorite).setIcon(if (isFavorite) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white)
+        mMenu.findItem(R.id.menu_favorite)
+            .setIcon(if (isFavorite) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -146,7 +150,7 @@ class ComicIntroActivity : BaseActivity() {
             R.id.menu_favorite -> if (isFavorite) {
                 viewModel.unFavoriteComic(comicId)
             } else {
-                viewModel.favoriteComic(comicId, comicTitle, comicAuthors, comicCover, Date().time)
+                viewModel.favoriteComic(comicId, comicTitle, comicAuthors.toString(), comicCover, Date().time)
             }
 
         }
@@ -161,64 +165,90 @@ class ComicIntroActivity : BaseActivity() {
         }
     }
 
-    fun initAdapter(dataBeanList: ArrayList<ChapterDataBean>) {
-        mAdapter = object : BaseQuickAdapter<ChapterDataBean, BaseViewHolder>(R.layout.item_chapter_layout, dataBeanList) {
+    private fun filterChapter(dataList: List<ChapterDataBean>) {
+        if (dataList.size >= 9) {
+            isMoreThanEight = true
+            mFilterChapterList = dataList.take(8)
+        }
+    }
+
+    fun initAdapter() {
+        mAdapter = object : BaseQuickAdapter<ChapterDataBean, BaseViewHolder>(
+            R.layout.item_chapter_layout,
+            mFilterChapterList ?: mChapterList
+        ) {
 
             override fun convert(holder: BaseViewHolder, item: ChapterDataBean?) {
-                ifNotNull(holder, item) { holder, item ->
-                    holder.setText(R.id.tv_num, item.chapterTitle)
-                    if (mComicIntroBean.mReadHistoryBean != null && item.chapterId == mComicIntroBean.mReadHistoryBean!!.chapterId) {
-                        holder.itemView.setBackgroundResource(R.drawable.chapter_read_backgroud)
-                        (holder.itemView as AppCompatTextView).setTextColor(0xFFFFFFFF.toInt())
-                        mHistoryChapterPosition = holder.adapterPosition
-                        mHistoryBrowsePosition = if (mComicIntroBean.mReadHistoryBean!!.browsePosition < 1)
+                if (isMoreThanEight && holder.adapterPosition == (mFilterChapterList?.size ?: 1) - 1) {
+                    holder.setText(R.id.tv_num, "...")
+                } else {
+                    holder.setText(R.id.tv_num, item?.chapterTitle)
+                }
+
+                if (mComicIntroBean.mReadHistoryBean != null && item?.chapterId == mComicIntroBean.mReadHistoryBean!!.chapterId) {
+                    holder.itemView.setBackgroundResource(R.drawable.chapter_read_backgroud)
+                    (holder.itemView as AppCompatTextView).setTextColor(0xFFFFFFFF.toInt())
+                    mHistoryChapterPosition = holder.adapterPosition
+                    mHistoryBrowsePosition =
+                        if (mComicIntroBean.mReadHistoryBean!!.browsePosition < 1)
                             1
                         else
                             mComicIntroBean.mReadHistoryBean!!.browsePosition
-                    } else {
-                        holder.itemView.setBackgroundResource(R.drawable.chapter_backgroud)
-                        (holder.itemView as AppCompatTextView).setTextColor(ContextCompat.getColor(mContext, R.color.content))
-                    }
+                } else {
+                    holder.itemView.setBackgroundResource(R.drawable.chapter_backgroud)
+                    (holder.itemView as AppCompatTextView).setTextColor(
+                        ContextCompat.getColor(
+                            mContext,
+                            R.color.content
+                        )
+                    )
                 }
             }
 
         }
 
-        comic_recyclerview.layoutManager = mLayoutManager
-        mAdapter?.addHeaderView(headerView)
-        comic_recyclerview.adapter = mAdapter
+        chapter_grid.layoutManager = mLayoutManager
+        chapter_grid.adapter = mAdapter
 
         mAdapter?.setOnItemClickListener { _, _, position ->
             val mBundle = Bundle()
             mBundle.run {
                 putInt("comicId", comicId)
-                putParcelableArrayList("comicChapter", dataBeanList)
+                putParcelableArrayList("comicChapter", mChapterList)
                 putInt("comicPosition", position)
-                putString("comicTagName", dataBeanList[position].chapterTitle)
+                putString("comicTagName", mChapterList?.get(position)?.chapterTitle)
                 putString("comicCover", mComicIntroBean.cover)
                 putString("comicTitle", mComicIntroBean.title)
-                putInt("historyPosition", if (position + 1 == mHistoryChapterPosition) mHistoryBrowsePosition else 0)
+                putInt(
+                    "historyPosition",
+                    if (position + 1 == mHistoryChapterPosition) mHistoryBrowsePosition else 0
+                )
             }
             startNewActivityForResult(ComicReadRecyclerActivity::class.java, 10002, mBundle)
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun setData(data: ComicIntroBean) {
-        mIntro.text = data.description
+
         collap.title = data.title
         tv_intro_title.text = data.title
-        for (i in data.authors.indices) {
-            comicAuthors = comicAuthors + data.authors[i].tagName + "/"
+
+        data.authors.forEach {
+            comicAuthors.append(it.tagName).append(" ")
         }
-        for (i in data.types.indices) {
-            comicTags = comicTags + data.types[i].tagName + "/"
+
+        data.types.forEach {
+            comicTags.append(it.tagName).append(" ")
         }
-        comicAuthors = comicAuthors.substring(0, comicAuthors.length - 1)
-        comicTags = comicTags.substring(0, comicTags.length - 1)
-        tv_intro_authors.text = "作者: $comicAuthors"
-        tv_intro_tags.text = "类型: $comicTags"
-        mUpdate.text = "最后更新: ${DateFormat.format("yyyy-MM-dd", data.lastUpdatetime * 1000)}"
+
+        tv_intro_authors.text =
+            string(R.string.intro_comic_authors, comicAuthors.toString())
+        tv_intro_tags.text =
+            string(R.string.intro_comic_types, comicTags.toString())
+
+        comic_last_update.text =
+            string(R.string.intro_comic_last_update, (data.lastUpdatetime * 1000).toDateString())
+        comic_introduction.text = data.description
         iv_cha_img.loadWithHead(data.cover)
 //        iv_cover.loadImg(data.cover)
 

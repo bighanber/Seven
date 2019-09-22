@@ -60,14 +60,6 @@ fun toast(@StringRes msg: Int, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(ComicApplication.mApp, ComicApplication.mApp.resources.getString(msg), duration).show()
 }
 
-fun <X, Y> LiveData<X>.map(body: (X) -> Y): LiveData<Y> {
-    return Transformations.map(this, body)
-}
-
-fun <T> MutableLiveData<T>.setValueIfNew(newValue: T) {
-    if (this.value != newValue) value = newValue
-}
-
 fun Parcel.writeBooleanUsingCompat(value: Boolean) = ParcelCompat.writeBoolean(this, value)
 
 fun Parcel.readBooleanUsingCompat() = ParcelCompat.readBoolean(this)

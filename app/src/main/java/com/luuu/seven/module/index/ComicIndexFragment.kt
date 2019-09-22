@@ -55,8 +55,6 @@ class ComicIndexFragment : BaseFragment() {
         index_banner?.startAutoPlay()
     }
 
-
-
     override fun initViews() {
         appbar_layout.updatePadding(top = paddingTop(context!!))
 

@@ -1,6 +1,7 @@
 package com.luuu.seven.repository
 
 import com.luuu.seven.bean.ComicIntroBean
+import com.luuu.seven.bean.ComicRelatedInfoBean
 import com.luuu.seven.bean.ReadHistoryBean
 import com.luuu.seven.db.CollectDao
 import com.luuu.seven.db.ReadHistoryDao
@@ -14,6 +15,10 @@ class IntroRepository {
 
     suspend fun getComicIntro(comicId: Int): ComicIntroBean {
         return HttpManager.getInstance.getService().getComicIntro(comicId)
+    }
+
+    suspend fun getComicRelated(comicId: Int): ComicRelatedInfoBean {
+        return HttpManager.getInstance.getService().getComicRelated(comicId)
     }
 
     suspend fun getReadHistory(comicId: Int): List<ReadHistoryBean> {

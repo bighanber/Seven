@@ -43,11 +43,14 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/comic_recyclerview"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/comic_intro_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+        <include layout="@layout/include_comic_intro"/>
+    </androidx.core.widget.NestedScrollView>
 
     <fragment
         android:id="@+id/chapter_sheet"
