@@ -1,10 +1,8 @@
 package com.luuu.seven.module.search
 
-import android.content.Context
 import android.os.Bundle
-import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.*
 import com.luuu.seven.R
@@ -14,31 +12,56 @@ import com.luuu.seven.base.BaseActivity
 import com.luuu.seven.bean.HotSearchBean
 import com.luuu.seven.bean.SearchDataBean
 import com.luuu.seven.module.intro.ComicIntroActivity
+import com.luuu.seven.util.*
 import kotlinx.android.synthetic.main.activity_comic_search.*
 
 /**
  * Created by lls on 2017/8/9.
  *搜索界面
  */
-class ComicSearchActivity : BaseActivity(), ComicSearchContract.View {
+class ComicSearchActivity : BaseActivity() {
 
+    private lateinit var mViewModel: SearchViewModel
     private var mAdapter: ComicSearchAdapter? = null
     private var mHotAdapter: ComicHotSearchAdapter? = null
     private val mLayoutManager by lazy { LinearLayoutManager(this) }
-    private lateinit var mFlexboxLayoutManager: FlexboxLayoutManager
+    private val mFlexLayoutManager: FlexboxLayoutManager by lazy {
+        FlexboxLayoutManager(this).apply {
+            flexDirection = FlexDirection.ROW
+            flexWrap = FlexWrap.WRAP
+            alignItems = AlignItems.CENTER
+            justifyContent = JustifyContent.FLEX_START
+        }
+    }
     private var mSearchDataBeanList: List<SearchDataBean>? = ArrayList()
-    private val mPresenter by lazy { ComicSearchPresenter(this) }
 
     override fun initViews() {
-        mPresenter.getHotSearch()
-        tv_cancel.setOnClickListener { onBackPressed() }
+
+        mViewModel = obtainViewModel<SearchViewModel>().apply {
+            getHotSearch()
+
+            searchData.observe(this@ComicSearchActivity, Observer {
+                if (it.isEmpty()) {
+                    toast(string(R.string.search_empty))
+                    return@Observer
+                }
+                updateSearchData(it)
+            })
+
+            hotSearchData.observe(this@ComicSearchActivity, Observer {
+                updateHotSearch(it)
+            })
+        }
+
+        tv_cancel.setOnClickListener { finish() }
+
         et_search_view.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val keyWords = et_search_view.text.toString().trim()
+                val keyWords = et_search_view.values()
                 if (keyWords.isEmpty()) {
-                    showToast(recycler_search,"请输入搜索内容")
+                    toast(string(R.string.search_input_keyword_first))
                 } else {
-                    mPresenter.getSearchData(keyWords)
+                    mViewModel.getSearchData(keyWords)
                 }
             }
             false
@@ -46,53 +69,28 @@ class ComicSearchActivity : BaseActivity(), ComicSearchContract.View {
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mPresenter.unsubscribe()
-//        mSearchDataBeanList = null
-    }
-
     override fun getIntentExtras(extras: Bundle?) {
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.activity_comic_search
 
-    override fun showLoading(isLoading: Boolean) {
+    private fun updateSearchData(data: List<SearchDataBean>) {
+        tv_hot_search.setGone()
+        mSearchDataBeanList = data
+        mAdapter?.setNewData(data) ?: initAdapter(data)
     }
 
-    override fun showError(isError: Boolean) {
-    }
-
-    override fun showEmpty(isEmpty: Boolean) {
-        if (isEmpty) showToast(recycler_search, "查不到数据哦")
-    }
-
-    override fun updateSearchData(dataBeen: List<SearchDataBean>) {
-        tv_hot_search.visibility = View.GONE
-        mSearchDataBeanList = dataBeen
-        if (mAdapter == null) {
-            initAdapter(dataBeen)
-        } else {
-            mAdapter!!.setNewData(dataBeen)
-        }
-    }
-
-    override fun updateHotSearch(data: List<HotSearchBean>) {
-        mFlexboxLayoutManager = FlexboxLayoutManager(this).apply {
-            flexDirection = FlexDirection.ROW
-            flexWrap = FlexWrap.WRAP
-            alignItems = AlignItems.CENTER
-            justifyContent = JustifyContent.FLEX_START
-        }
+    private fun updateHotSearch(data: List<HotSearchBean>) {
 
         mHotAdapter = ComicHotSearchAdapter(R.layout.item_hot_search_layout, data.take(20))
-        recycler_search.layoutManager = mFlexboxLayoutManager
-        recycler_search.adapter = mHotAdapter
+        recycler_search.apply {
+            layoutManager = mFlexLayoutManager
+            adapter = mHotAdapter
+        }
 
-        mHotAdapter!!.setOnItemClickListener { _, _, position ->
-            mPresenter.getSearchData(data[position].name)
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(et_search_view.windowToken, 0)
+        mHotAdapter?.setOnItemClickListener { _, _, position ->
+            mViewModel.getSearchData(data[position].name)
+            et_search_view.dismissKeyboard()
         }
     }
 
@@ -100,10 +98,10 @@ class ComicSearchActivity : BaseActivity(), ComicSearchContract.View {
         mAdapter = ComicSearchAdapter(R.layout.item_search_layout, searchDataBeanList)
         recycler_search.layoutManager = mLayoutManager
         recycler_search.adapter = mAdapter
-        mAdapter!!.setOnItemClickListener { _, _, position ->
+        mAdapter?.setOnItemClickListener { _, _, position ->
             val mBundle = Bundle()
-            mBundle.putInt("comicId", mSearchDataBeanList!![position].id)
-            startNewActivity(ComicIntroActivity::class.java, mBundle)
+            mBundle.putInt(ComicIntroActivity.COMIC_ID, mSearchDataBeanList!![position].id)
+            startActivity<ComicIntroActivity>(bundle = mBundle)
         }
     }
 }

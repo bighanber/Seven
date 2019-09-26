@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Looper
 import android.util.TypedValue
 import android.view.View
+import android.widget.EditText
 import androidx.annotation.RestrictTo
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -180,3 +181,5 @@ fun paddingTop(context: Context): Int {
         else 0
     return BarUtils.getStatusBarHeight(context) + mActonBarHeight
 }
+
+fun EditText.values() = this.text.toString()

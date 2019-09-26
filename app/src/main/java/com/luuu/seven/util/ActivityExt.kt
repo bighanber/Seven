@@ -1,5 +1,9 @@
 package com.luuu.seven.util
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
@@ -7,7 +11,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.luuu.seven.theme.Theme
 
 /**
@@ -65,3 +68,19 @@ inline fun <reified T : ViewModel> Fragment.obtainViewModel() =
 
 inline fun <reified T : ViewModel> Fragment.activityViewModel() =
     ViewModelProvider(requireActivity()).get(T::class.java)
+
+inline fun <reified T> Fragment.startActivity(flag: Int = -1, bundle: Bundle? = null) {
+    activity?.startActivity<T>(flag, bundle)
+}
+
+inline fun <reified T> Context.startActivity(flag: Int = -1, bundle: Bundle? = null) {
+    val intent = Intent(this, T::class.java).apply {
+        if (-1 != flag) {
+            flags = flags
+        } else if (this@startActivity !is Activity) {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        if (bundle != null) putExtras(bundle)
+    }
+    startActivity(intent)
+}

@@ -171,10 +171,9 @@ class ComicIndexFragment : BaseFragment() {
         super.onPause()
         if (this::mJob.isInitialized) {
             mJob.cancel()
-
+        }
         if (this::mBitmapGet.isInitialized) {
             mBitmapGet.cancel(true)
-        }
         }
         index_banner.stopAutoPlay()
     }

@@ -71,13 +71,13 @@ object TaskData {
                 .compose(SchedulerHelper.io_main())
     }
 
-    fun getSearchData(keyname: String): Observable<List<SearchDataBean>> {
-        return HttpManager.getInstance.getService().getSearchData(keyname)
-                .compose(SchedulerHelper.io_main())
-    }
+//    fun getSearchData(keyname: String): Observable<List<SearchDataBean>> {
+//        return HttpManager.getInstance.getService().getSearchData(keyname)
+//                .compose(SchedulerHelper.io_main())
+//    }
 
-    fun getHotSearch(): Observable<List<HotSearchBean>> {
-        return HttpManager.getInstance.getService().getHotSearch()
-                .compose(SchedulerHelper.io_main())
-    }
+//    fun getHotSearch(): Observable<List<HotSearchBean>> {
+//        return HttpManager.getInstance.getService().getHotSearch()
+//                .compose(SchedulerHelper.io_main())
+//    }
 }

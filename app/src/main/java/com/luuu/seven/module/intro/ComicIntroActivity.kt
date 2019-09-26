@@ -58,6 +58,10 @@ class ComicIntroActivity : BaseActivity() {
 
     private var readList = ArrayList<ReadHistoryBean>()
 
+    companion object {
+        const val COMIC_ID = "comicId"
+    }
+
     override fun initViews() {
 
         val bottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.chapter_sheet))
@@ -112,7 +116,7 @@ class ComicIntroActivity : BaseActivity() {
     }
 
     override fun getIntentExtras(extras: Bundle?) {
-        comicId = extras?.getInt("comicId") ?: 0
+        comicId = extras?.getInt(COMIC_ID) ?: 0
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.activity_comic_intro

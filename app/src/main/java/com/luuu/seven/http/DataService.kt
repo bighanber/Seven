@@ -71,9 +71,9 @@ interface DataService {
     fun getComicReadPage(@Path("comicid") comicid: Int, @Path("chapterid") chapterid: Int): Observable<ComicReadBean>
 
     //漫画搜索
-    @GET("search/show/0/{keyname}/0.json")
-    fun getSearchData(@Path("keyname") keyname: String): Observable<List<SearchDataBean>>
+    @GET("search/show/0/{keyword}/0.json")
+    suspend fun getSearchData(@Path("keyword") keyword: String): List<SearchDataBean>
 
     @GET("search/hot/0.json")
-    fun getHotSearch(): Observable<List<HotSearchBean>>
+    suspend fun getHotSearch(): List<HotSearchBean>
 }

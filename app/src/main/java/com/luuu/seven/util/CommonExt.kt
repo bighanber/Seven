@@ -5,6 +5,7 @@ import android.os.Parcel
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.DimenRes
 import androidx.annotation.LayoutRes
@@ -67,3 +68,12 @@ fun Parcel.readBooleanUsingCompat() = ParcelCompat.readBoolean(this)
 val <T> T.checkAllMatched: T
     get() = this
 
+fun View.showKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(this, InputMethodManager.SHOW_FORCED)
+}
+
+fun View.dismissKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(this.windowToken, 0)
+}

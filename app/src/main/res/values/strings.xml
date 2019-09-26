@@ -15,7 +15,6 @@
     <string name="comic_search">漫画搜索</string>
     <string name="search">搜索</string>
     <string name="cancel">取消</string>
-    <string name="hot_search">- 热门搜索 -</string>
     <string name="start_read">开始阅读</string>
     <string name="news">新闻</string>
     <string name="flash_news">快讯</string>
@@ -27,4 +26,9 @@
     <string name="intro_comic_authors">作者: %s</string>
     <string name="intro_comic_types">类型: %s</string>
     <string name="intro_comic_last_update">最后更新: %s</string>
+
+    <!--漫画搜索-->
+    <string name="search_input_keyword_first">请输入搜索内容</string>
+    <string name="search_empty">未搜索到相关漫画</string>
+    <string name="hot_search">- 热门搜索 -</string>
 </resources>

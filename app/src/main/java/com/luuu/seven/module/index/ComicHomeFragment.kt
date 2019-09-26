@@ -5,10 +5,10 @@ import androidx.fragment.app.Fragment
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicFragmentAdapter
 import com.luuu.seven.base.BaseFragment
+import com.luuu.seven.module.search.ComicSearchActivity
 import com.luuu.seven.module.shelf.ComicCollectFragment
 import com.luuu.seven.module.shelf.ComicHistoryFragment
-import com.luuu.seven.util.BarUtils
-import com.luuu.seven.util.pageChangeListener
+import com.luuu.seven.util.*
 import kotlinx.android.synthetic.main.fra_home_layout.*
 
 class ComicHomeFragment : BaseFragment() {
@@ -30,6 +30,10 @@ class ComicHomeFragment : BaseFragment() {
     override fun initViews() {
         BarUtils.addStatusBarView(status_bg, mContext!!, ContextCompat.getColor(mContext!!, R.color.transparent))
 
+        tv_search.click {
+            startActivity<ComicSearchActivity>()
+        }
+
         val mAdapter = ComicFragmentAdapter(childFragmentManager, homePages, HOME_TITLES)
         home_tabs.setupWithViewPager(home_viewpager.apply {
             adapter = mAdapter
@@ -39,8 +43,11 @@ class ComicHomeFragment : BaseFragment() {
         home_viewpager.pageChangeListener {
             onPageSelected {  pos ->
                 if (pos != 1) {
-                    tool_bg.setBackgroundColor(ContextCompat.getColor(mContext!!, R.color.colorPrimary))
-                    status_bg.setBackgroundColor(ContextCompat.getColor(mContext!!, R.color.colorPrimary))
+                    tool_bg.setBackgroundColor(color(R.color.colorPrimary))
+                    status_bg.setBackgroundColor(color(R.color.colorPrimary))
+                } else {
+                    tool_bg.setBackgroundColor(color(R.color.transparent))
+                    status_bg.setBackgroundColor(color(R.color.transparent))
                 }
             }
         }
