@@ -47,6 +47,12 @@ fun AppCompatActivity.hideFragment(fragment: Fragment) {
     }
 }
 
+fun AppCompatActivity.removeFragment(fragment: Fragment) {
+    supportFragmentManager.transact {
+        remove(fragment)
+    }
+}
+
 fun AppCompatActivity.updateForTheme(theme: Theme) = when(theme) {
     Theme.DARK -> delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
     Theme.LIGHT -> delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -69,18 +75,39 @@ inline fun <reified T : ViewModel> Fragment.obtainViewModel() =
 inline fun <reified T : ViewModel> Fragment.activityViewModel() =
     ViewModelProvider(requireActivity()).get(T::class.java)
 
-inline fun <reified T> Fragment.startActivity(flag: Int = -1, bundle: Bundle? = null) {
-    activity?.startActivity<T>(flag, bundle)
+inline fun <reified T> Fragment.startActivity(flag: Int = -1, vararg params: Pair<String, Any>) {
+    activity?.startActivity<T>(flag, *params)
 }
 
-inline fun <reified T> Context.startActivity(flag: Int = -1, bundle: Bundle? = null) {
+inline fun <reified T> Context.startActivity(flag: Int = -1, vararg params: Pair<String, Any>) {
     val intent = Intent(this, T::class.java).apply {
         if (-1 != flag) {
             flags = flags
         } else if (this@startActivity !is Activity) {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
-        if (bundle != null) putExtras(bundle)
     }
+    intent.putExtras(*params)
     startActivity(intent)
+}
+
+inline fun <reified T> AppCompatActivity.startActivityForResult(flag: Int = -1, requestCode: Int = -1, vararg params: Pair<String, Any>, crossinline callback: (result: Intent?) -> Unit = {}) {
+    val intent = Intent(this, T::class.java).apply {
+        if (flag != -1) {
+            this.addFlags(flag)
+        }
+    }
+    intent.putExtras(*params)
+    val fragment = EmptyFragment().apply {
+        init(requestCode, intent) {
+            callback.invoke(it)
+            this@startActivityForResult.removeFragment(this)
+        }
+    }
+    addFragment(fragment, "")
+}
+
+fun AppCompatActivity.returnAndFinish(vararg params: Pair<String, Any>) {
+    setResult(Activity.RESULT_OK, Intent().putExtras(*params))
+    finish()
 }
