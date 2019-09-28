@@ -17,16 +17,13 @@ class ShelfViewModel : ViewModel() {
     private val mRepository by lazy { ShelfRepository() }
 
     private val _historyData = MutableLiveData<List<ReadHistoryBean>>()
-    val historyData: LiveData<List<ReadHistoryBean>>
-        get() = _historyData
+    val historyData: LiveData<List<ReadHistoryBean>> = _historyData
 
     private val _collectData = MutableLiveData<List<CollectBean>>()
-    val collectData: LiveData<List<CollectBean>>
-        get() = _collectData
+    val collectData: LiveData<List<CollectBean>> = _collectData
 
     private val _dataLoading = MutableLiveData<Boolean>()
-    val dataLoading: LiveData<Boolean>
-        get() = _dataLoading
+    val dataLoading: LiveData<Boolean> = _dataLoading
 
     fun getReadHistory() {
         launch<List<ReadHistoryBean>> {

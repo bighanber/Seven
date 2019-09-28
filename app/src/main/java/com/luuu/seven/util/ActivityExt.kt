@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
@@ -17,37 +18,37 @@ import com.luuu.seven.theme.Theme
  * Created by lls on 2019-05-09
  */
 
-fun AppCompatActivity.replaceFragment(fragment: Fragment, fragmentContent: Int) {
+fun FragmentActivity.replaceFragment(fragment: Fragment, fragmentContent: Int) {
     supportFragmentManager.transact {
         replace(fragmentContent, fragment)
     }
 }
 
-fun AppCompatActivity.addFragment(fragment: Fragment, fragmentContent: Int) {
+fun FragmentActivity.addFragment(fragment: Fragment, fragmentContent: Int) {
     supportFragmentManager.transact {
         add(fragmentContent, fragment)
     }
 }
 
-fun AppCompatActivity.addFragment(fragment: Fragment, tag: String) {
+fun FragmentActivity.addFragment(fragment: Fragment, tag: String) {
     supportFragmentManager.transact {
         add(fragment, tag)
     }
 }
 
-fun AppCompatActivity.showFragment(fragment: Fragment) {
+fun FragmentActivity.showFragment(fragment: Fragment) {
     supportFragmentManager.transact {
         show(fragment)
     }
 }
 
-fun AppCompatActivity.hideFragment(fragment: Fragment) {
+fun FragmentActivity.hideFragment(fragment: Fragment) {
     supportFragmentManager.transact {
         hide(fragment)
     }
 }
 
-fun AppCompatActivity.removeFragment(fragment: Fragment) {
+fun FragmentActivity.removeFragment(fragment: Fragment) {
     supportFragmentManager.transact {
         remove(fragment)
     }
@@ -63,7 +64,7 @@ fun AppCompatActivity.updateForTheme(theme: Theme) = when(theme) {
 private inline fun FragmentManager.transact(action: FragmentTransaction.() -> Unit) {
     beginTransaction().apply {
         action()
-    }.commit()
+    }.commitAllowingStateLoss()
 }
 
 inline fun <reified T : ViewModel> AppCompatActivity.obtainViewModel() =
@@ -75,11 +76,11 @@ inline fun <reified T : ViewModel> Fragment.obtainViewModel() =
 inline fun <reified T : ViewModel> Fragment.activityViewModel() =
     ViewModelProvider(requireActivity()).get(T::class.java)
 
-inline fun <reified T> Fragment.startActivity(flag: Int = -1, vararg params: Pair<String, Any>) {
-    activity?.startActivity<T>(flag, *params)
+inline fun <reified T> Fragment.startActivity(vararg params: Pair<String, Any>, flag: Int = -1) {
+    activity?.startActivity<T>(*params, flag = flag)
 }
 
-inline fun <reified T> Context.startActivity(flag: Int = -1, vararg params: Pair<String, Any>) {
+inline fun <reified T> Context.startActivity(vararg params: Pair<String, Any>, flag: Int = -1) {
     val intent = Intent(this, T::class.java).apply {
         if (-1 != flag) {
             flags = flags
@@ -91,7 +92,7 @@ inline fun <reified T> Context.startActivity(flag: Int = -1, vararg params: Pair
     startActivity(intent)
 }
 
-inline fun <reified T> AppCompatActivity.startActivityForResult(flag: Int = -1, requestCode: Int = -1, vararg params: Pair<String, Any>, crossinline callback: (result: Intent?) -> Unit = {}) {
+inline fun <reified T> FragmentActivity.startActivityForResult(vararg params: Pair<String, Any>, flag: Int = -1, requestCode: Int = -1, crossinline callback: (result: Intent?) -> Unit = {}) {
     val intent = Intent(this, T::class.java).apply {
         if (flag != -1) {
             this.addFlags(flag)
@@ -104,10 +105,19 @@ inline fun <reified T> AppCompatActivity.startActivityForResult(flag: Int = -1, 
             this@startActivityForResult.removeFragment(this)
         }
     }
-    addFragment(fragment, "")
+    addFragment(fragment, "ForResult")
 }
 
-fun AppCompatActivity.returnAndFinish(vararg params: Pair<String, Any>) {
+inline fun <reified T> Fragment.startActivityForResult(vararg params: Pair<String, Any>, flag: Int = -1, requestCode: Int = -1, crossinline callback: (result: Intent?) -> Unit = {}) {
+    activity?.startActivityForResult<T>(*params, flag = flag, requestCode = requestCode, callback = callback)
+}
+
+
+fun FragmentActivity.returnAndFinish(vararg params: Pair<String, Any>) {
     setResult(Activity.RESULT_OK, Intent().putExtras(*params))
     finish()
+}
+
+fun Fragment.returnAndFinish(vararg params: Pair<String, Any>) {
+    activity?.returnAndFinish(*params)
 }

@@ -33,9 +33,6 @@ class ComicSpecialActivity : BaseActivity(), ComicSpecialContract.View {
         mPresenter.getComicSpecial(0)
     }
 
-    override fun getIntentExtras(extras: Bundle?) {
-    }
-
     override fun getContentViewLayoutID(): Int = R.layout.activity_comic_special
 
     override fun onDestroy() {

@@ -19,24 +19,19 @@ class IntroViewModel : ViewModel() {
     private val mRepository by lazy { IntroRepository() }
 
     private val _comicIntroData = MutableLiveData<ComicIntroBean>()
-    val comicIntroData: LiveData<ComicIntroBean>
-        get() = _comicIntroData
+    val comicIntroData: LiveData<ComicIntroBean> = _comicIntroData
 
     private val _updateFavorite = MutableLiveData<Boolean>()
-    val updateFavorite: LiveData<Boolean>
-        get() = _updateFavorite
+    val updateFavorite: LiveData<Boolean> = _updateFavorite
 
     private val _readHistory = MutableLiveData<List<ReadHistoryBean>>()
-    val readHistory: LiveData<List<ReadHistoryBean>>
-        get() = _readHistory
+    val readHistory: LiveData<List<ReadHistoryBean>> = _readHistory
 
     private val _comicRelatedData = MutableLiveData<ComicRelatedInfoBean>()
-    val comicRelatedData: LiveData<ComicRelatedInfoBean>
-        get() = _comicRelatedData
+    val comicRelatedData: LiveData<ComicRelatedInfoBean> = _comicRelatedData
 
     private val _dataLoading = MutableLiveData<Boolean>()
-    val dataLoading: LiveData<Boolean>
-        get() = _dataLoading
+    val dataLoading: LiveData<Boolean> = _dataLoading
 
     fun getComicIntro(comicId: Int) {
         launch<ComicIntroBean> {

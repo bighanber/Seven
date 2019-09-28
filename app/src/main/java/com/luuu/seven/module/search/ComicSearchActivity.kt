@@ -51,6 +51,10 @@ class ComicSearchActivity : BaseActivity() {
             hotSearchData.observe(this@ComicSearchActivity, Observer {
                 updateHotSearch(it)
             })
+
+            isEmpty.observe(this@ComicSearchActivity, Observer {
+                if (it) toast(string(R.string.search_empty))
+            })
         }
 
         tv_cancel.setOnClickListener { finish() }
@@ -67,9 +71,6 @@ class ComicSearchActivity : BaseActivity() {
             false
         }
 
-    }
-
-    override fun getIntentExtras(extras: Bundle?) {
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.activity_comic_search
@@ -99,9 +100,7 @@ class ComicSearchActivity : BaseActivity() {
         recycler_search.layoutManager = mLayoutManager
         recycler_search.adapter = mAdapter
         mAdapter?.setOnItemClickListener { _, _, position ->
-            val mBundle = Bundle()
-            mBundle.putInt(ComicIntroActivity.COMIC_ID, mSearchDataBeanList!![position].id)
-            startActivity<ComicIntroActivity>(bundle = mBundle)
+            startActivity<ComicIntroActivity>(ComicIntroActivity.COMIC_ID to mSearchDataBeanList!![position].id)
         }
     }
 }

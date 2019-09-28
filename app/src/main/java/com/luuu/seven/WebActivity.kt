@@ -10,6 +10,7 @@ import android.webkit.WebViewClient
 import com.luuu.seven.base.BaseActivity
 import com.luuu.seven.http.Api
 import com.luuu.seven.module.intro.ComicIntroActivity
+import com.luuu.seven.util.get
 import kotlinx.android.synthetic.main.activity_web.*
 
 class WebActivity : BaseActivity() {
@@ -25,6 +26,8 @@ class WebActivity : BaseActivity() {
         mWebSettings?.javaScriptEnabled = true
         mWebSettings?.useWideViewPort = true
         mWebSettings?.loadWithOverviewMode = true
+
+        mUrl = intent.get("url")
 
         mWeb?.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
@@ -48,10 +51,6 @@ class WebActivity : BaseActivity() {
 
             if (mWeb!!.canGoBack()) mWeb?.goBack() else onBackPressed()
         }
-    }
-
-    override fun getIntentExtras(extras: Bundle?) {
-        mUrl = extras?.getString("url")
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.activity_web

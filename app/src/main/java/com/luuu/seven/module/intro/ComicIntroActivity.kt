@@ -87,6 +87,8 @@ class ComicIntroActivity : BaseActivity() {
             bottomSheetBehavior.state = STATE_HIDDEN
         }
 
+        comicId = intent.get(COMIC_ID) ?: 0
+
         viewModel = obtainViewModel<IntroViewModel>().apply {
             getReadHistory(comicId)
 //            isFavorite(comicId)
@@ -113,10 +115,6 @@ class ComicIntroActivity : BaseActivity() {
 
             })
         }
-    }
-
-    override fun getIntentExtras(extras: Bundle?) {
-        comicId = extras?.getInt(COMIC_ID) ?: 0
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.activity_comic_intro

@@ -16,13 +16,20 @@ import com.luuu.seven.base.BaseActivity
 import com.luuu.seven.bean.ChapterDataBean
 import com.luuu.seven.module.read.ComicReadContract
 import com.luuu.seven.module.read.ComicReadPresenter
+import com.luuu.seven.util.get
 import com.luuu.seven.util.toast
 import kotlinx.android.synthetic.main.activity_comic_read_recycler.*
 import kotlinx.android.synthetic.main.read_page_info.*
 
 class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
 
-    private val mLayoutManager: ViewPagerLayoutManager by lazy { ViewPagerLayoutManager(this, LinearLayoutManager.HORIZONTAL, false) }
+    private val mLayoutManager: ViewPagerLayoutManager by lazy {
+        ViewPagerLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+    }
     private var mAdapter: ComicReadAdapter? = null
     private var mComicId: Int = 0
     private var intCurPage: Int = 0
@@ -37,6 +44,15 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
     private val mPresenter by lazy { ComicReadPresenter(this) }
 
     override fun initViews() {
+
+        mComicId = intent.get("comicId") ?: 0
+        mChapters = intent.get("comicChapter")
+        mChapterTagName = intent.get("comicTagName")
+        mCurChapterPosition = intent.get("comicPosition") ?: 0
+        mHistoryBrowsePosition = intent.get("historyPosition") ?: 0
+        mComicCover = intent.get("comicCover")
+        mComicTitle = intent.get("comicTitle")
+
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         mPresenter.getComicData(mComicId, mChapters!![mCurChapterPosition].chapterId)
 
@@ -55,9 +71,11 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
 
         })
 
-        iv_back.setOnClickListener{
-            mPresenter.updateReadHistory(mComicId, mChapters!![mCurChapterPosition].chapterId,
-                    mChapterTagName!!, intCurPage, mComicCover!!, mComicTitle!!)
+        iv_back.setOnClickListener {
+            mPresenter.updateReadHistory(
+                mComicId, mChapters!![mCurChapterPosition].chapterId,
+                mChapterTagName!!, intCurPage, mComicCover!!, mComicTitle!!
+            )
         }
 
         mLayoutManager.setOnViewPagerListener(object : OnViewPagerListener {
@@ -80,28 +98,22 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            mPresenter.updateReadHistory(mComicId, mChapters!![mCurChapterPosition].chapterId,
-                    mChapterTagName!!, intCurPage, mComicCover!!, mComicTitle!!)
+            mPresenter.updateReadHistory(
+                mComicId, mChapters!![mCurChapterPosition].chapterId,
+                mChapterTagName!!, intCurPage, mComicCover!!, mComicTitle!!
+            )
             return true
         }
         return super.onKeyDown(keyCode, event)
     }
 
-    override fun getIntentExtras(extras: Bundle?) {
-        extras?.let {
-            mComicId = it.getInt("comicId")
-            mChapters = it.getParcelableArrayList<Parcelable>("comicChapter") as ArrayList<ChapterDataBean>
-            mChapterTagName = it.getString("comicTagName")
-            mCurChapterPosition = it.getInt("comicPosition")
-            mHistoryBrowsePosition = it.getInt("historyPosition")
-            mComicCover = it.getString("comicCover")
-            mComicTitle = it.getString("comicTitle")
-        }
-    }
-
     override fun getContentViewLayoutID(): Int = R.layout.activity_comic_read_recycler
 
-    override fun updateComicContent(urls: MutableList<String>, bytes: MutableList<ByteArray>?, isFromDisk: Boolean) {
+    override fun updateComicContent(
+        urls: MutableList<String>,
+        bytes: MutableList<ByteArray>?,
+        isFromDisk: Boolean
+    ) {
         tv_chapter_title.text = mChapters!![mCurChapterPosition].chapterTitle
         mTotalPage = if (isFromDisk) bytes!!.size else urls.size
         tv_chapter_page.text = "1 | $mTotalPage"
@@ -190,14 +202,14 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
                 mCurChapterPosition += 1
                 mPresenter.getComicData(mComicId, mChapters!![mCurChapterPosition].chapterId)
             } else {
-                showToast(comic_list,"已经是第一话了")
+                showToast(comic_list, "已经是第一话了")
             }
         } else if (intCurPage == 0) {
             if (mCurChapterPosition > 0) {
                 mCurChapterPosition -= 1
                 mPresenter.getComicData(mComicId, mChapters!![mCurChapterPosition].chapterId)
             } else {
-                showToast(comic_list,"已经是最新的了")
+                showToast(comic_list, "已经是最新的了")
             }
         }
     }
@@ -211,18 +223,22 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
     }
 
     private fun hideBottomBar() {
-        val downAction = TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 1.0f)
+        val downAction = TranslateAnimation(
+            Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, 1.0f
+        )
         downAction.duration = 300
         ll_bottom_bar.startAnimation(downAction)
         ll_bottom_bar.visibility = View.INVISIBLE
     }
 
     private fun showBottomBar() {
-        val upAction = TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f)
+        val upAction = TranslateAnimation(
+            Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1.0f,
+            Animation.RELATIVE_TO_SELF, 0.0f
+        )
         upAction.duration = 300
         ll_bottom_bar.startAnimation(upAction)
         ll_bottom_bar.visibility = View.VISIBLE

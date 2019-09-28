@@ -7,6 +7,7 @@ import com.luuu.seven.adapter.ComicSpecialDetailAdapter
 import com.luuu.seven.base.BaseActivity
 import com.luuu.seven.bean.ComicSpecialDetBean
 import com.luuu.seven.module.intro.ComicIntroActivity
+import com.luuu.seven.util.get
 import kotlinx.android.synthetic.main.activity_comic_special_detail.*
 
 /**
@@ -22,13 +23,12 @@ class ComicSpecialDetailActivity : BaseActivity(), ComicSpecialDetailContract.Vi
     private var mTitle = ""
 
     override fun initViews() {
+
+        tagId = intent.get("tagId") ?: 0
+        mTitle = intent.get("title") ?: " "
+
         setToolbarTitle(mTitle)
         mPresent.getComicSpecialDetail(tagId)
-    }
-
-    override fun getIntentExtras(extras: Bundle?) {
-        tagId = extras?.getInt("tagId") ?: 0
-        mTitle = extras?.getString("title") ?: " "
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.activity_comic_special_detail

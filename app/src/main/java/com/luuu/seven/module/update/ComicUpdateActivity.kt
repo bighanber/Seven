@@ -28,9 +28,6 @@ class ComicUpdateActivity : BaseActivity() {
 //        initViewPager(title, fragments)
     }
 
-    override fun getIntentExtras(extras: Bundle?) {
-    }
-
     override fun getContentViewLayoutID(): Int = R.layout.activity_comic_tab
 
     private fun initViewPager(names: List<String>, fragments: List<Fragment>) {

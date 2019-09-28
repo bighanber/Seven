@@ -3,6 +3,7 @@ package com.luuu.seven.util
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 
 class EmptyFragment : Fragment() {
@@ -19,6 +20,11 @@ class EmptyFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         intent?.let { startActivityForResult(it, requestCode) }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

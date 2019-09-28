@@ -24,8 +24,6 @@ abstract class BaseAppCompatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        extra = intent.extras
-        getIntentExtras(extra)
         mContext = this
         if (getContentViewLayoutID() != 0) {
             setContentView(getContentViewLayoutID())
@@ -36,7 +34,6 @@ abstract class BaseAppCompatActivity : AppCompatActivity() {
     }
 
     abstract fun initViews()
-    abstract fun getIntentExtras(extras: Bundle?)
     abstract fun getContentViewLayoutID(): Int
 
     fun showToast(view: View, msg: String) {

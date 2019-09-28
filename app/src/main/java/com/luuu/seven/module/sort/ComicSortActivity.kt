@@ -35,9 +35,6 @@ class ComicSortActivity : BaseActivity(), ComicSortContract.View {
         mSortBeanList = null
     }
 
-    override fun getIntentExtras(extras: Bundle?) {
-    }
-
     override fun getContentViewLayoutID(): Int = R.layout.activity_comic_tab
 
     override fun showLoading(isLoading: Boolean) {

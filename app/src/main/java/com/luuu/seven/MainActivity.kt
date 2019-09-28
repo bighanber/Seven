@@ -45,9 +45,6 @@ class MainActivity : BaseActivity() {
         showFragment(0)
     }
 
-    override fun getIntentExtras(extras: Bundle?) {
-    }
-
     override fun getContentViewLayoutID(): Int = R.layout.activity_main
 
     private fun showFragment(id: Int) {

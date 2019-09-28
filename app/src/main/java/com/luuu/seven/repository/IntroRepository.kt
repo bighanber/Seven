@@ -3,6 +3,7 @@ package com.luuu.seven.repository
 import com.luuu.seven.bean.ComicIntroBean
 import com.luuu.seven.bean.ComicRelatedInfoBean
 import com.luuu.seven.bean.ReadHistoryBean
+import com.luuu.seven.db.AppDatabase
 import com.luuu.seven.db.CollectDao
 import com.luuu.seven.db.ReadHistoryDao
 import com.luuu.seven.http.HttpManager
@@ -22,7 +23,7 @@ class IntroRepository {
     }
 
     suspend fun getReadHistory(comicId: Int): List<ReadHistoryBean> {
-        return ReadHistoryDao.get().queryByComicId(comicId)
+        return AppDatabase.getInstance().historyDao().queryByComicId(comicId)
     }
 
     suspend fun favoriteComic(comicId: Int, comicTitle: String, comicAuthors: String, comicCover: String, time: Long): Boolean {
