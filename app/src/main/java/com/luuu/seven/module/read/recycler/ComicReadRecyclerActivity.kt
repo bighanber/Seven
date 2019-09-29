@@ -1,27 +1,27 @@
 package com.luuu.seven.module.read.recycler
 
 import android.graphics.Point
-import android.os.Bundle
-import android.os.Parcelable
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.SeekBar
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicReadAdapter
 import com.luuu.seven.base.BaseActivity
 import com.luuu.seven.bean.ChapterDataBean
-import com.luuu.seven.module.read.ComicReadContract
-import com.luuu.seven.module.read.ComicReadPresenter
+import com.luuu.seven.bean.ReadHistoryBean
+import com.luuu.seven.module.read.ReadViewModel
 import com.luuu.seven.util.get
+import com.luuu.seven.util.obtainViewModel
 import com.luuu.seven.util.toast
 import kotlinx.android.synthetic.main.activity_comic_read_recycler.*
 import kotlinx.android.synthetic.main.read_page_info.*
 
-class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
+class ComicReadRecyclerActivity : BaseActivity() {
 
     private val mLayoutManager: ViewPagerLayoutManager by lazy {
         ViewPagerLayoutManager(
@@ -30,6 +30,7 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
             false
         )
     }
+    private lateinit var mViewModel: ReadViewModel
     private var mAdapter: ComicReadAdapter? = null
     private var mComicId: Int = 0
     private var intCurPage: Int = 0
@@ -41,7 +42,6 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
     private var mComicCover: String? = null
     private var mComicTitle: String? = null
     private var isUse = true
-    private val mPresenter by lazy { ComicReadPresenter(this) }
 
     override fun initViews() {
 
@@ -54,7 +54,18 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
         mComicTitle = intent.get("comicTitle")
 
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        mPresenter.getComicData(mComicId, mChapters!![mCurChapterPosition].chapterId)
+
+        mViewModel = obtainViewModel<ReadViewModel>().apply {
+            getComicReadPage(mComicId, mChapters!![mCurChapterPosition].chapterId)
+
+            comicPageData.observe(this@ComicReadRecyclerActivity, Observer {
+                updateComicContent(it.pageUrl)
+            })
+
+            updateOrInsert.observe(this@ComicReadRecyclerActivity, Observer {
+                finish()
+            })
+        }
 
         seek_bar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
@@ -72,10 +83,7 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
         })
 
         iv_back.setOnClickListener {
-            mPresenter.updateReadHistory(
-                mComicId, mChapters!![mCurChapterPosition].chapterId,
-                mChapterTagName!!, intCurPage, mComicCover!!, mComicTitle!!
-            )
+            mViewModel.updateOrInsertReadData(ReadHistoryBean(mComicId, mChapters!![mCurChapterPosition].chapterId,  mChapterTagName!!, intCurPage, mComicCover!!, mComicTitle!!))
         }
 
         mLayoutManager.setOnViewPagerListener(object : OnViewPagerListener {
@@ -98,10 +106,7 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            mPresenter.updateReadHistory(
-                mComicId, mChapters!![mCurChapterPosition].chapterId,
-                mChapterTagName!!, intCurPage, mComicCover!!, mComicTitle!!
-            )
+            mViewModel.updateOrInsertReadData(ReadHistoryBean(mComicId, mChapters!![mCurChapterPosition].chapterId,  mChapterTagName!!, intCurPage, mComicCover!!, mComicTitle!!))
             return true
         }
         return super.onKeyDown(keyCode, event)
@@ -109,10 +114,10 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
 
     override fun getContentViewLayoutID(): Int = R.layout.activity_comic_read_recycler
 
-    override fun updateComicContent(
+    private fun updateComicContent(
         urls: MutableList<String>,
-        bytes: MutableList<ByteArray>?,
-        isFromDisk: Boolean
+        bytes: MutableList<ByteArray>? = null,
+        isFromDisk: Boolean = false
     ) {
         tv_chapter_title.text = mChapters!![mCurChapterPosition].chapterTitle
         mTotalPage = if (isFromDisk) bytes!!.size else urls.size
@@ -138,24 +143,6 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
         mAdapter?.getTapBack { x, y ->
             clickEvents(x, y)
         }
-    }
-
-    override fun isSuccess(isOver: Boolean) {
-        if (isOver) onBackPressed() else showToast(comic_list, "数据更新失败")
-    }
-
-    override fun showLoading(isLoading: Boolean) {
-    }
-
-    override fun showError(isError: Boolean) {
-    }
-
-    override fun showEmpty(isEmpty: Boolean) {
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mPresenter.unsubscribe()
     }
 
     private fun clickEvents(x: Float, y: Float) {
@@ -200,14 +187,14 @@ class ComicReadRecyclerActivity : BaseActivity(), ComicReadContract.View {
         if (intCurPage == mTotalPage - 1) {
             if (mCurChapterPosition < mChapters!!.size - 1) {
                 mCurChapterPosition += 1
-                mPresenter.getComicData(mComicId, mChapters!![mCurChapterPosition].chapterId)
+                mViewModel.getComicReadPage(mComicId, mChapters!![mCurChapterPosition].chapterId)
             } else {
                 showToast(comic_list, "已经是第一话了")
             }
         } else if (intCurPage == 0) {
             if (mCurChapterPosition > 0) {
                 mCurChapterPosition -= 1
-                mPresenter.getComicData(mComicId, mChapters!![mCurChapterPosition].chapterId)
+                mViewModel.getComicReadPage(mComicId, mChapters!![mCurChapterPosition].chapterId)
             } else {
                 showToast(comic_list, "已经是最新的了")
             }

@@ -49,15 +49,15 @@ interface DataService {
 
     //新闻里面的大图轮播
     @GET("article/recommend/header.json")
-    fun getComicNewsPic(): Observable<ComicNewsPicBean>
+    suspend fun getComicNewsPic(): ComicNewsPicBean
 
     //新闻
     @GET("article/list/v2/0/2/{id}.json")
-    fun getComicNewsList(@Path("id") id: Int): Observable<List<ComicNewsListBean>>
+    suspend fun getComicNewsList(@Path("id") id: Int): List<ComicNewsListBean>
 
     //新闻
     @GET("message/list/{id}.json")
-    fun getComicNewsFlash(@Path("id") id: Int): Observable<List<ComicNewsFlashBean>>
+    suspend fun getComicNewsFlash(@Path("id") id: Int): List<ComicNewsFlashBean>
 
     //漫画介绍以及章节
     @GET("comic/{comicid}.json")
@@ -68,7 +68,7 @@ interface DataService {
 
     //漫画阅读
     @GET("chapter/{comicid}/{chapterid}.json")
-    fun getComicReadPage(@Path("comicid") comicid: Int, @Path("chapterid") chapterid: Int): Observable<ComicReadBean>
+    suspend fun getComicReadPage(@Path("comicid") comicid: Int, @Path("chapterid") chapterid: Int): ComicReadBean
 
     //漫画搜索
     @GET("search/show/0/{keyword}/0.json")

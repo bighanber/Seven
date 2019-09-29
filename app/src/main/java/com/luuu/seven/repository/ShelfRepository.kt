@@ -15,6 +15,6 @@ class  ShelfRepository {
     }
 
     suspend fun getCollect(): List<CollectBean> {
-        return CollectDao.get().getCollect()
+        return AppDatabase.getInstance().collectionDao().getCollectionData()
     }
 }

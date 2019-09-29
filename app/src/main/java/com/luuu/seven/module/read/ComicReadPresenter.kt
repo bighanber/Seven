@@ -17,14 +17,14 @@ class ComicReadPresenter(var mView: ComicReadContract.View) : ComicReadContract.
     }
 
     override fun getComicData(comicId: Int, chapterId: Int) {
-        mSubscriptions.add(TaskData.getComicReadPage(comicId, chapterId).subscribe({
-            t ->
-            mView.updateComicContent(t.pageUrl, null, false)
-        }, {
-            mView.showError(true)
-        }, {
-            mView.showError(false)
-        }))
+//        mSubscriptions.add(TaskData.getComicReadPage(comicId, chapterId).subscribe({
+//            t ->
+//            mView.updateComicContent(t.pageUrl, null, false)
+//        }, {
+//            mView.showError(true)
+//        }, {
+//            mView.showError(false)
+//        }))
     }
 
     override fun updateReadHistory(comicId: Int, chapterId: Int, chapterTitle: String, browsePosition: Int, cover: String, title: String) {

@@ -14,13 +14,7 @@ import com.google.gson.annotations.SerializedName
 
 
 
-data class CollectBean(
-        var comicId: Int = 0,
-        var comicTitle: String = "",
-        var comicAuthors: String = "",
-        var comicCover: String = "",
-        var collectTime: Long = 0
-)
+
 
 data class ComicUpdateBean(
         var id: Int,

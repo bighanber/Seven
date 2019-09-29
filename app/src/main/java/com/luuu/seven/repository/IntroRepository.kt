@@ -1,5 +1,6 @@
 package com.luuu.seven.repository
 
+import com.luuu.seven.bean.CollectBean
 import com.luuu.seven.bean.ComicIntroBean
 import com.luuu.seven.bean.ComicRelatedInfoBean
 import com.luuu.seven.bean.ReadHistoryBean
@@ -26,15 +27,15 @@ class IntroRepository {
         return AppDatabase.getInstance().historyDao().queryByComicId(comicId)
     }
 
-    suspend fun favoriteComic(comicId: Int, comicTitle: String, comicAuthors: String, comicCover: String, time: Long): Boolean {
-        return CollectDao.get().insert(comicId, comicTitle, comicAuthors, comicCover, time)
+    suspend fun favoriteComic(collectBean: CollectBean) {
+        return AppDatabase.getInstance().collectionDao().insertCollection(collectBean)
     }
 
     suspend fun isFavorite(comicId: Int): Boolean {
-        return CollectDao.get().queryById(comicId)
+        return AppDatabase.getInstance().collectionDao().getCollectionById(comicId)
     }
 
-    suspend fun unFavoriteComic(comicId: Int): Boolean {
-        return CollectDao.get().cancelCollect(comicId)
+    suspend fun unFavoriteComic(comicId: Int) {
+        return AppDatabase.getInstance().collectionDao().cancelCollection(comicId)
     }
 }

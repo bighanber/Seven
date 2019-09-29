@@ -3,10 +3,7 @@ package com.luuu.seven.module.intro
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.luuu.seven.bean.ComicIntroBean
-import com.luuu.seven.bean.ComicRelatedInfoBean
-import com.luuu.seven.bean.IndexBean
-import com.luuu.seven.bean.ReadHistoryBean
+import com.luuu.seven.bean.*
 import com.luuu.seven.repository.IntroRepository
 import com.luuu.seven.util.handleLoading
 import com.luuu.seven.util.ioMain
@@ -78,7 +75,8 @@ class IntroViewModel : ViewModel() {
     fun favoriteComic(comicId: Int, comicTitle: String, comicAuthors: String, comicCover: String, time: Long) {
         launch<Boolean> {
             request {
-                mRepository.favoriteComic(comicId, comicTitle, comicAuthors, comicCover, time)
+                mRepository.favoriteComic(CollectBean(comicId, comicTitle, comicAuthors, comicCover, time))
+                return@request true
             }
             onSuccess { result ->
                 _updateFavorite.value = result
@@ -107,6 +105,7 @@ class IntroViewModel : ViewModel() {
         launch<Boolean> {
             request {
                 mRepository.unFavoriteComic(comicId)
+                return@request true
             }
             onSuccess { result ->
                 _updateFavorite.value = result

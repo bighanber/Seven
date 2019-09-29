@@ -91,7 +91,7 @@ class ComicIntroActivity : BaseActivity() {
 
         viewModel = obtainViewModel<IntroViewModel>().apply {
             getReadHistory(comicId)
-//            isFavorite(comicId)
+            isFavorite(comicId)
 //            getComicRelated(comicId)
 
             comicIntroData.observe(this@ComicIntroActivity, Observer { data ->

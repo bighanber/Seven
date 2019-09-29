@@ -43,8 +43,8 @@ class ComicNewsFragment : BaseFragment() {
 //        BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
 
         viewModel = obtainViewModel().apply {
-            getComicNewsPic(false).addTo(mSubscription)
-        }.apply {
+            getComicNewsPic()
+
             newsPicData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {
                     updateComicList(it)
@@ -70,10 +70,6 @@ class ComicNewsFragment : BaseFragment() {
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_news_layout
-
-    override fun onFirstUserInvisible() {
-    }
-
 
     private fun updateComicList(data: ComicNewsPicBean) {
 //        val urls = ArrayList<String>()

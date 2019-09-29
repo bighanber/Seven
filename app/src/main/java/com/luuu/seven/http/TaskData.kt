@@ -51,25 +51,25 @@ object TaskData {
 //                .compose(SchedulerHelper.io_main())
 //    }
 
-    fun getComicReadPage(comicId: Int, chapterId: Int): Observable<ComicReadBean> {
-        return HttpManager.getInstance.getService().getComicReadPage(comicId, chapterId)
-                .compose(SchedulerHelper.io_main())
-    }
+//    fun getComicReadPage(comicId: Int, chapterId: Int): Observable<ComicReadBean> {
+//        return HttpManager.getInstance.getService().getComicReadPage(comicId, chapterId)
+//                .compose(SchedulerHelper.io_main())
+//    }
 
-    fun getComicNewsPic(): Observable<ComicNewsPicBean> {
-        return HttpManager.getInstance.getService().getComicNewsPic()
-                .compose(SchedulerHelper.io_main())
-    }
-
-    fun getComicNewsList(page: Int): Observable<List<ComicNewsListBean>> {
-        return HttpManager.getInstance.getService().getComicNewsList(page)
-                .compose(SchedulerHelper.io_main())
-    }
-
-    fun getComicNewsFlash(page: Int): Observable<List<ComicNewsFlashBean>> {
-        return HttpManager.getInstance.getService().getComicNewsFlash(page)
-                .compose(SchedulerHelper.io_main())
-    }
+//    fun getComicNewsPic(): Observable<ComicNewsPicBean> {
+//        return HttpManager.getInstance.getService().getComicNewsPic()
+//                .compose(SchedulerHelper.io_main())
+//    }
+//
+//    fun getComicNewsList(page: Int): Observable<List<ComicNewsListBean>> {
+//        return HttpManager.getInstance.getService().getComicNewsList(page)
+//                .compose(SchedulerHelper.io_main())
+//    }
+//
+//    fun getComicNewsFlash(page: Int): Observable<List<ComicNewsFlashBean>> {
+//        return HttpManager.getInstance.getService().getComicNewsFlash(page)
+//                .compose(SchedulerHelper.io_main())
+//    }
 
 //    fun getSearchData(keyname: String): Observable<List<SearchDataBean>> {
 //        return HttpManager.getInstance.getService().getSearchData(keyname)

@@ -11,6 +11,7 @@ import com.luuu.seven.bean.ReadHistoryBean
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun historyDao(): HistoryReadDao
+    abstract fun collectionDao(): CollectionDao
 
     companion object {
         private const val databaseName = "comic-db"

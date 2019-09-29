@@ -27,14 +27,9 @@ class ComicNewsListFragment : BaseFragment() {
 
     private lateinit var viewModel: NewsViewModel
 
-    override fun onFragmentVisibleChange(isVisible: Boolean) {
-    }
-
     override fun initViews() {
 
         viewModel = obtainViewModel().apply {
-            getComicNewsList(mPageNum, false).addTo(mSubscription)
-        }.apply {
             newsListData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {
                     mNewsListBeanList.addAll(it)
@@ -66,15 +61,16 @@ class ComicNewsListFragment : BaseFragment() {
         refresh.setOnRefreshListener {
             mPageNum = 0
             mNewsListBeanList.clear()
-            viewModel.getComicNewsList(mPageNum, false, isRefresh = true)
+            viewModel.getComicNewsList(mPageNum)
         }
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_tab_layout
 
-    override fun onFirstUserInvisible() {
+    override fun onResume() {
+        super.onResume()
+        viewModel.getComicNewsList(mPageNum)
     }
-
 
     private fun updateComicList(data: List<ComicNewsListBean>) {
 
@@ -92,7 +88,7 @@ class ComicNewsListFragment : BaseFragment() {
             setEnableLoadMore(true)
             setOnLoadMoreListener({
                 mPageNum++
-                viewModel.getComicNewsList(mPageNum, false, isLoadMore = true)
+                viewModel.getComicNewsList(mPageNum)
             }, recycler)
             setOnItemClickListener { _, _, position ->
                 val mBundle = Bundle()

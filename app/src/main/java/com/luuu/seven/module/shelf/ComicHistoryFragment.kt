@@ -1,6 +1,5 @@
 package com.luuu.seven.module.shelf
 
-import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,9 +8,8 @@ import com.luuu.seven.adapter.ComicHistoryAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ReadHistoryBean
 import com.luuu.seven.module.intro.ComicIntroActivity
-import com.luuu.seven.util.addTo
 import com.luuu.seven.util.obtainViewModel
-import com.luuu.seven.util.toast
+import com.luuu.seven.util.startActivity
 import kotlinx.android.synthetic.main.fra_shelf_list_layout.*
 
 /**
@@ -49,11 +47,8 @@ class ComicHistoryFragment : BaseFragment() {
     override fun getContentViewLayoutID(): Int = R.layout.fra_shelf_list_layout
 
     private fun updateComic(data: List<ReadHistoryBean>) {
-        if (mAdapter == null) {
-            initAdapter(data)
-        } else {
-            mAdapter?.setNewData(data)
-        }
+
+        mAdapter?.setNewData(data) ?: initAdapter(data)
     }
 
     private fun initAdapter(historyBeanList: List<ReadHistoryBean>) {
@@ -62,9 +57,8 @@ class ComicHistoryFragment : BaseFragment() {
         recycler_shelf.adapter = mAdapter
 
         mAdapter?.setOnItemClickListener { _, _, position ->
-            val mBundle = Bundle()
-            mBundle.putInt("comicId", historyBeanList[position].comicId)
-            startNewActivity(ComicIntroActivity::class.java, mBundle)
+
+            startActivity<ComicIntroActivity>(ComicIntroActivity.COMIC_ID to historyBeanList[position].comicId)
         }
     }
 

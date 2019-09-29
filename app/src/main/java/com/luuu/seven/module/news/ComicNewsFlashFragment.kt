@@ -24,13 +24,8 @@ class ComicNewsFlashFragment : BaseFragment() {
     private var mFlashList: ArrayList<ComicNewsFlashBean> = ArrayList()
     private lateinit var viewModel: NewsViewModel
 
-    override fun onFragmentVisibleChange(isVisible: Boolean) {
-    }
-
     override fun initViews() {
         viewModel = obtainViewModel().apply {
-            getComicNewsFlash(mPageNum, false).addTo(mSubscription)
-        }.apply {
             newsFlashData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {
                     mFlashList.addAll(it)
@@ -60,15 +55,16 @@ class ComicNewsFlashFragment : BaseFragment() {
         refresh.setOnRefreshListener {
             mPageNum = 0
             mFlashList.clear()
-            viewModel.getComicNewsFlash(mPageNum, false, isRefresh = true)
+            viewModel.getComicNewsFlash(mPageNum)
         }
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_tab_layout
 
-    override fun onFirstUserInvisible() {
+    override fun onResume() {
+        super.onResume()
+        viewModel.getComicNewsFlash(mPageNum)
     }
-
 
     private fun updateComicList(data: List<ComicNewsFlashBean>) {
         when {
@@ -85,7 +81,7 @@ class ComicNewsFlashFragment : BaseFragment() {
             setEnableLoadMore(true)
             setOnLoadMoreListener({
                 mPageNum++
-                viewModel.getComicNewsFlash(mPageNum, false, isLoadMore = true)
+                viewModel.getComicNewsFlash(mPageNum)
             }, recycler)
         }
         recycler.layoutManager = mLayoutManager

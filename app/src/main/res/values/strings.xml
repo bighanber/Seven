@@ -34,4 +34,7 @@
     <string name="search_comic_authors">作者: %s</string>
     <string name="search_comic_types">类型: %s</string>
     <string name="search_comic_newest">最新: %s</string>
+
+    <!--书架-->
+    <string name="shelf_continue_watch">续看</string>
 </resources>
