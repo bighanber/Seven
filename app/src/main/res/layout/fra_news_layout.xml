@@ -19,14 +19,14 @@
             android:clipToPadding="false"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
-            <!--<com.youth.banner.Banner-->
-                <!--android:id="@+id/news_banner"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="200dp"-->
-                <!--app:indicator_drawable_selected="@drawable/dot_circle_drawable_pressed"-->
-                <!--app:indicator_drawable_unselected="@drawable/dot_circle_drawable"-->
-                <!--app:layout_collapseMode="parallax"-->
-                <!--app:layout_collapseParallaxMultiplier="0.8"/>-->
+            <com.youth.banner.Banner
+                android:id="@+id/news_banner"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:indicator_drawable_selected="@drawable/dot_circle_drawable_pressed"
+                app:indicator_drawable_unselected="@drawable/dot_circle_drawable"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.8"/>
 
             <Toolbar
                 android:id="@+id/toolbar"

@@ -1,6 +1,5 @@
 package com.luuu.seven.module.news
 
-import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
@@ -9,8 +8,9 @@ import com.luuu.seven.R
 import com.luuu.seven.WebActivity
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicNewsPicBean
-import com.luuu.seven.util.addTo
+import com.luuu.seven.util.GlideImageLoader
 import com.luuu.seven.util.obtainViewModel
+import com.luuu.seven.util.startActivity
 import kotlinx.android.synthetic.main.fra_news_layout.*
 
 /**
@@ -29,20 +29,9 @@ class ComicNewsFragment : BaseFragment() {
 
     private lateinit var viewModel: NewsViewModel
 
-    override fun onFragmentVisibleChange(isVisible: Boolean) {
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-//            BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
-        }
-    }
-
     override fun initViews() {
-//        BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
 
-        viewModel = obtainViewModel().apply {
+        viewModel = obtainViewModel<NewsViewModel>().apply {
             getComicNewsPic()
 
             newsPicData.observe(viewLifecycleOwner, Observer { data ->
@@ -60,26 +49,24 @@ class ComicNewsFragment : BaseFragment() {
                 R.id.rb_flash -> showFragment(1)
             }
         }
-        appbar_layout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-//            if (verticalOffset == 0) {
-//                news_banner.startAutoPlay()
-//            } else {
-//                news_banner.stopAutoPlay()
-//            }
+        appbar_layout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+            if (verticalOffset == 0) {
+                news_banner.startAutoPlay()
+            } else {
+                news_banner.stopAutoPlay()
+            }
         })
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_news_layout
 
     private fun updateComicList(data: ComicNewsPicBean) {
-//        val urls = ArrayList<String>()
-//        data.data.mapTo(urls) { it.picUrl }
-//        news_banner.setOnBannerListener { position ->
-//            val mBundle = Bundle()
-//            mBundle.putString("url", data.data[position].objectUrl)
-//            startNewActivity(WebActivity::class.java, mBundle)
-//        }
-//        news_banner.setImages(urls).setImageLoader(GlideImageLoader()).start()
+        val urls = ArrayList<String>()
+        data.data.mapTo(urls) { it.picUrl }
+        news_banner.setOnBannerListener { position ->
+            startActivity<WebActivity>("url" to data.data[position].objectUrl)
+        }
+        news_banner.setImages(urls).setImageLoader(GlideImageLoader()).start()
     }
 
     private fun showFragment(id: Int) {
@@ -107,5 +94,4 @@ class ComicNewsFragment : BaseFragment() {
         if (mNewsFlashFragment != null) ft.hide(mNewsFlashFragment!!)
     }
 
-    private fun obtainViewModel(): NewsViewModel = obtainViewModel<NewsViewModel>()
 }

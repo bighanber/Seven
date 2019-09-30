@@ -29,25 +29,28 @@ class ComicNewsListFragment : BaseFragment() {
 
     override fun initViews() {
 
-        viewModel = obtainViewModel().apply {
+        viewModel = obtainViewModel<NewsViewModel>().apply {
             newsListData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {
                     mNewsListBeanList.addAll(it)
-                    updateComicList(it)
+                    updateComicList()
                 }
 
             })
 
-            dataRefresh.observe(viewLifecycleOwner, Observer { bol ->
-                bol?.let {
-                    refresh.isEnabled = it
-                }
+            swipeRefreshing.observe(viewLifecycleOwner, Observer {
+                refresh.isEnabled = false
             })
 
-            dataLoadMore.observe(viewLifecycleOwner, Observer {  bol ->
-                if (bol == null || !bol) {
-                    mAdapter?.loadMoreComplete()
+            loadMore.observe(viewLifecycleOwner, Observer {
+                mAdapter?.loadMoreComplete()
+            })
+
+            isEmpty.observe(viewLifecycleOwner, Observer {
+                if (it) {
+                    mAdapter?.loadMoreEnd()
                 }
+
             })
         }
 
@@ -61,7 +64,7 @@ class ComicNewsListFragment : BaseFragment() {
         refresh.setOnRefreshListener {
             mPageNum = 0
             mNewsListBeanList.clear()
-            viewModel.getComicNewsList(mPageNum)
+            viewModel.getComicNewsList(mPageNum, true)
         }
     }
 
@@ -72,15 +75,9 @@ class ComicNewsListFragment : BaseFragment() {
         viewModel.getComicNewsList(mPageNum)
     }
 
-    private fun updateComicList(data: List<ComicNewsListBean>) {
+    private fun updateComicList() {
 
-        when {
-            mAdapter == null -> initAdapter()
-            data.isEmpty() -> mAdapter?.loadMoreEnd()
-            else -> {
-                mAdapter?.notifyDataSetChanged()
-            }
-        }
+        mAdapter?.notifyDataSetChanged() ?: initAdapter()
     }
 
     private fun initAdapter() {
@@ -88,7 +85,7 @@ class ComicNewsListFragment : BaseFragment() {
             setEnableLoadMore(true)
             setOnLoadMoreListener({
                 mPageNum++
-                viewModel.getComicNewsList(mPageNum)
+                viewModel.getComicNewsList(mPageNum, more = true)
             }, recycler)
             setOnItemClickListener { _, _, position ->
                 val mBundle = Bundle()
@@ -102,5 +99,4 @@ class ComicNewsListFragment : BaseFragment() {
 
     }
 
-    private fun obtainViewModel(): NewsViewModel = obtainViewModel<NewsViewModel>()
 }
