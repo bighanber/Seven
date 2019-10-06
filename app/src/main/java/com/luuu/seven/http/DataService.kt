@@ -39,13 +39,13 @@ interface DataService {
     @GET("rank/0/0/0/{id}.json")
     fun getHotComic(@Path("id") id: Int): Observable<List<HotComicBean>>
 
-    //漫画分类
-    @GET("0/category.json")
-    fun getSortComic(): Observable<List<ComicSortBean>>
+    //漫画分类筛选
+    @GET("classify/filter.json")
+    suspend fun getSortComicFilter(): List<SortFilterBean>
 
     //漫画分类里面对应的漫画列表
-    @GET("classify/{sortid}/0/{page}.json")
-    fun getSortComicList(@Path("sortid") sortid: Int, @Path("page") page: Int): Observable<List<ComicSortListBean>>
+    @GET("classify/{filter}/0/{page}.json")
+    suspend fun getSortComicList(@Path("filter") filter: String, @Path("page") page: Int): List<ComicSortListBean>
 
     //新闻里面的大图轮播
     @GET("article/recommend/header.json")

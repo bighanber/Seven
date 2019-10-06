@@ -11,7 +11,7 @@ interface CollectionDao {
     @Insert
     suspend fun insertCollection(collectBean: CollectBean)
 
-    @Query("select * from comic_collect where comic_id = :comicId")
+    @Query("select exists(select * from comic_collect where comic_id = :comicId)")
     suspend fun getCollectionById(comicId: Int): Boolean
 
     @Query("delete from comic_collect where comic_id = :comicId")

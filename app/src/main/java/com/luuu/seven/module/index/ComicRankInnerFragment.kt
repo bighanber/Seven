@@ -1,22 +1,13 @@
-package com.luuu.seven.module.rank
+package com.luuu.seven.module.index
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelStoreOwner
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicRankAdapter
 import com.luuu.seven.base.BaseFragment
-import com.luuu.seven.bean.ComicUpdateBean
 import com.luuu.seven.bean.HotComicBean
-import com.luuu.seven.module.index.HomeViewModel
 import com.luuu.seven.module.intro.ComicIntroActivity
 import com.luuu.seven.util.*
 import com.luuu.seven.widgets.RankItemDecoration

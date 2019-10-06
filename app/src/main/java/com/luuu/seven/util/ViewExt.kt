@@ -183,3 +183,5 @@ fun paddingTop(context: Context): Int {
 }
 
 fun EditText.values() = this.text.toString()
+
+fun View.isRtl() = layoutDirection == View.LAYOUT_DIRECTION_RTL

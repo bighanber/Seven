@@ -5,7 +5,6 @@ import com.luuu.seven.ComicConst
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicFragmentAdapter
 import com.luuu.seven.base.BaseFragment
-import com.luuu.seven.module.rank.ComicRankInnerFragment
 import com.luuu.seven.util.paddingTop
 import kotlinx.android.synthetic.main.fra_inner_viewpager.*
 

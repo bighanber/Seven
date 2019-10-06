@@ -22,7 +22,7 @@ abstract class BaseFragment : Fragment() {
     val TAG_LOG: String = BaseFragment::class.java.simpleName
 
     var mContext: Context? = null
-    private var fragmentRootView: View? = null
+    var fragmentRootView: View? = null
 
     var mSubscription = CompositeDisposable()
 
@@ -51,27 +51,6 @@ abstract class BaseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-//        if (isFragmentVisible) {
-//            onFragmentVisibleChange(true)
-//        }
-    }
-
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-//        isFragmentVisible = isVisibleToUser
-//        if (fragmentRootView == null) {
-//            return
-//        }
-//        if (isFragmentVisible) {
-//            onFragmentVisibleChange(true)
-//        } else {
-//            onFragmentVisibleChange(false)
-//        }
     }
 
     override fun onDestroyView() {

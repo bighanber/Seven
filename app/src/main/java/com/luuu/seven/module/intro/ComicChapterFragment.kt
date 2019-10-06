@@ -6,9 +6,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnLayout
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
-import androidx.core.view.updatePaddingRelative
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,8 +15,9 @@ import com.luuu.seven.R
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ChapterDataBean
 import com.luuu.seven.bean.ComicIntroBean
-import com.luuu.seven.module.read.recycler.ComicReadRecyclerActivity
-import com.luuu.seven.util.*
+import com.luuu.seven.util.BarUtils
+import com.luuu.seven.util.activityViewModel
+import com.luuu.seven.util.ifNotNull
 import com.luuu.seven.widgets.BottomSheetBehavior
 import com.luuu.seven.widgets.BottomSheetBehavior.Companion.STATE_COLLAPSED
 import com.luuu.seven.widgets.BottomSheetBehavior.Companion.STATE_EXPANDED

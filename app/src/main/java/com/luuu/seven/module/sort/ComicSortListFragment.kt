@@ -1,4 +1,4 @@
-package com.luuu.seven.module.sort.sortlist
+package com.luuu.seven.module.sort
 
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.fra_tab_layout.*
  * Created by lls on 2017/8/4.
  *
  */
-class ComicSortListFragment : BaseFragment(), ComicSortListContract.View {
+class ComicSortListFragment : BaseFragment() {
 
     companion object {
         private val SORT_ID = "sortId"
@@ -31,7 +31,6 @@ class ComicSortListFragment : BaseFragment(), ComicSortListContract.View {
     private var mSortListBeanList: MutableList<ComicSortListBean>? = null
     private var mPageNum = 0
     private var sortId = 0
-    private val mPresent by lazy { ComicSortListPresenter(this) }
     private var mAdapter: ComicSortListAdapter? = null
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
@@ -44,7 +43,6 @@ class ComicSortListFragment : BaseFragment(), ComicSortListContract.View {
 
     override fun onDestroy() {
         super.onDestroy()
-        mPresent.unsubscribe()
         mSortListBeanList = null
     }
 
@@ -52,32 +50,21 @@ class ComicSortListFragment : BaseFragment(), ComicSortListContract.View {
         if (isVisible) {
             mSortListBeanList = ArrayList()
             mPageNum = 0
-            mPresent.getComicSortList(sortId, 0)
+//            mPresent.getComicSortList(sortId, 0)
         }
     }
 
     override fun initViews() {
         refresh.setOnRefreshListener {
             mPageNum = 0
-            mPresent.refreshData(sortId)
+//            mPresent.refreshData(sortId)
         }
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_tab_layout
 
-    override fun onFirstUserInvisible() {
-    }
 
-    override fun showLoading(isLoading: Boolean) {
-    }
-
-    override fun showError(isError: Boolean) {
-    }
-
-    override fun showEmpty(isEmpty: Boolean) {
-    }
-
-    override fun updateComicSortList(data: List<ComicSortListBean>, type: DataLoadType) {
+    private fun updateComicSortList(data: List<ComicSortListBean>, type: DataLoadType) {
         when(type) {
             DataLoadType.TYPE_REFRESH_SUCCESS -> {
                 mSortListBeanList = data.toMutableList()
@@ -102,7 +89,7 @@ class ComicSortListFragment : BaseFragment(), ComicSortListContract.View {
         }
     }
 
-    override fun judgeRefresh(isRefresh: Boolean) {
+    private fun judgeRefresh(isRefresh: Boolean) {
         refresh.isEnabled = isRefresh
     }
 
@@ -111,7 +98,7 @@ class ComicSortListFragment : BaseFragment(), ComicSortListContract.View {
             setEnableLoadMore(true)
             setOnLoadMoreListener({
                 mPageNum++
-                mPresent.loadMoreData(sortId, mPageNum)
+//                mPresent.loadMoreData(sortId, mPageNum)
             }, recycler)
             setOnItemClickListener { _, _, position ->
                 val mBundle = Bundle()

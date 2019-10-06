@@ -26,15 +26,15 @@ object TaskData {
 //                .compose(SchedulerHelper.io_main())
 //    }
 
-    fun getSortComic(): Observable<List<ComicSortBean>> {
-        return HttpManager.getInstance.getService().getSortComic()
-                .compose(SchedulerHelper.io_main())
-    }
+//    fun getSortComic(): Observable<List<ComicSortBean>> {
+//        return HttpManager.getInstance.getService().getSortComic()
+//                .compose(SchedulerHelper.io_main())
+//    }
 
-    fun getSortComicList(sortid: Int, page: Int): Observable<List<ComicSortListBean>> {
-        return HttpManager.getInstance.getService().getSortComicList(sortid, page)
-                .compose(SchedulerHelper.io_main())
-    }
+//    fun getSortComicList(sortid: Int, page: Int): Observable<List<ComicSortListBean>> {
+//        return HttpManager.getInstance.getService().getSortComicList(sortid, page)
+//                .compose(SchedulerHelper.io_main())
+//    }
 
     fun getSpecialComic(page: Int): Observable<List<ComicSpecialBean>> {
         return HttpManager.getInstance.getService().getSpecialComic(page)

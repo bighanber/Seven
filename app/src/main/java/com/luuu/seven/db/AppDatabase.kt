@@ -5,9 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.luuu.seven.ComicApplication
+import com.luuu.seven.bean.CollectBean
 import com.luuu.seven.bean.ReadHistoryBean
 
-@Database(entities = [ReadHistoryBean::class], version = 2, exportSchema = false)
+@Database(entities = [ReadHistoryBean::class, CollectBean::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun historyDao(): HistoryReadDao

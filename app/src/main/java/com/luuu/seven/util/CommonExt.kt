@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.recyclerview.widget.RecyclerView
 import com.luuu.seven.ComicApplication
 import java.io.Serializable
 
@@ -55,6 +56,11 @@ fun Fragment.dp2px(value: Int): Int = context!!.dp2px(value)
 fun Fragment.px2dp(value: Int): Float = context!!.px2dp(value)
 fun Fragment.sp2px(value: Float): Int = context!!.sp2px(value)
 fun Fragment.px2sp(value: Int): Float = context!!.px2sp(value)
+
+fun RecyclerView.ViewHolder.dp2px(value: Int): Int = itemView.dp2px(value)
+fun RecyclerView.ViewHolder.px2dp(value: Int): Float = itemView.px2dp(value)
+fun RecyclerView.ViewHolder.sp2px(value: Float): Int = itemView.sp2px(value)
+fun RecyclerView.ViewHolder.px2sp(value: Int): Float = itemView.px2sp(value)
 
 
 fun toast(msg: String? = "error", duration: Int = Toast.LENGTH_SHORT) {

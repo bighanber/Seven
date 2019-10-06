@@ -1,5 +1,9 @@
 package com.luuu.seven.util
 
+import android.os.Build
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import android.util.Log
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -61,3 +65,45 @@ fun ImageView.loadImgWithProgress(imageUrl: String, view: ProgressBar) {
 //fun Fragment.showSnackbar(view: View, message: String, duration: Int = Snackbar.LENGTH_SHORT) {
 //    Snackbar.make(view, message, duration).show()
 //}
+
+/**
+ * @param source
+ * @param paint
+ * @param width 文字区域的宽度
+ * @param alignment 文字的对齐方向
+ * @param spacingmult 行间距的倍数
+ * @param spacingadd 行间距的额外增加值
+ * @param includepad 文字上下添加额外的空间
+ */
+fun newStaticLayout(
+    source: CharSequence,
+    paint: TextPaint,
+    width: Int,
+    alignment: Layout.Alignment,
+    includepad: Boolean,
+    spacingmult: Float = 1f,
+    spacingadd: Float = 0f
+): StaticLayout {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        StaticLayout.Builder.obtain(source, 0, source.length, paint, width).apply {
+            setAlignment(alignment)
+            setLineSpacing(spacingadd, spacingmult)
+            setIncludePad(includepad)
+        }.build()
+    } else {
+        @Suppress("DEPRECATION")
+        (StaticLayout(source, paint, width, alignment, spacingmult, spacingadd, includepad))
+    }
+}
+
+fun StaticLayout.textWidth(): Int {
+    var width = 0f
+    for (i in 0 until lineCount) {
+        width = width.coerceAtLeast(getLineWidth(i))
+    }
+    return width.toInt()
+}
+
+fun lerp(a: Float, b: Float, t: Float): Float {
+    return a + (b - a) * t
+}
