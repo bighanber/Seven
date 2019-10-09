@@ -1,6 +1,7 @@
 package com.luuu.seven.util
 
 import android.os.Build
+import android.os.Environment
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
@@ -107,3 +108,5 @@ fun StaticLayout.textWidth(): Int {
 fun lerp(a: Float, b: Float, t: Float): Float {
     return a + (b - a) * t
 }
+
+fun isSDCardEnable() = Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()

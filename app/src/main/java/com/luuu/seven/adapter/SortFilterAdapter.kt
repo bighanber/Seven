@@ -20,6 +20,10 @@ class SortFilterAdapter(data: List<FilterSection>) : BaseSectionQuickAdapter<Fil
         val params = filterView.layoutParams
         if(params is FlexboxLayoutManager.LayoutParams) params.flexGrow = 1.0f
         helper.addOnClickListener(R.id.filter_label)
+
+        if (item?.t?.check == false) {
+            filterView.isChecked = false
+        }
     }
 
 

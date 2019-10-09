@@ -1,6 +1,5 @@
 package com.luuu.seven.module.sort
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +11,10 @@ import com.luuu.seven.R
 import com.luuu.seven.adapter.SortFilterAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.FilterSection
+import com.luuu.seven.bean.FilterViewBean
 import com.luuu.seven.bean.SortFilterBean
 import com.luuu.seven.util.BarUtils
 import com.luuu.seven.util.activityViewModel
-import com.luuu.seven.util.color
 import com.luuu.seven.util.toast
 import com.luuu.seven.widgets.BottomSheetBehavior
 import com.luuu.seven.widgets.BottomSheetBehavior.Companion.STATE_COLLAPSED
@@ -28,6 +27,7 @@ class ComicSortFilterFragment : BaseFragment() {
     private lateinit var viewModel: SortViewModel
     private var mAdapter: SortFilterAdapter? = null
 
+    private val checkMap by lazy { HashMap<String, FilterViewBean>() }
     private val mAssemblyData = ArrayList<FilterSection>()
     private val mFlexLayoutManager: FlexboxLayoutManager by lazy {
         FlexboxLayoutManager(mContext).apply {
@@ -85,7 +85,7 @@ class ComicSortFilterFragment : BaseFragment() {
         data.forEach { filter ->
             mAssemblyData.add(FilterSection(true, filter.title))
             filter.items.forEach { item ->
-                mAssemblyData.add(FilterSection(item))
+                mAssemblyData.add(FilterSection(item, filter.title))
             }
         }
     }
@@ -102,11 +102,42 @@ class ComicSortFilterFragment : BaseFragment() {
                 val filterView = view as FilterView
                 val check = !filterView.isChecked
                 toast("$check")
+                changeFilter(mAssemblyData[position].header)
                 filterView.animateCheckedAndInvoke(check) {
-
+                    mAssemblyData[position].t.check = true
+                    checkMap[mAssemblyData[position].header] = FilterViewBean(filterView, position)
                 }
             }
         }
+
+    }
+
+
+    private fun changeFilter(key: String) {
+
+        checkMap[key]?.let { bean ->
+            bean.view.animateCheckedAndInvoke(false) {
+                mAssemblyData[bean.position].t.check = false
+            }
+        }
+
+//        mAssemblyData.filterNot {
+//            it.isHeader
+//        }.groupBy {
+//            it.header
+//        }.filter {
+//            it.value.find { section ->
+//                section.t.tagId == mAssemblyData[position].t.tagId
+//            } != null
+//        }.flatMap {
+//            it.value
+//        }.forEachIndexed { index, filterSection ->
+//            if (filterSection.t.check) {
+//                (mAdapter?.getViewByPosition(recycler_filter, index, R.id.filter_label) as? FilterView)?.animateCheckedAndInvoke(false) {
+//                    filterSection.t.check = false
+//                }
+//            }
+//        }
 
     }
 

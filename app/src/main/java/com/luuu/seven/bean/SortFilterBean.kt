@@ -12,12 +12,15 @@ data class SortFilterItemBean(
     @SerializedName("tag_id")
     val tagId: Int,
     @SerializedName("tag_name")
-    val tagName: String
+    val tagName: String,
+    var check: Boolean = false
 )
 
 class FilterSection : SectionEntity<SortFilterItemBean> {
 
     constructor(isHeader: Boolean, header: String) : super(isHeader, header)
 
-    constructor(sortFilterItemBean: SortFilterItemBean) : super(sortFilterItemBean)
+    constructor(sortFilterItemBean: SortFilterItemBean, header: String) : super(sortFilterItemBean) {
+        this.header = header
+    }
 }

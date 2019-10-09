@@ -1,6 +1,7 @@
 package com.luuu.seven
 
 import android.app.Application
+import com.luuu.seven.util.isSDCardEnable
 import kotlin.properties.Delegates
 
 /**
@@ -23,16 +24,12 @@ class ComicApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        if (applicationContext.externalCacheDir != null && ExistSDCard()) {
+//        applicationContext.externalMediaDirs  该目录下的文件能够被其他应用访问和被MediaStore查询和获取
+        if (applicationContext.externalCacheDir != null && isSDCardEnable()) {
             ComicApplication.cacheDir = applicationContext.externalCacheDir.toString()
-
         } else {
             ComicApplication.cacheDir = applicationContext.cacheDir.toString()
         }
     }
 
-    fun ExistSDCard(): Boolean {
-
-        return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)
-    }
 }
