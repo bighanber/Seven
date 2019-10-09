@@ -1,5 +1,6 @@
 package com.luuu.seven.module.sort
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +15,12 @@ import com.luuu.seven.bean.FilterSection
 import com.luuu.seven.bean.SortFilterBean
 import com.luuu.seven.util.BarUtils
 import com.luuu.seven.util.activityViewModel
+import com.luuu.seven.util.color
 import com.luuu.seven.util.toast
 import com.luuu.seven.widgets.BottomSheetBehavior
 import com.luuu.seven.widgets.BottomSheetBehavior.Companion.STATE_COLLAPSED
 import com.luuu.seven.widgets.BottomSheetBehavior.Companion.STATE_EXPANDED
+import com.luuu.seven.widgets.FilterView
 import kotlinx.android.synthetic.main.fra_filter_layout.*
 
 class ComicSortFilterFragment : BaseFragment() {
@@ -94,7 +97,16 @@ class ComicSortFilterFragment : BaseFragment() {
             adapter = mAdapter
         }
 
-        mAdapter?.setOnItemClickListener { adapter, view, position ->  }
+        mAdapter?.setOnItemChildClickListener { adapter, view, position ->
+            if (view.id == R.id.filter_label) {
+                val filterView = view as FilterView
+                val check = !filterView.isChecked
+                toast("$check")
+                filterView.animateCheckedAndInvoke(check) {
+
+                }
+            }
+        }
 
     }
 

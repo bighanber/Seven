@@ -1,6 +1,5 @@
 package com.luuu.seven.adapter
 
-import android.widget.TextView
 import com.chad.library.adapter.base.BaseSectionQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.google.android.flexbox.FlexboxLayoutManager
@@ -17,8 +16,10 @@ class SortFilterAdapter(data: List<FilterSection>) : BaseSectionQuickAdapter<Fil
     override fun convert(helper: BaseViewHolder, item: FilterSection?) {
 //        val data = item?.t
         helper.getView<FilterView>(R.id.filter_label).text = item?.t?.tagName ?: ""
-        val params = helper.getView<FilterView>(R.id.filter_label).layoutParams
+        val filterView = helper.getView<FilterView>(R.id.filter_label)
+        val params = filterView.layoutParams
         if(params is FlexboxLayoutManager.LayoutParams) params.flexGrow = 1.0f
+        helper.addOnClickListener(R.id.filter_label)
     }
 
 

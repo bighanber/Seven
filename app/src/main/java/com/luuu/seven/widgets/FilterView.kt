@@ -18,13 +18,8 @@ import androidx.core.content.res.*
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.withScale
 import androidx.core.graphics.withTranslation
-import androidx.core.view.isEmpty
-import androidx.recyclerview.widget.RecyclerView
 import com.luuu.seven.R
-import com.luuu.seven.util.dp2px
-import com.luuu.seven.util.lerp
-import com.luuu.seven.util.newStaticLayout
-import com.luuu.seven.util.textWidth
+import com.luuu.seven.util.*
 
 class FilterView @JvmOverloads constructor(
     context: Context,
@@ -33,15 +28,15 @@ class FilterView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr), Checkable {
 
     companion object {
-        private const val SELECTING_DURATION = 350L
-        private const val DESELECTING_DURATION = 200L
+        private const val SELECTING_DURATION = 500L
+        private const val DESELECTING_DURATION = 350L
     }
 
     private val outlinePaint by lazy { Paint(Paint.ANTI_ALIAS_FLAG) }
     private val textPaint by lazy { TextPaint(Paint.ANTI_ALIAS_FLAG) }
     private val dotPaint: Paint by lazy { Paint(Paint.ANTI_ALIAS_FLAG) }
 
-    var selectedTextColor: Int = Color.WHITE
+    private var selectedTextColor: Int = Color.WHITE
 
     var text: String = ""
         set(value) {
@@ -74,41 +69,54 @@ class FilterView @JvmOverloads constructor(
     private lateinit var textLayout: StaticLayout
     private var progressAnimator: ValueAnimator? = null
     private var chipHeight = 0
-    private val interp = AnimationUtils.loadInterpolator(context, android.R.interpolator.fast_out_extra_slow_in)
+    private val interp =
+        AnimationUtils.loadInterpolator(context, android.R.interpolator.fast_out_slow_in)
 
     init {
-        val attrs = context.obtainStyledAttributes(attrs, R.styleable.FilterView, defStyleAttr, R.style.FilterStyle)
+        val a = context.obtainStyledAttributes(
+            attrs,
+            R.styleable.FilterView,
+            defStyleAttr,
+            R.style.FilterStyle
+        )
 
         outlinePaint.apply {
-            color = attrs.getColorOrThrow(R.styleable.FilterView_android_strokeColor)
-            strokeWidth = attrs.getDimensionOrThrow(R.styleable.FilterView_outlineWidth)
+            color = a.getColorOrThrow(R.styleable.FilterView_android_strokeColor)
+            strokeWidth = a.getDimensionOrThrow(R.styleable.FilterView_outlineWidth)
             style = Paint.Style.STROKE
         }
 
-        defaultTextColor = attrs.getColorOrThrow(R.styleable.FilterView_android_textColor)
+        defaultTextColor = a.getColorOrThrow(R.styleable.FilterView_android_textColor)
         textPaint.apply {
             color = defaultTextColor
-            textSize = attrs.getDimensionOrThrow(R.styleable.FilterView_android_textSize)
-            letterSpacing = attrs.getFloat(R.styleable.FilterView_android_letterSpacing, 0f)
+            textSize = a.getDimensionOrThrow(R.styleable.FilterView_android_textSize)
+            letterSpacing = a.getFloat(R.styleable.FilterView_android_letterSpacing, 0f)
         }
-        clear = attrs.getDrawableOrThrow(R.styleable.FilterView_clearIcon).apply {
-            setBounds(-intrinsicWidth / 2, -intrinsicHeight / 2, intrinsicWidth / 2, intrinsicHeight / 2)
+        clear = a.getDrawableOrThrow(R.styleable.FilterView_clearIcon).apply {
+            setBounds(
+                -intrinsicWidth / 2,
+                -intrinsicHeight / 2,
+                intrinsicWidth / 2,
+                intrinsicHeight / 2
+            )
         }
-        touchFeedback = attrs.getDrawableOrThrow(R.styleable.FilterView_foreground).apply {
+        touchFeedback = a.getDrawableOrThrow(R.styleable.FilterView_foreground).apply {
             callback = this@FilterView
         }
-        padding = attrs.getDimensionPixelSizeOrThrow(R.styleable.FilterView_android_padding)
-        isChecked = attrs.getBoolean(R.styleable.FilterView_android_checked, false)
-        showIcons = attrs.getBoolean(R.styleable.FilterView_showIcons, true)
-        cornerRadius = attrs.getDimension(R.styleable.FilterView_cornerRadius, 0f)
+        padding = a.getDimensionPixelSizeOrThrow(R.styleable.FilterView_android_padding)
+        isChecked = a.getBoolean(R.styleable.FilterView_android_checked, false)
+        showIcons = a.getBoolean(R.styleable.FilterView_showIcons, true)
+        cornerRadius = a.getDimension(R.styleable.FilterView_cornerRadius, 0f)
 
-        attrs.recycle()
+        a.recycle()
         clipToOutline = true
+        dotPaint.color = color(R.color.colorPrimary)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val nonTextWidth = (4 * padding) + (2 * outlinePaint.strokeWidth).toInt() + if (showIcons) clear.intrinsicWidth else 0
-        val availableTextWidth = when(MeasureSpec.getMode(widthMeasureSpec)) {
+        val nonTextWidth =
+            (4 * padding) + (2 * outlinePaint.strokeWidth).toInt() + if (showIcons) clear.intrinsicWidth else 0
+        val availableTextWidth = when (MeasureSpec.getMode(widthMeasureSpec)) {
             MeasureSpec.EXACTLY -> MeasureSpec.getSize(widthMeasureSpec) - nonTextWidth
             MeasureSpec.AT_MOST -> MeasureSpec.getSize(widthMeasureSpec) - nonTextWidth
             MeasureSpec.UNSPECIFIED -> 1000
@@ -144,19 +152,41 @@ class FilterView @JvmOverloads constructor(
         val rounding = cornerRadius.coerceAtMost((chipHeight - strokeWidth) / 2f)
 
         if (progress < 1f) {
-            canvas.drawRoundRect(halfStroke, halfStroke, width - halfStroke, chipHeight - halfStroke, rounding, rounding, outlinePaint)
+            canvas.drawRoundRect(
+                halfStroke,
+                halfStroke,
+                width - halfStroke,
+                chipHeight - halfStroke,
+                rounding,
+                rounding,
+                outlinePaint
+            )
         }
 
         if (showIcons) {
-            val dotRadius = lerp(strokeWidth + iconRadius, width.toFloat(), progress)
+            val dotRadius = lerp(0f, width.toFloat(), progress)
+            canvas.drawCircle(
+                width / 2f,
+                chipHeight / 2f,
+                dotRadius,
+                dotPaint
+            )
         } else {
-            canvas.drawRoundRect(halfStroke, halfStroke, width - halfStroke, chipHeight - halfStroke, rounding, rounding, dotPaint)
+            canvas.drawRoundRect(
+                halfStroke,
+                halfStroke,
+                width - halfStroke,
+                chipHeight - halfStroke,
+                rounding,
+                rounding,
+                dotPaint
+            )
         }
 
         val textLayoutDiff = (textLayout.width - textLayout.textWidth()) / 2
-        val textBaseOffset = strokeWidth + padding * 2
+        val textBaseOffset = strokeWidth + padding
         val textAnimOffset = if (showIcons) {
-            val offsetProgress = progress
+            val offsetProgress = 1f - progress
             clear.intrinsicWidth * offsetProgress
         } else {
             0f
@@ -175,7 +205,7 @@ class FilterView @JvmOverloads constructor(
 
         if (showIcons && progress > 0f) {
             val iconX = width - strokeWidth - padding - iconRadius
-            canvas.withTranslation(x = width - iconX, y = chipHeight / 2f) {
+            canvas.withTranslation(x = iconX, y = chipHeight / 2f) {
                 canvas.withScale(progress, progress) {
                     clear.draw(canvas)
                 }
@@ -205,8 +235,10 @@ class FilterView @JvmOverloads constructor(
     }
 
     private fun createLayout(textWidth: Int) {
-        textLayout = newStaticLayout(text, textPaint, textWidth,
-            Layout.Alignment.ALIGN_CENTER, true)
+        textLayout = newStaticLayout(
+            text, textPaint, textWidth,
+            Layout.Alignment.ALIGN_CENTER, true
+        )
     }
 
     override fun isChecked(): Boolean = progress == 1f

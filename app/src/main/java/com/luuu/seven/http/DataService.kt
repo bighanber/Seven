@@ -16,7 +16,7 @@ import retrofit2.http.Path
  */
 interface DataService {
     //漫画首页数据
-    @GET("recommend.json")
+    @GET("recommend_new.json")
     suspend fun getIndexData(): List<IndexBean>
 
     //漫画更新 num: 100 全部漫画, 1 原创漫画, 0 译制漫画
