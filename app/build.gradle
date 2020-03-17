@@ -18,7 +18,13 @@ android {
 
     }
     buildTypes {
+        debug {
+            buildConfigField "boolean", "IS_DEBUG", "true"
+            buildConfigField "String", "BASE_URL", getUrl(0)
+        }
         release {
+            buildConfigField "boolean", "IS_DEBUG", "false"
+            buildConfigField "String", "BASE_URL", getUrl(2)
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -27,6 +33,25 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+static String getUrl(int status) {
+    File propFile = new File('url.properties')//这个文件不可写注释
+    if (propFile.exists()) {
+        Properties props = new Properties()
+        props.load(new FileInputStream(propFile))
+        switch (status) {
+            case 0:
+                return String.valueOf(props['TEST_URL'])  //测试
+            case 1:
+                return String.valueOf(props['PREVIEW_URL'])//仿真
+            case 2:
+                return String.valueOf(props['RELEASE_URL'])//线上
+            default:
+                return String.valueOf(props['RELEASE_URL'])//线上
+        }
+    }
+    return 2//线上
 }
 
 repositories {

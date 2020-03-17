@@ -2,16 +2,19 @@ package com.luuu.seven.widgets
 
 import android.content.Context
 import android.graphics.Color
-import android.text.Layout
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.StaticLayout
+import android.text.*
 import android.text.method.LinkMovementMethod
+import android.text.style.AlignmentSpan
+import android.text.style.ClickableSpan
+import android.text.style.StyleSpan
 import android.util.AttributeSet
+import android.view.View
 import android.view.animation.Animation
+import android.view.animation.Transformation
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatTextView
 import com.luuu.seven.util.newStaticLayout
+
 
 class ExpandableTextView @JvmOverloads constructor(
     context: Context,
@@ -26,6 +29,8 @@ class ExpandableTextView @JvmOverloads constructor(
         private const val DEFAULT_MAX_LINE = 3
     }
 
+    @Volatile
+    var animating = false
     private var isClosed = false
     private var mMaxLines = DEFAULT_MAX_LINE
     private var initWidth = 0
@@ -85,10 +90,21 @@ class ExpandableTextView @JvmOverloads constructor(
 
     private var mCharSequenceToSpannableHandler: ((CharSequence) -> SpannableStringBuilder)?= null
 
+    var mOpenCloseCallback: OpenAndCloseCallback? = null
+    fun setOpenAndCloseCallback(callback: OpenAndCloseCallback) {
+        this.mOpenCloseCallback = callback
+    }
+
+    interface OpenAndCloseCallback {
+        fun onOpen()
+        fun onClose()
+    }
+
     init {
         movementMethod = LinkMovementMethod.getInstance()
         includeFontPadding = false
-
+        updateOpenSuffixSpan()
+        updateCloseSuffixSpan()
     }
 
     override fun hasOverlappingRendering(): Boolean {
@@ -182,11 +198,29 @@ class ExpandableTextView @JvmOverloads constructor(
     }
 
     private fun open() {
-
+        if (hasAnimation) {
+            val layout = createLayout(mOpenSpannableStr!!)
+            mOpenHeight = layout.height + paddingTop + paddingBottom
+            executeOpenAnim()
+        } else {
+            super@ExpandableTextView.setMaxLines(Integer.MAX_VALUE)
+            text = mOpenSpannableStr
+            mOpenCloseCallback?.let {
+                it.onOpen()
+            }
+        }
     }
 
     private fun close() {
-
+        if (hasAnimation) {
+            executeCloseAnim()
+        } else {
+            super@ExpandableTextView.setMaxLines(mMaxLines)
+            text = mCloseSpannableStr
+            mOpenCloseCallback?.let {
+                it.onClose()
+            }
+        }
     }
 
     fun initWidth(width: Int) {
@@ -199,10 +233,111 @@ class ExpandableTextView @JvmOverloads constructor(
     }
 
     private fun updateOpenSuffixSpan() {
+        if (mOpenSuffixStr.isEmpty()) {
+            mOpenSuffixSpan = null
+            return
+        }
+        mOpenSuffixSpan = SpannableString(mOpenSuffixStr).apply {
+            setSpan(StyleSpan(android.graphics.Typeface.BOLD), 0, mOpenSuffixStr.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    switchOpenClose()
+                }
 
+                override fun updateDrawState(ds: TextPaint) {
+                    super.updateDrawState(ds)
+                    ds.color = mOpenSuffixColor
+                    ds.isUnderlineText = false
+                }
+            }, 0, mCloseSuffixStr.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
     }
 
     private fun updateCloseSuffixSpan() {
+        if (mCloseSuffixStr.isEmpty()) {
+            mCloseSuffixSpan = null
+            return
+        }
+        mCloseSuffixSpan = SpannableString(mCloseSuffixStr).apply {
+            setSpan(StyleSpan(android.graphics.Typeface.BOLD), 0, mCloseSuffixStr.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            if (mCloseInNewLine) {
+                setSpan(AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            setSpan(object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    switchOpenClose()
+                }
 
+                override fun updateDrawState(ds: TextPaint) {
+                    super.updateDrawState(ds)
+                    ds.color = mCloseSuffixColor
+                    ds.isUnderlineText = false
+                }
+            }, 0, mCloseSuffixStr.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+    }
+
+    private fun executeOpenAnim() {
+        if (mOpenAnim == null) {
+            mOpenAnim = ExpandCollapseAnimation(this, mCloseHeight, mOpenHeight)
+            mOpenAnim?.fillAfter = true
+            mOpenAnim?.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {
+                    super@ExpandableTextView.setMaxLines(Integer.MAX_VALUE)
+                    text = mOpenSpannableStr
+                }
+
+                override fun onAnimationEnd(animation: Animation) {
+                    //  动画结束后textview设置展开的状态
+                    layoutParams.height = mOpenHeight
+                    requestLayout()
+                    animating = false
+                }
+
+                override fun onAnimationRepeat(animation: Animation) {
+
+                }
+            })
+        }
+        if (animating) return
+        animating = true
+        clearAnimation()
+        startAnimation(mOpenAnim)
+    }
+
+    private fun executeCloseAnim() {
+        if (mCloseAnim == null) {
+            mCloseAnim = ExpandCollapseAnimation(this, mCloseHeight, mOpenHeight).apply {
+                fillAfter = true
+                setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation) {
+                    }
+
+                    override fun onAnimationEnd(animation: Animation) {
+                        animating = false
+                        super@ExpandableTextView.setMaxLines(mMaxLines)
+                        text = mCloseSpannableStr
+                        layoutParams.height = mCloseHeight
+                        requestLayout()
+                    }
+
+                    override fun onAnimationRepeat(animation: Animation) {
+
+                    }
+                })
+            }
+        }
+        if (animating) return
+        animating = true
+        clearAnimation()
+        startAnimation(mCloseAnim)
+    }
+
+    class ExpandCollapseAnimation(val target: View, val startHeight: Int, val endHeight: Int) : Animation() {
+        override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+            target.scrollY = 0
+            target.layoutParams.height = ((endHeight - startHeight) * interpolatedTime + startHeight).toInt()
+            target.requestLayout()
+        }
     }
 }
