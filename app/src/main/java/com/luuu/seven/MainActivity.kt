@@ -1,5 +1,8 @@
 package com.luuu.seven
 
+import android.accounts.Account
+import android.accounts.AccountManager
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -17,6 +20,14 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
 
+    companion object {
+//        const val AUTHORITY = "com.example.android.datasync.provider"
+//        const val ACCOUNT_TYPE = "example.com"
+//        const val ACCOUNT = "dummyaccount"
+    }
+
+//    private lateinit var mAccount: Account
+
     private lateinit var fm: FragmentManager
 
     private var indexFragment: ComicHomeFragment? = null
@@ -26,6 +37,8 @@ class MainActivity : BaseActivity() {
     override fun initViews() {
 //        updateForTheme(ThemedActivityDelegateImpl().currentTheme)
 //        ThemedActivityDelegateImpl().theme.observe(this, Observer(::updateForTheme))
+
+//        mAccount = createSyncAccount()
 //
         fm = supportFragmentManager
         bottom_navigation.setOnNavigationItemSelectedListener { item ->
@@ -82,6 +95,17 @@ class MainActivity : BaseActivity() {
         shelfFragment?.let { ft.hide(shelfFragment!!) }
         newsFragment?.let { ft.hide(newsFragment!!) }
     }
+
+//    private fun createSyncAccount(): Account {
+//        val accountManager = getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
+//        return Account(ACCOUNT, ACCOUNT_TYPE).also { newAccount ->
+//            if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+//
+//            } else {
+//
+//            }
+//        }
+//    }
 
     override fun onDestroy() {
         super.onDestroy()

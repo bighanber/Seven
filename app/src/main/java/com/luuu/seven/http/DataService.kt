@@ -16,64 +16,64 @@ import retrofit2.http.Path
  */
 interface DataService {
     //漫画首页数据
-    @GET("recommend_new.json")
+    @GET("")
     suspend fun getIndexData(): List<IndexBean>
 
     //漫画更新 num: 100 全部漫画, 1 原创漫画, 0 译制漫画
-    @GET("latest/{num}/{id}.json")
+    @GET("")
     suspend fun getAllUpdataComic(@Path("num") num: Int, @Path("id") id: Int): List<ComicUpdateBean>
 
     //漫画排行 type: 0 人气排行, 1 吐槽排行, 2 订阅排行
-    @GET("rank/0/0/{type}/{id}.json")
+    @GET("")
     suspend fun getRankComic(@Path("type") type: Int, @Path("id") id: Int): List<HotComicBean>
 
     //专题
-    @GET("subject/0/{id}.json")
+    @GET("")
     fun getSpecialComic(@Path("id") id: Int): Observable<List<ComicSpecialBean>>
 
     //专题详情
-    @GET("subject/{objId}.json")
+    @GET("")
     fun getSpecialComicDetail(@Path("objId") objId: Int): Observable<ComicSpecialDetBean>
 
     //漫画排行 人气榜 待删除
-    @GET("rank/0/0/0/{id}.json")
+    @GET("")
     fun getHotComic(@Path("id") id: Int): Observable<List<HotComicBean>>
 
     //漫画分类筛选
-    @GET("classify/filter.json")
+    @GET("")
     suspend fun getSortComicFilter(): List<SortFilterBean>
 
     //漫画分类里面对应的漫画列表
-    @GET("classify/{filter}/0/{page}.json")
+    @GET("")
     suspend fun getSortComicList(@Path("filter") filter: String, @Path("page") page: Int): List<ComicSortListBean>
 
     //新闻里面的大图轮播
-    @GET("article/recommend/header.json")
+    @GET("")
     suspend fun getComicNewsPic(): ComicNewsPicBean
 
     //新闻
-    @GET("article/list/v2/0/2/{id}.json")
+    @GET("")
     suspend fun getComicNewsList(@Path("id") id: Int): List<ComicNewsListBean>
 
     //新闻
-    @GET("message/list/{id}.json")
+    @GET("")
     suspend fun getComicNewsFlash(@Path("id") id: Int): List<ComicNewsFlashBean>
 
     //漫画介绍以及章节
-    @GET("comic/{comicid}.json")
+    @GET("")
     suspend fun getComicIntro(@Path("comicid") comicid: Int): ComicIntroBean
 
-    @GET("comic/related/{comic_id}.json")
+    @GET("")
     suspend fun getComicRelated(@Path("comic_id") comicId: Int): ComicRelatedInfoBean
 
     //漫画阅读
-    @GET("chapter/{comicid}/{chapterid}.json")
+    @GET("")
     suspend fun getComicReadPage(@Path("comicid") comicid: Int, @Path("chapterid") chapterid: Int): ComicReadBean
 
     //漫画搜索
-    @GET("search/show/0/{keyword}/0.json")
+    @GET("")
     suspend fun getSearchData(@Path("keyword") keyword: String): List<SearchDataBean>
 
-    @GET("search/hot/0.json")
+    @GET("")
     suspend fun getHotSearch(): List<HotSearchBean>
 }

@@ -8,8 +8,11 @@ package com.luuu.seven.http
  *     version:
  */
 object Api {
-    val SCHEME = ""
-    val AUTHORITY = ""
-    val DMZJ_URL = ""
-    val DMZJ = ""
+    const val SCHEME = ""
+    const val AUTHORITY = ""
+    const val DMZJ_URL = ""
+    const val DMZJ = ""
+
+    const val REFERER = ""
+    const val AGENT = ""
 }
