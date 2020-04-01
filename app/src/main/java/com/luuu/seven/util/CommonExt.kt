@@ -1,5 +1,6 @@
 package com.luuu.seven.util
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -138,5 +139,17 @@ fun <T> Intent.get(key: String): T? {
     } catch (e: Exception) {
     }
     return null
+}
+
+fun Context.showActivity(packageName: String) {
+    val intent = packageManager.getLaunchIntentForPackage(packageName)
+    startActivity(intent)
+}
+
+fun Context.showActivity(packageName: String, activityDir: String) {
+    val intent = Intent()
+    intent.component = ComponentName(packageName, activityDir)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    startActivity(intent)
 }
 
