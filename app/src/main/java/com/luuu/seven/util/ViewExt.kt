@@ -1,9 +1,11 @@
 package com.luuu.seven.util
 
 import android.content.Context
+import android.graphics.Rect
 import android.os.Looper
 import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import androidx.annotation.RestrictTo
 import androidx.core.view.ViewCompat
@@ -185,3 +187,48 @@ fun paddingTop(context: Context): Int {
 fun EditText.values() = this.text.toString()
 
 fun View.isRtl() = layoutDirection == View.LAYOUT_DIRECTION_RTL
+
+/**
+ * View有效区域
+ */
+fun View.isCover(): Boolean {
+    var view = this
+    val currentViewRect = Rect()
+    val partVisible: Boolean = view.getLocalVisibleRect(currentViewRect)
+    val totalHeightVisible =
+        currentViewRect.bottom - currentViewRect.top >= view.measuredHeight
+    val totalWidthVisible =
+        currentViewRect.right - currentViewRect.left >= view.measuredWidth
+    val totalViewVisible = partVisible && totalHeightVisible && totalWidthVisible
+    if (!totalViewVisible)
+        return true
+    while (view.parent is ViewGroup) {
+        val currentParent = view.parent as ViewGroup
+        if (currentParent.visibility != View.VISIBLE) //if the parent of view is not visible,return true
+            return true
+
+        val start = view.indexOfViewInParent(currentParent)
+        for (i in start + 1 until currentParent.childCount) {
+            val viewRect = Rect()
+            view.getGlobalVisibleRect(viewRect)
+            val otherView = currentParent.getChildAt(i)
+            val otherViewRect = Rect()
+            otherView.getGlobalVisibleRect(otherViewRect)
+            if (Rect.intersects(viewRect, otherViewRect)) {
+                //if view intersects its older brother(covered),return true
+                return true
+            }
+        }
+        view = currentParent
+    }
+    return false
+}
+
+fun View.indexOfViewInParent(parent: ViewGroup): Int {
+    var index = 0
+    while (index < parent.childCount) {
+        if (parent.getChildAt(index) === this) break
+        index++
+    }
+    return index
+}
