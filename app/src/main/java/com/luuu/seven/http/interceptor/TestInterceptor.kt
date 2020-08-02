@@ -24,13 +24,13 @@ class TestInterceptor : Interceptor {
         val request: Request = chain.request()
         val response = chain.proceed(request)
 
-        val url: HttpUrl = request.url()
+        val url: HttpUrl = request.url
         //http://127.0.0.1/test/upload/img?userName=xiaoming&userPassword=12345
         //http://127.0.0.1/test/upload/img?userName=xiaoming&userPassword=12345
-        val scheme = url.scheme() //  http https
-        val host = url.host() //   127.0.0.1
-        val path = url.encodedPath() //  /test/upload/img
-        val query = url.encodedQuery() //  userName=xiaoming&userPassword=12345
+        val scheme = url.scheme //  http https
+        val host = url.host //   127.0.0.1
+        val path = url.encodedPath //  /test/upload/img
+        val query = url.encodedQuery //  userName=xiaoming&userPassword=12345
 
         val sb = StringBuffer()
         val newUrl =
@@ -44,7 +44,7 @@ class TestInterceptor : Interceptor {
 
         val sbb = StringBuffer()
         sbb.append(scheme).append(newHost).append(path).append("?")
-        val queryList = url.queryParameterNames()
+        val queryList = url.queryParameterNames
         val iterator: Iterator<String> = queryList.iterator()
 
         for (i in queryList.indices) {
@@ -99,7 +99,7 @@ class TestInterceptor : Interceptor {
         //--------------------
         //请求日志抓取
 
-        val body = request.body()
+        val body = request.body
         val bodyToString = requestBodyToString(body!!)
 
         Log.e(TAG, scheme)
@@ -108,18 +108,18 @@ class TestInterceptor : Interceptor {
         Log.e(TAG, query)
 
         if (response != null) {
-            val responseBody = response.body()
+            val responseBody = response.body
             val contentLength = responseBody!!.contentLength()
             val bodySize =
                 if (contentLength != -1L) "$contentLength-byte" else "unknown-length"
             Log.e(
-                TAG, response.code().toString() + ' ' + response.message() + ' '
-                        + response.request().url() + ' '
+                TAG, response.code.toString() + ' ' + response.message + ' '
+                        + response.request.url + ' '
                         + bodySize
             )
-            val headers = response.headers()
+            val headers = response.headers
             var i = 0
-            val count = headers.size()
+            val count = headers.size
             while (i < count) {
                 Log.e(TAG, headers.name(i).toString() + ": " + headers.value(i))
                 i++

@@ -2,10 +2,12 @@ package com.luuu.seven.util
 
 import android.content.Context
 import android.graphics.Rect
+import android.os.Build
 import android.os.Looper
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewParent
 import android.widget.EditText
 import androidx.annotation.RestrictTo
 import androidx.core.view.ViewCompat
@@ -17,6 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposables
 import java.util.concurrent.TimeUnit
+
 
 val View.isVisible: Boolean
     get() = visibility == View.VISIBLE
@@ -231,4 +234,44 @@ fun View.indexOfViewInParent(parent: ViewGroup): Int {
         index++
     }
     return index
+}
+
+fun View.setDrawDuringWindowsAnimating() {
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M
+        || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        // 1 android n以上  & android 4.1以下不存在此问题，无须处理
+        return
+    }
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        handleDispatchDoneAnimating()
+        return
+    }
+    try {
+        // 4.3及以上，反射setDrawDuringWindowsAnimating来实现动画过程中渲染
+        val rootParent: ViewParent = rootView.parent
+        val method = rootParent.javaClass
+            .getDeclaredMethod(
+                "setDrawDuringWindowsAnimating",
+                Boolean::class.javaPrimitiveType
+            )
+        method.isAccessible = true
+        method.invoke(rootParent, true)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
+
+/**
+ * android4.2可以反射handleDispatchDoneAnimating来解决
+ */
+fun View.handleDispatchDoneAnimating() {
+    try {
+        val localViewParent: ViewParent = rootView.parent
+        val localClass = localViewParent.javaClass
+        val localMethod = localClass.getDeclaredMethod("handleDispatchDoneAnimating")
+        localMethod.isAccessible = true
+        localMethod.invoke(localViewParent)
+    } catch (localException: java.lang.Exception) {
+        localException.printStackTrace()
+    }
 }

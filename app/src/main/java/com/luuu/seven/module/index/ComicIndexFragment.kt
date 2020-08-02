@@ -58,7 +58,6 @@ class ComicIndexFragment : BaseFragment() {
     override fun initViews() {
         appbar_layout.updatePadding(top = paddingTop(context!!))
 
-
         mViewModel = obtainViewModel<HomeViewModel>().apply {
             getHomeData()
 
