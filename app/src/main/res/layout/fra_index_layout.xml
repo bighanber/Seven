@@ -30,8 +30,8 @@
                 <com.youth.banner.Banner
                     android:id="@+id/index_banner"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    app:image_scale_type="fit_xy"
+                    android:layout_height="200dp"
+                    app:image_scale_type="center_crop"
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="15dp"
                     app:indicator_drawable_selected="@drawable/dot_circle_drawable_pressed"

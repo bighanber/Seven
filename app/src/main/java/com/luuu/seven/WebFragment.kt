@@ -3,31 +3,28 @@ package com.luuu.seven
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.luuu.seven.base.BaseActivity
+import androidx.navigation.fragment.findNavController
+import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.http.Api
-import com.luuu.seven.module.intro.ComicIntroActivity
-import com.luuu.seven.util.get
-import kotlinx.android.synthetic.main.activity_web.*
+import kotlinx.android.synthetic.main.fra_web.*
 
-class WebActivity : BaseActivity() {
+class WebFragment : BaseFragment() {
 
     private var mUrl: String?= null
     private var mWeb: WebView?= null
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun initViews() {
-        setToolbarTitle(" ")
-        mWeb = findViewById(R.id.web)
+        mWeb = requireActivity().findViewById(R.id.web)
         val mWebSettings = mWeb?.settings
         mWebSettings?.javaScriptEnabled = true
         mWebSettings?.useWideViewPort = true
         mWebSettings?.loadWithOverviewMode = true
 
-        mUrl = intent.get("url")
+        mUrl = arguments?.getString("url")
 
         mWeb?.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
@@ -35,9 +32,11 @@ class WebActivity : BaseActivity() {
                 if (uri.scheme == Api.SCHEME) {
                     if (uri.authority == Api.AUTHORITY) {
                         val id = uri.getQueryParameter("id")
-                        val mBundle = Bundle()
-                        mBundle.putInt("comicId", id.toInt())
-                        startNewActivity(ComicIntroActivity::class.java, mBundle)
+                        val bundle = Bundle().apply {
+                            putInt("comicId", id?.toIntOrNull() ?: 0)
+                        }
+//                        startNewActivity(ComicIntroActivity::class.java, mBundle)
+                        findNavController().navigate(R.id.action_web_fragment_to_intro_fragment, bundle)
                     }
                 } else {
                     view!!.loadUrl(url)
@@ -49,19 +48,19 @@ class WebActivity : BaseActivity() {
 
         iv_web_back.setOnClickListener {
 
-            if (mWeb!!.canGoBack()) mWeb?.goBack() else onBackPressed()
+            if (mWeb!!.canGoBack()) mWeb?.goBack() else findNavController().navigateUp()
         }
     }
 
-    override fun getContentViewLayoutID(): Int = R.layout.activity_web
+    override fun getContentViewLayoutID(): Int = R.layout.fra_web
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && mWeb!!.canGoBack()) {
-            mWeb?.goBack()
-            return true
-        }
-        return super.onKeyDown(keyCode, event)
-    }
+//    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+//        if ((keyCode == KeyEvent.KEYCODE_BACK) && mWeb!!.canGoBack()) {
+//            mWeb?.goBack()
+//            return true
+//        }
+//        return super.onKeyDown(keyCode, event)
+//    }
 
     override fun onDestroy() {
         super.onDestroy()

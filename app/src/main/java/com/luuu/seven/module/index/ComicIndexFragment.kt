@@ -2,32 +2,24 @@ package com.luuu.seven.module.index
 
 import android.graphics.Bitmap
 import android.os.AsyncTask
-import android.os.Bundle
-import android.util.Log
-import androidx.core.content.ContextCompat
 import androidx.core.view.updatePadding
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.appbar.AppBarLayout
 import com.luuu.seven.R
-import com.luuu.seven.WebActivity
 import com.luuu.seven.adapter.ComicIndexAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.IndexBean
 import com.luuu.seven.bean.IndexDataBean
-import com.luuu.seven.module.intro.ComicIntroActivity
-import com.luuu.seven.util.GlideImageLoader
-import com.luuu.seven.util.obtainViewModel
-import com.luuu.seven.util.paddingTop
-import com.luuu.seven.util.url2Bitmap
+import com.luuu.seven.util.*
 import com.youth.banner.BannerConfig
 import kotlinx.android.synthetic.main.fra_index_layout.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlin.math.abs
 
 
 /**
@@ -39,7 +31,7 @@ import kotlin.math.abs
  */
 class ComicIndexFragment : BaseFragment() {
 
-    private lateinit var mViewModel: HomeViewModel
+    private val mViewModel by viewModels<HomeViewModel>()
     private var mAdapter: ComicIndexAdapter? = null
     private lateinit var mJob: Job
     private lateinit var mBitmapGet: AsyncTask<Bitmap, Void, Palette>
@@ -56,31 +48,17 @@ class ComicIndexFragment : BaseFragment() {
     }
 
     override fun initViews() {
-        appbar_layout.updatePadding(top = paddingTop(context!!))
+        appbar_layout.updatePadding(top = paddingTop(requireContext()))
 
-        mViewModel = obtainViewModel<HomeViewModel>().apply {
-            getHomeData()
-
-            homeData.observe(viewLifecycleOwner, Observer { data ->
-                data?.let {
-                    updateIndexList(it)
-                }
-            })
-
-            dataLoading.observe(viewLifecycleOwner, Observer { isRefresh ->
-                isRefresh?.let {
-                    index_refresh.isRefreshing = it
-                }
-            })
-        }
+        mViewModel.getHomeData()
 
         index_refresh.setOnRefreshListener {
             mViewModel.getHomeData()
         }
 
         appbar_layout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            val percent =
-                (abs(verticalOffset)).toFloat() / (appBarLayout.totalScrollRange).toFloat()
+//            val percent =
+//                (abs(verticalOffset)).toFloat() / (appBarLayout.totalScrollRange).toFloat()
 //            toolbar.alpha = percent
 //            tv_search_bg.alpha = if (percent >= 0.5) percent else 0.5f
             index_refresh.isEnabled = verticalOffset == 0
@@ -90,6 +68,26 @@ class ComicIndexFragment : BaseFragment() {
                 index_banner.stopAutoPlay()
             }
         })
+
+        mViewModel.homeList.observe(viewLifecycleOwner) {
+            updateIndexList(it)
+        }
+
+        mViewModel.homeBanner.observe(viewLifecycleOwner) {
+            initPager(it.data)
+        }
+
+        mViewModel.toIntro.observeEvent(viewLifecycleOwner) {
+            findNavController().navigate(R.id.action_home_fragment_to_intro_fragment, it)
+        }
+
+        mViewModel.toSpecialDetail.observeEvent(viewLifecycleOwner) {
+            findNavController().navigate(R.id.action_home_fragment_to_special_detail_fragment, it)
+        }
+
+        mViewModel.toWeb.observeEvent(viewLifecycleOwner) {
+            findNavController().navigate(R.id.action_home_fragment_to_web_fragment, it)
+        }
 
 //        tv_search_bg.setOnClickListener { startNewActivity(ComicSearchActivity::class.java) }
 //        tv_header_update.setOnClickListener { startNewActivity(ComicUpdateActivity::class.java) }
@@ -101,15 +99,12 @@ class ComicIndexFragment : BaseFragment() {
     override fun getContentViewLayoutID(): Int = R.layout.fra_index_layout
 
     private fun updateIndexList(data: List<IndexBean>) {
-        initPager(data[0].data)
-        //个别栏目不需要就不展示
-        val mData = data.filterNot { it.sort == 1 || it.sort == 4 }
-
-        mAdapter?.setNewData(mData) ?: initAdapter(mData)
+        index_refresh.isRefreshing = false
+        mAdapter?.setNewData(data) ?: initAdapter(data)
     }
 
     private fun initAdapter(indexBeanList: List<IndexBean>) {
-        mAdapter = ComicIndexAdapter(indexBeanList)
+        mAdapter = ComicIndexAdapter(indexBeanList, mViewModel)
         recycler.layoutManager = LinearLayoutManager(mContext)
         recycler.adapter = mAdapter
     }
@@ -121,47 +116,32 @@ class ComicIndexFragment : BaseFragment() {
             setIndicatorGravity(BannerConfig.RIGHT)
             //如果url为空则表示是具体的漫画，不然就是广告或者活动
             setOnBannerListener { position ->
-                if ("" == dataBeanList[position].url) {
-                    val mBundle = Bundle()
-                    mBundle.putInt("comicId", dataBeanList[position].objId)
-                    startNewActivity(ComicIntroActivity::class.java, mBundle)
-                } else {
-                    val mBundle = Bundle()
-                    mBundle.putString("url", dataBeanList[position].url)
-                    startNewActivity(WebActivity::class.java, mBundle)
-                }
+                mViewModel.bannerClick(position)
             }
-            setImages(urls).setImageLoader(GlideImageLoader()).start()
+            setImages(urls).setImageLoader(SevenImageLoader()).start()
             setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-                override fun onPageScrollStateChanged(state: Int) {
-
-                }
+                override fun onPageScrollStateChanged(state: Int) {}
 
                 override fun onPageScrolled(
                     position: Int,
                     positionOffset: Float,
                     positionOffsetPixels: Int
                 ) {
-
                 }
 
                 override fun onPageSelected(position: Int) {
                     mJob = GlobalScope.launch {
-                        mBitmapGet =
-                            Palette.from(url2Bitmap(mContext!!, urls[position])).generate { palette ->
-                                palette?.let {
-                                    val mColor = it.getVibrantColor(
-                                        ContextCompat.getColor(
-                                            mContext!!,
-                                            R.color.colorPrimary
-                                        )
-                                    )
-                                    appbar_layout?.setBackgroundColor(mColor)
+                        url2Bitmap(requireContext(), urls[position])?.let {
+                            mBitmapGet =
+                                Palette.from(it).generate { palette ->
+                                    palette?.let {
+                                        val mColor = it.getVibrantColor(color(R.color.colorPrimary))
+                                        appbar_layout?.setBackgroundColor(mColor)
+                                    }
                                 }
-                            }
+                        }
                     }
                 }
-
             })
         }
     }

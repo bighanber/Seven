@@ -3,6 +3,7 @@ package com.luuu.seven.module.shelf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.luuu.seven.bean.CollectBean
 import com.luuu.seven.bean.ComicIntroBean
 import com.luuu.seven.bean.ReadHistoryBean
@@ -12,6 +13,8 @@ import com.luuu.seven.util.ioMain
 import com.luuu.seven.util.launch
 import com.luuu.seven.util.toast
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class ShelfViewModel : ViewModel() {
     private val mRepository by lazy { ShelfRepository() }
@@ -26,29 +29,17 @@ class ShelfViewModel : ViewModel() {
     val dataLoading: LiveData<Boolean> = _dataLoading
 
     fun getReadHistory() {
-        launch<List<ReadHistoryBean>> {
-            request {
-                mRepository.getReadHistory()
-            }
-            onSuccess { result ->
-                _historyData.value = result
-            }
-            onFailed { error, code ->
-                toast(error)
+        viewModelScope.launch {
+            mRepository.getReadHistory().collectLatest {
+                _historyData.value = it
             }
         }
     }
 
     fun getCollect() {
-        launch<List<CollectBean>> {
-            request {
-                mRepository.getCollect()
-            }
-            onSuccess { result ->
-                _collectData.value = result
-            }
-            onFailed { error, code ->
-                toast(error)
+        viewModelScope.launch {
+            mRepository.getCollect().collectLatest {
+                _collectData.value = it
             }
         }
     }

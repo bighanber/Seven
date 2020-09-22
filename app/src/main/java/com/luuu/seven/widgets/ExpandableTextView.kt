@@ -182,8 +182,7 @@ class ExpandableTextView @JvmOverloads constructor(
         val contentWidth = initWidth - paddingStart - paddingEnd
         return newStaticLayout(
             spannable, paint, contentWidth,
-            Layout.Alignment.ALIGN_NORMAL, includeFontPadding
-        )
+            Layout.Alignment.ALIGN_NORMAL,1f,0f, includeFontPadding)
     }
 
     private fun switchOpenClose() {

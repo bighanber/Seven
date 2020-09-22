@@ -2,13 +2,17 @@ package com.luuu.seven.util
 
 import android.content.Context
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Looper
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewParent
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView
 import androidx.annotation.RestrictTo
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -30,8 +34,8 @@ val View.isInvisible: Boolean
 val View.isGone: Boolean
     get() = visibility == View.GONE
 
-fun View.setVisible() {
-    this.visibility = View.VISIBLE
+fun View.show() {
+    if (visibility != View.VISIBLE) visibility = View.VISIBLE
 }
 
 fun View.setVisible(show: Boolean) {
@@ -42,18 +46,33 @@ fun View.setVisible(show: Boolean) {
     }
 }
 
-fun View.setInvisible() {
+fun View.invisible() {
     this.visibility = View.INVISIBLE
 }
 
-fun View.setGone() {
+fun View.gone() {
     this.visibility = View.GONE
+}
+
+fun ViewGroup.inflate(id: Int, attachToRoot: Boolean): View {
+    return LayoutInflater.from(context).inflate(id, this, attachToRoot)
 }
 
 fun <T : View> T.withTrigger(delay: Long = 600): T {
     triggerDelay = delay
     return this
 }
+
+fun View.showKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(this, InputMethodManager.SHOW_FORCED)
+}
+
+fun View.dismissKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(this.windowToken, 0)
+}
+
 
 fun <T : View> T.click(block: (T) -> Unit) = setOnClickListener {
 
@@ -273,5 +292,51 @@ fun View.handleDispatchDoneAnimating() {
         localMethod.invoke(localViewParent)
     } catch (localException: java.lang.Exception) {
         localException.printStackTrace()
+    }
+}
+
+fun TextView.updateCompoundDrawables(
+    leftDrawable: Drawable? = null,
+    topDrawable: Drawable? = null,
+    rightDrawable: Drawable? = null,
+    bottomDrawable: Drawable? = null,
+    width: Int? = null,
+    height: Int? = null,
+    padding: Int? = null
+) {
+    if (width != null && height != null) {
+        leftDrawable?.setBounds(
+            0,
+            0,
+            width,
+            height
+        )
+        topDrawable?.setBounds(
+            0,
+            0,
+            width,
+            height
+        )
+        rightDrawable?.setBounds(
+            0,
+            0,
+            width,
+            height
+        )
+        bottomDrawable?.setBounds(
+            0,
+            0,
+            width,
+            height
+        )
+    }
+    setCompoundDrawables(
+        leftDrawable,
+        topDrawable,
+        rightDrawable,
+        bottomDrawable
+    )
+    padding?.let {
+        compoundDrawablePadding = padding
     }
 }

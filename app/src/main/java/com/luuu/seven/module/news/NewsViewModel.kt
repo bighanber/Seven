@@ -1,15 +1,17 @@
 package com.luuu.seven.module.news
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.luuu.seven.bean.ComicNewsFlashBean
 import com.luuu.seven.bean.ComicNewsListBean
 import com.luuu.seven.bean.ComicNewsPicBean
 import com.luuu.seven.repository.NewsRepository
 import com.luuu.seven.util.*
+import com.luuu.seven.util.map
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.launch
 import kotlin.Result
 
 class NewsViewModel : ViewModel() {
@@ -62,51 +64,33 @@ class NewsViewModel : ViewModel() {
     }
 
     fun getComicNewsPic() {
-        launch<ComicNewsPicBean> {
-            request {
-                mRepository.getComicNewsPic()
-            }
-            onSuccess {
+        viewModelScope.launch {
+            mRepository.getComicNewsPic().collectLatest {
                 _newsPicData.value = it
             }
-            onFailed { error, code ->
-                toast(error)
-            }
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun getComicNewsList(page: Int, refresh: Boolean = false, more: Boolean = false) {
-        launch<List<ComicNewsListBean>> {
-            request {
-                mRepository.getComicNewsList(page)
-            }
-            onSuccess {
+        viewModelScope.launch {
+            mRepository.getComicNewsList(page).onCompletion {
+                if (refresh) swipeRefreshResult.value = true
+                if (more) loadMoreResult.value = true
+            }.collectLatest {
                 _newsListData.value = it
             }
-            onFailed { error, code ->
-                toast(error)
-            }
-            onComplete {
-                if (refresh) swipeRefreshResult.value = true
-                if (more) loadMoreResult.value = true
-            }
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun getComicNewsFlash(page: Int, refresh: Boolean = false, more: Boolean = false) {
-        launch<List<ComicNewsFlashBean>> {
-            request {
-                mRepository.getComicNewsFlash(page)
-            }
-            onSuccess {
-                _newsFlashData.value = it
-            }
-            onFailed { error, code ->
-                toast(error)
-            }
-            onComplete {
+        viewModelScope.launch {
+            mRepository.getComicNewsFlash(page).onCompletion {
                 if (refresh) swipeRefreshResult.value = true
                 if (more) loadMoreResult.value = true
+            }.collectLatest {
+                _newsFlashData.value = it
             }
         }
     }

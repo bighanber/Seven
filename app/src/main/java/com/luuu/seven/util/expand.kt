@@ -10,19 +10,14 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.luuu.seven.ComicApplication
+import java.lang.ref.WeakReference
+import java.text.DecimalFormat
+import java.util.*
 
 /**
  * Created by lls on 2017/11/9.
  *
  */
-fun ImageView.loadImg(imageUrl: String) {
-//    if (TextUtils.isEmpty(imageUrl)) {
-//        Glide.with(ComicApplication.sAppContext).load(R.mipmap.ic_launcher).into(this)
-//    } else {
-//        Glide.with(ComicApplication.sAppContext).load(GlideUrl(imageUrl, LazyHeaders.Builder().addHeader("Referer", Api.DMZJ).build()))
-//                .into(this)
-//    }
-}
 
 fun <T1, T2> ifNotNull(value1: T1?, value2: T2?, bothNotNull: (T1, T2) -> (Unit)) {
     if (value1 != null && value2 != null) {
@@ -32,33 +27,9 @@ fun <T1, T2> ifNotNull(value1: T1?, value2: T2?, bothNotNull: (T1, T2) -> (Unit)
     }
 }
 
-fun ImageView.loadImgWithTransform(imageUrl: String) {
-//    Glide.with(ComicApplication.sAppContext).load(GlideUrl(imageUrl, LazyHeaders.Builder().addHeader("Referer", Api.DMZJ).build()))
-//            .bitmapTransform(BlurTransformation(context, 50))
-//            .into(object : SimpleTarget<GlideDrawable>() {
-//                @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-//                override fun onResourceReady(resource: GlideDrawable, glideAnimation: GlideAnimation<in GlideDrawable>) {
-//                    background = resource
-//                }
-//            })
-}
 
-fun ImageView.loadImgWithProgress(imageUrl: String, view: ProgressBar) {
-//    Glide.with(ComicApplication.sAppContext)
-//            .load(GlideUrl(imageUrl, LazyHeaders.Builder().addHeader("Referer", Api.DMZJ).build()))
-//            .listener(object : RequestListener<GlideUrl, GlideDrawable> {
-//                override fun onResourceReady(resource: GlideDrawable?, model: GlideUrl?, target: Target<GlideDrawable>?, isFromMemoryCache: Boolean, isFirstResource: Boolean): Boolean {
-//                    view.visibility = View.INVISIBLE
-//                    return false
-//                }
-//
-//                override fun onException(e: Exception?, model: GlideUrl?, target: Target<GlideDrawable>?, isFirstResource: Boolean): Boolean {
-//                    return false
-//                }
-//
-//            })
-//            .into(this)
-}
+
+
 //fun Fragment.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
 //    Toast.makeText(context, message, duration).show()
 //}
@@ -81,9 +52,9 @@ fun newStaticLayout(
     paint: TextPaint,
     width: Int,
     alignment: Layout.Alignment,
-    includepad: Boolean,
-    spacingmult: Float = 1f,
-    spacingadd: Float = 0f
+    spacingmult: Float,
+    spacingadd: Float,
+    includepad: Boolean
 ): StaticLayout {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         StaticLayout.Builder.obtain(source, 0, source.length, paint, width).apply {
@@ -93,7 +64,7 @@ fun newStaticLayout(
         }.build()
     } else {
         @Suppress("DEPRECATION")
-        (StaticLayout(source, paint, width, alignment, spacingmult, spacingadd, includepad))
+        StaticLayout(source, paint, width, alignment, spacingmult, spacingadd, includepad)
     }
 }
 
@@ -110,3 +81,38 @@ fun lerp(a: Float, b: Float, t: Float): Float {
 }
 
 fun isSDCardEnable() = Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()
+
+fun Float.normalize(
+    inputMin: Float,
+    inputMax: Float,
+    outputMin: Float,
+    outputMax: Float
+): Float {
+    if (this < inputMin) {
+        return outputMin
+    } else if (this > inputMax) {
+        return outputMax
+    }
+
+    return outputMin * (1 - (this - inputMin) / (inputMax - inputMin)) +
+            outputMax * ((this - inputMin) / (inputMax - inputMin))
+}
+
+fun Int.centsToDollars(): Double = this.toDouble() / 100.0
+
+fun Int.centsToDollarsFormat(currency: String): String {
+    val dollars = this / 100
+    val cents = this % 100
+    return String.format(Locale.getDefault(), "%s%d.%02d", currency, dollars, cents)
+}
+
+fun Double.toPrice(): String {
+    val pattern = "#,###.00"
+    val decimalFormat = DecimalFormat(pattern)
+    decimalFormat.groupingSize = 3
+
+    return "¥" + decimalFormat.format(this)
+}
+
+val <T> T.weak: WeakReference<T>
+    get() = WeakReference(this)

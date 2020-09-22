@@ -12,7 +12,7 @@ import com.youth.banner.loader.ImageLoader
  *     desc   :
  *     version:
  */
-class GlideImageLoader : ImageLoader() {
+class SevenImageLoader : ImageLoader() {
     override fun displayImage(context: Context?, path: Any?, imageView: ImageView?) {
         imageView?.loadWithHead(path as String)
     }

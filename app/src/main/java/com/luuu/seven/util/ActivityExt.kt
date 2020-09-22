@@ -1,11 +1,16 @@
 package com.luuu.seven.util
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -120,4 +125,21 @@ fun FragmentActivity.returnAndFinish(vararg params: Pair<String, Any>) {
 
 fun Fragment.returnAndFinish(vararg params: Pair<String, Any>) {
     activity?.returnAndFinish(*params)
+}
+
+fun AppCompatActivity.callTo(phoneNumber: String, requestCode: Int) {
+    val intent = Intent(Intent.ACTION_CALL)
+
+    intent.data = Uri.parse("tel:$phoneNumber")
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            val permissions = arrayOfNulls<String>(1)
+            permissions[0] = Manifest.permission.CALL_PHONE
+            requestPermissions(permissions, requestCode)
+        } else {
+            startActivity(intent)
+        }
+    } else {
+        startActivity(intent)
+    }
 }

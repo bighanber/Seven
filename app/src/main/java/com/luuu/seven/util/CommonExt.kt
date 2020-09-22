@@ -3,6 +3,7 @@ package com.luuu.seven.util
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
@@ -31,8 +32,27 @@ fun Context.px2dp(px: Int): Float = px.toFloat() / resources.displayMetrics.dens
 fun Context.px2sp(px: Int): Float = px.toFloat() / resources.displayMetrics.scaledDensity
 fun Context.dimen2px(@DimenRes resource: Int): Int = resources.getDimensionPixelSize(resource)
 
-fun Context.getVersionName(): String = packageManager.getPackageInfo(packageName, 0).versionName
-fun Context.getVersionCode(): Int = packageManager.getPackageInfo(packageName, 0).versionCode
+val Context.versionName: String?
+    get() = try {
+        val pInfo = packageManager.getPackageInfo(packageName, 0);
+        pInfo?.versionName
+    } catch (e: PackageManager.NameNotFoundException) {
+        e.printStackTrace()
+        null
+    }
+val Context.versionCode: Long?
+    get() = try {
+        val pInfo = packageManager.getPackageInfo(packageName, 0)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            pInfo?.longVersionCode
+        } else {
+            @Suppress("DEPRECATION")
+            pInfo?.versionCode?.toLong()
+        }
+    } catch (e: PackageManager.NameNotFoundException) {
+        e.printStackTrace()
+        null
+    }
 fun Context.getAppName(): String =
     resources.getString(packageManager.getPackageInfo(packageName, 0).applicationInfo.labelRes)
 
@@ -79,15 +99,6 @@ fun Parcel.readBooleanUsingCompat() = ParcelCompat.readBoolean(this)
 val <T> T.checkAllMatched: T
     get() = this
 
-fun View.showKeyboard() {
-    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.showSoftInput(this, InputMethodManager.SHOW_FORCED)
-}
-
-fun View.dismissKeyboard() {
-    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.hideSoftInputFromWindow(this.windowToken, 0)
-}
 
 fun Intent.putExtras(vararg params: Pair<String, Any>): Intent {
     if (params.isEmpty()) return this

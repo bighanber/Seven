@@ -2,31 +2,31 @@ package com.luuu.seven.module.search
 
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.*
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicHotSearchAdapter
 import com.luuu.seven.adapter.ComicSearchAdapter
-import com.luuu.seven.base.BaseActivity
+import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.HotSearchBean
 import com.luuu.seven.bean.SearchDataBean
-import com.luuu.seven.module.intro.ComicIntroActivity
 import com.luuu.seven.util.*
-import kotlinx.android.synthetic.main.activity_comic_search.*
+import kotlinx.android.synthetic.main.fra_comic_search.*
 
 /**
  * Created by lls on 2017/8/9.
  *搜索界面
  */
-class ComicSearchActivity : BaseActivity() {
+class ComicSearchFragment : BaseFragment() {
 
-    private lateinit var mViewModel: SearchViewModel
+    private val mViewModel: SearchViewModel by viewModels()
     private var mAdapter: ComicSearchAdapter? = null
     private var mHotAdapter: ComicHotSearchAdapter? = null
-    private val mLayoutManager by lazy { LinearLayoutManager(this) }
+    private val mLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private val mFlexLayoutManager: FlexboxLayoutManager by lazy {
-        FlexboxLayoutManager(this).apply {
+        FlexboxLayoutManager(requireContext()).apply {
             flexDirection = FlexDirection.ROW
             flexWrap = FlexWrap.WRAP
             alignItems = AlignItems.CENTER
@@ -37,27 +37,31 @@ class ComicSearchActivity : BaseActivity() {
 
     override fun initViews() {
 
-        mViewModel = obtainViewModel<SearchViewModel>().apply {
-            getHotSearch()
+        BarUtils.addStatusBarView(status_bg, requireContext(), color(R.color.colorPrimary))
 
-            searchData.observe(this@ComicSearchActivity, Observer {
-                if (it.isEmpty()) {
-                    toast(string(R.string.search_empty))
-                    return@Observer
-                }
-                updateSearchData(it)
-            })
+        mViewModel.getHotSearch()
 
-            hotSearchData.observe(this@ComicSearchActivity, Observer {
-                updateHotSearch(it)
-            })
-
-            isEmpty.observe(this@ComicSearchActivity, Observer {
-                if (it) toast(string(R.string.search_empty))
-            })
+        mViewModel.searchData.observe(this) {
+            if (it.isEmpty()) {
+                toast(string(R.string.search_empty))
+                return@observe
+            }
+            updateSearchData(it)
         }
 
-        tv_cancel.setOnClickListener { finish() }
+        mViewModel.hotSearchData.observe(this) {
+            updateHotSearch(it)
+        }
+
+        mViewModel.isEmpty.observe(this) {
+            if (it) toast(string(R.string.search_empty))
+        }
+
+        tv_cancel.click { findNavController().navigateUp() }
+
+        back.click {
+            findNavController().navigateUp()
+        }
 
         et_search_view.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -73,10 +77,10 @@ class ComicSearchActivity : BaseActivity() {
 
     }
 
-    override fun getContentViewLayoutID(): Int = R.layout.activity_comic_search
+    override fun getContentViewLayoutID(): Int = R.layout.fra_comic_search
 
     private fun updateSearchData(data: List<SearchDataBean>) {
-        tv_hot_search.setGone()
+        tv_hot_search.gone()
         mSearchDataBeanList = data
         mAdapter?.setNewData(data) ?: initAdapter(data)
     }
@@ -100,7 +104,10 @@ class ComicSearchActivity : BaseActivity() {
         recycler_search.layoutManager = mLayoutManager
         recycler_search.adapter = mAdapter
         mAdapter?.setOnItemClickListener { _, _, position ->
-            startActivity<ComicIntroActivity>(ComicIntroActivity.COMIC_ID to mSearchDataBeanList!![position].id)
+//            startActivity<ComicIntroActivity>(ComicIntroActivity.COMIC_ID to mSearchDataBeanList!![position].id)
+            findNavController().navigate(
+                R.id.action_search_fragment_to_intro_fragment,
+                Bundle().apply { putInt("comicId", mSearchDataBeanList!![position].id) })
         }
     }
 }

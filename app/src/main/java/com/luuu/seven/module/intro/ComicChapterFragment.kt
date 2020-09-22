@@ -50,7 +50,7 @@ class ComicChapterFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val lp = chapter_sheet.layoutParams as ViewGroup.MarginLayoutParams
-        lp.topMargin = BarUtils.getStatusBarHeight(context!!)
+        lp.topMargin = BarUtils.getStatusBarHeight(requireContext())
         chapter_sheet.layoutParams = lp
 
         val behavior = BottomSheetBehavior.from(chapter_sheet)

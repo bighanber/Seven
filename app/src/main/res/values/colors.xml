@@ -8,6 +8,7 @@
     <color name="colorSubFont">#C3C3C3</color>
     <color name="item_text">#434343</color>
     <color name="content">#333333</color>
+    <color name="colorBody2">#666666</color>
     <color name="white">#FFF</color>
     <color name="black">#000</color>
     <color name="read_page_info_bg">#4F000000</color>

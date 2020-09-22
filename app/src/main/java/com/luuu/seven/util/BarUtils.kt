@@ -1,140 +1,98 @@
 package com.luuu.seven.util
 
-import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
-import android.graphics.Color
+import android.content.res.Resources
 import android.os.Build
-import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.Window
 import android.view.WindowManager
-import android.widget.LinearLayout
 import androidx.annotation.ColorInt
-import androidx.annotation.IntRange
+import androidx.annotation.FloatRange
 import androidx.annotation.RequiresApi
-import androidx.drawerlayout.widget.DrawerLayout
+import com.luuu.seven.R
 import java.util.regex.Pattern
 
 object BarUtils {
 
-    const val DEFAULT_ALPHA = 0
+    private const val DEFAULT_ALPHA = 0f
+    private const val DEFAULT_COLOR = 0
 
-    /**
-     * 设置状态栏颜色（自定义颜色)
-     *
-     * @param activity 目标activity
-     * @param color    状态栏颜色值
-     */
-    fun setColor(activity: Activity, @ColorInt color: Int) {
-        setColor(activity, color, DEFAULT_ALPHA)
+    fun immersive(activity: Activity) {
+        immersive(activity, DEFAULT_COLOR, DEFAULT_ALPHA)
     }
 
-    /**
-     * 设置纯色状态栏（自定义颜色，alpha）
-     *
-     * @param activity 目标activity
-     * @param color    状态栏颜色值
-     * @param alpha    状态栏透明度
-     */
-    fun setColor(activity: Activity, @ColorInt color: Int, @IntRange(from = 0, to = 255) alpha: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            activity.window.statusBarColor = cipherColor(color, alpha)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            setTranslucentView(activity.window.decorView as ViewGroup, color, alpha)
-            setRootView(activity, true)
-        }
+    fun immersive(activity: Activity, @ColorInt color: Int, @FloatRange(from = 0.0, to = 1.0) alpha: Float) {
+        immersive(activity.window, color, alpha)
     }
 
-    fun addStatusBarView(view: View, context: Context, color: Int) {
-        val layoutParamsStatusBlock = view.layoutParams
-        layoutParamsStatusBlock.height = getStatusBarHeight(context)
-        view.setBackgroundColor(color)
-        view.layoutParams = layoutParamsStatusBlock
-    }
-
-    /**
-     * 设置状态栏渐变颜色
-     *
-     * @param activity 目标activity
-     * @param view     目标View
-     */
-    fun setGradientColor(activity: Activity, view: View) {
-        val decorView = activity.window.decorView as ViewGroup
-        val fakeStatusBarView = decorView.findViewById<View>(android.R.id.custom)
-        if (fakeStatusBarView != null) {
-            decorView.removeView(fakeStatusBarView)
-        }
-        setRootView(activity, false)
-        setTransparentForWindow(activity)
-        setPaddingTop(activity, view)
-    }
-
-    /**
-     * 设置透明状态栏
-     *
-     * @param activity 目标界面
-     */
-    fun setTransparentForWindow(activity: Activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.window.statusBarColor = Color.TRANSPARENT
-            activity.window
-                .decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            activity.window
-                .setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        }
-    }
-
-    /**
-     * 增加View的paddingTop,增加的值为状态栏高度 (智能判断，并设置高度)
-     *
-     * @param context 目标Context
-     * @param view    需要增高的View
-     */
-    fun setPaddingTop(context: Context, view: View) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            val lp = view.layoutParams
-            if (lp != null && lp.height > 0 && view.paddingTop == 0) {
-                lp.height += getStatusBarHeight(context)
-                view.setPadding(view.paddingLeft, view.paddingTop + getStatusBarHeight(context),
-                    view.paddingRight, view.paddingBottom)
+    fun immersive(window: Window, @ColorInt color: Int, @FloatRange(from = 0.0, to = 1.0) alpha: Float) {
+        when {
+            Build.VERSION.SDK_INT >= 21 -> {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                window.statusBarColor = mixtureColor(color, alpha)
+                var systemUiVisibility = window.decorView.systemUiVisibility
+                systemUiVisibility = systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                systemUiVisibility = systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                window.decorView.systemUiVisibility = systemUiVisibility
+            }
+            Build.VERSION.SDK_INT >= 19 -> {
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+                setTranslucentView(
+                    window.decorView as ViewGroup,
+                    color,
+                    alpha
+                )
+            }
+            Build.VERSION.SDK_INT >= 16 -> {
+                var systemUiVisibility = window.decorView.systemUiVisibility
+                systemUiVisibility = systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                systemUiVisibility = systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                window.decorView.systemUiVisibility = systemUiVisibility
             }
         }
     }
 
-    /**
-     * 设置状态栏darkMode,字体颜色及icon变黑(目前支持MIUI6以上,Flyme4以上,Android M以上)
-     *
-     * @param activity 目标activity
-     */
-    fun setDarkMode(activity: Activity) {
-        darkMode(activity.window, true)
+    fun darkMode(activity: Activity) {
+        darkMode(
+            activity.window,
+            DEFAULT_COLOR,
+            DEFAULT_ALPHA
+        )
     }
 
-    /**
-     * 设置状态栏darkMode,字体颜色及icon变亮(目前支持MIUI6以上,Flyme4以上,Android M以上)
-     *
-     * @param activity 目标activity
-     */
-    fun setLightMode(activity: Activity) {
-        darkMode(activity.window, false)
+    fun darkMode(activity: Activity, @ColorInt color: Int, @FloatRange(from = 0.0, to = 1.0) alpha: Float) {
+        darkMode(activity.window, color, alpha)
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
-    private fun darkMode(window: Window, dark: Boolean) {
-        if (isFlyme4()) {
-            setModeForFlyme4(window, dark)
-        } else if (isMIUI6()) {
-            setModeForMIUI6(window, dark)
+    fun darkMode(window: Window, @ColorInt color: Int, @FloatRange(from = 0.0, to = 1.0) alpha: Float) {
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
+                darkModeForM(window, true)
+                immersive(window, color, alpha)
+            }
+            isFlyme4() -> {
+                setModeForFlyme4(window, true)
+                immersive(window, color, alpha)
+            }
+            isMIUI6() -> {
+                setModeForMIUI6(window, true)
+                immersive(window, color, alpha)
+            }
+            Build.VERSION.SDK_INT >= 19 -> {
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+                setTranslucentView(
+                    window.decorView as ViewGroup,
+                    color,
+                    alpha
+                )
+            }
         }
-        darkModeForM(window, dark)
     }
 
     /**
@@ -169,7 +127,11 @@ object BarUtils {
             val layoutParams = Class.forName("android.view.MiuiWindowManager\$LayoutParams")
             val field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE")
             val darkModeFlag = field.getInt(layoutParams)
-            val extraFlagField = clazz.getMethod("setExtraFlags", Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
+            val extraFlagField = clazz.getMethod(
+                "setExtraFlags",
+                Int::class.javaPrimitiveType,
+                Int::class.javaPrimitiveType
+            )
             extraFlagField.invoke(window, if (dark) darkModeFlag else 0, darkModeFlag)
         } catch (e: Exception) {
             Log.e("StatusBar", "darkIcon: failed")
@@ -218,37 +180,79 @@ object BarUtils {
      * 判断是否MIUI6以上
      */
     private fun isMIUI6(): Boolean {
-        try {
+        return try {
             val clz = Class.forName("android.os.SystemProperties")
             val mtd = clz.getMethod("get", String::class.java)
             var `val` = mtd.invoke(null, "ro.miui.ui.version.name") as String
             `val` = `val`.replace("[vV]".toRegex(), "")
             val version = Integer.parseInt(`val`)
-            return version >= 6
+            version >= 6
         } catch (e: Exception) {
-            return false
+            false
         }
 
     }
 
     /**
-     * 计算alpha色值
-     *
-     * @param color 状态栏颜色值
-     * @param alpha 状态栏透明度
+     * 增加View的paddingTop,增加的值为状态栏高度
      */
-    private fun cipherColor(@ColorInt color: Int, alpha: Int): Int {
-        if (alpha == 0) {
-            return color
+    fun setPadding(context: Context, view: View) {
+        if (Build.VERSION.SDK_INT >= 16) {
+            view.setPadding(
+                view.paddingLeft,
+                view.paddingTop +
+                        getStatusBarHeight(context),
+                view.paddingRight,
+                view.paddingBottom
+            )
         }
-        val a = 1 - alpha / 255f
-        var red = color shr 16 and 0xff
-        var green = color shr 8 and 0xff
-        var blue = color and 0xff
-        red = (red * a + 0.5).toInt()
-        green = (green * a + 0.5).toInt()
-        blue = (blue * a + 0.5).toInt()
-        return 0xff shl 24 or (red shl 16) or (green shl 8) or blue
+    }
+
+    /**
+     * 增加View的paddingTop,增加的值为状态栏高度 (智能判断，并设置高度)
+     */
+    fun setPaddingSmart(context: Context, view: View) {
+        if (Build.VERSION.SDK_INT >= 16) {
+            val lp = view.layoutParams
+            if (lp != null && lp.height > 0) {
+                lp.height += getStatusBarHeight(context) //增高
+            }
+            view.setPadding(
+                view.paddingLeft,
+                view.paddingTop + getStatusBarHeight(context),
+                view.paddingRight,
+                view.paddingBottom
+            )
+        }
+    }
+
+    /**
+     * 增加View的高度以及paddingTop,增加的值为状态栏高度.一般是在沉浸式全屏给ToolBar用的
+     */
+    fun setHeightAndPadding(context: Context, view: View) {
+        if (Build.VERSION.SDK_INT >= 16) {
+            val lp = view.layoutParams
+            lp.height += getStatusBarHeight(context) //增高
+            view.setPadding(
+                view.paddingLeft,
+                view.paddingTop + getStatusBarHeight(context),
+                view.paddingRight,
+                view.paddingBottom
+            )
+        }
+    }
+
+    /**
+     * 增加View上边距（MarginTop）一般是给高度为 WARP_CONTENT 的小控件用的
+     */
+    fun setMargin(context: Context, view: View) {
+        if (Build.VERSION.SDK_INT >= 16) {
+            val lp = view.layoutParams
+            if (lp is MarginLayoutParams) {
+                lp.topMargin += getStatusBarHeight(context) //增高
+            }
+            view.layoutParams = lp
+        }
     }
 
     /**
@@ -258,17 +262,25 @@ object BarUtils {
      * @param color     状态栏颜色值
      * @param alpha     状态栏透明度
      */
-    private fun setTranslucentView(viewGroup: ViewGroup, @ColorInt color: Int, @IntRange(from = 0, to = 255) alpha: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            val cipherColor = cipherColor(color, alpha)
-            var translucentView: View? = viewGroup.findViewById(android.R.id.custom)
-            if (translucentView == null && cipherColor != 0) {
-                translucentView = View(viewGroup.context)
-                translucentView.id = android.R.id.custom
-                val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight(viewGroup.context))
-                viewGroup.addView(translucentView, params)
+    private fun setTranslucentView(
+        container: ViewGroup, @ColorInt color: Int, @FloatRange(
+            from = 0.0,
+            to = 1.0
+        ) alpha: Float
+    ) {
+        if (Build.VERSION.SDK_INT >= 19) {
+            val mixtureColor: Int = mixtureColor(color, alpha)
+            var translucentView = container.findViewById<View>(R.id.custom)
+            if (translucentView == null && mixtureColor != 0) {
+                translucentView = View(container.context)
+                translucentView.id = R.id.custom
+                val lp = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    getStatusBarHeight(container.context)
+                )
+                container.addView(translucentView, lp)
             }
-            translucentView?.setBackgroundColor(cipherColor)
+            translucentView?.setBackgroundColor(mixtureColor)
         }
 
     }
@@ -293,14 +305,34 @@ object BarUtils {
         }
     }
 
+    fun mixtureColor(@ColorInt color: Int, @FloatRange(from = 0.0, to = 1.0) alpha: Float): Int {
+        val a = if (color and -0x1000000 == 0) 0xff else color ushr 24
+        return color and 0x00ffffff or ((a * alpha).toInt() shl 24)
+    }
+
     /**
      * 获取状态栏高度
      *
      * @param context 目标Context
      */
     fun getStatusBarHeight(context: Context): Int {
-        // 获得状态栏高度
-        val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
-        return context.resources.getDimensionPixelSize(resourceId)
+        var result = 24
+        val resId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
+        result = if (resId > 0) {
+            context.resources.getDimensionPixelSize(resId)
+        } else {
+            TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                result.toFloat(), Resources.getSystem().displayMetrics
+            ).toInt()
+        }
+        return result
+    }
+
+    fun addStatusBarView(view: View, context: Context, @ColorInt color: Int) {
+        val layoutParamsStatusBlock = view.layoutParams
+        layoutParamsStatusBlock.height = getStatusBarHeight(context)
+        view.setBackgroundColor(color)
+        view.layoutParams = layoutParamsStatusBlock
     }
 }

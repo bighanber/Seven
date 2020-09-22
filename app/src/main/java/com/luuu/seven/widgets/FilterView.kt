@@ -237,7 +237,7 @@ class FilterView @JvmOverloads constructor(
     private fun createLayout(textWidth: Int) {
         textLayout = newStaticLayout(
             text, textPaint, textWidth,
-            Layout.Alignment.ALIGN_CENTER, true
+            Layout.Alignment.ALIGN_CENTER, 1f, 0f, true
         )
     }
 

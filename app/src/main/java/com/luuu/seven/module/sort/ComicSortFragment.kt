@@ -1,29 +1,25 @@
 package com.luuu.seven.module.sort
 
+import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicSortAdapter
-import com.luuu.seven.base.BaseActivity
+import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicSortListBean
-import com.luuu.seven.bean.FilterSection
-import com.luuu.seven.bean.SortFilterBean
-import com.luuu.seven.module.intro.ComicIntroActivity
 import com.luuu.seven.util.click
-import com.luuu.seven.util.obtainViewModel
-import com.luuu.seven.util.startActivity
 import com.luuu.seven.widgets.BottomSheetBehavior
 import com.luuu.seven.widgets.SpaceItemDecoration
-import kotlinx.android.synthetic.main.activity_sort_layout.*
+import kotlinx.android.synthetic.main.fra_sort_layout.*
 
 
-class ComicSortActivity : BaseActivity() {
+class ComicSortFragment : BaseFragment() {
 
-    private lateinit var mViewModel: SortViewModel
+    private val mViewModel by viewModels<SortViewModel>()
     private var mSortBeanList: ArrayList<ComicSortListBean> = ArrayList()
-
 
     private var mAdapter: ComicSortAdapter? = null
     private var mPageNum = 0
@@ -36,7 +32,7 @@ class ComicSortActivity : BaseActivity() {
 
         }
 
-        val bottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.filter_sheet))
+        val bottomSheetBehavior = BottomSheetBehavior.from(requireActivity().findViewById(R.id.filter_sheet))
         filter_fab.click {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
@@ -58,29 +54,26 @@ class ComicSortActivity : BaseActivity() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
-        mViewModel = obtainViewModel<SortViewModel>().apply {
-            getSortComicFilter()
-            getSortComicList("0", 0)
-
-            sortListData.observe(this@ComicSortActivity, Observer {
-                mSortBeanList.addAll(it)
-                mAdapter?.let { adapter ->
-                    adapter.loadMoreComplete()
-                    if (swipe_refresh.isRefreshing) {
-                        swipe_refresh.isRefreshing = false
+        mViewModel.getSortComicFilter()
+        mViewModel.getSortComicList("0", 0)
+        mViewModel.sortListData.observe(this) {
+            mSortBeanList.addAll(it)
+            mAdapter?.let { adapter ->
+                adapter.loadMoreComplete()
+                if (swipe_refresh.isRefreshing) {
+                    swipe_refresh.isRefreshing = false
+                } else {
+                    if (it.isEmpty()) {
+                        adapter.loadMoreEnd()
                     } else {
-                        if (it.isEmpty()) {
-                            adapter.loadMoreEnd()
-                        } else {
-                            adapter.notifyDataSetChanged()
-                        }
+                        adapter.notifyDataSetChanged()
                     }
-                } ?: initAdapter()
-            })
+                }
+            } ?: initAdapter()
         }
     }
 
-    override fun getContentViewLayoutID(): Int = R.layout.activity_sort_layout
+    override fun getContentViewLayoutID(): Int = R.layout.fra_sort_layout
 
     private fun initAdapter() {
         mAdapter = ComicSortAdapter(mSortBeanList).apply {
@@ -91,14 +84,17 @@ class ComicSortActivity : BaseActivity() {
             }, comic_list)
 
             setOnItemClickListener { _, _, position ->
-                startActivity<ComicIntroActivity>(ComicIntroActivity.COMIC_ID to mSortBeanList[position].id)
+//                startActivity<ComicIntroActivity>(ComicIntroActivity.COMIC_ID to mSortBeanList[position].id)
+                findNavController().navigate(
+                    R.id.action_sort_fragment_to_intro_fragment,
+                    Bundle().apply { putInt("comicId", mSortBeanList[position].id) })
             }
         }
 
         comic_list.apply {
             layoutManager = mLayoutManager
             adapter = mAdapter
-            addItemDecoration(SpaceItemDecoration(mContext).setSpace(10))
+            addItemDecoration(SpaceItemDecoration(requireContext()).setSpace(10))
         }
     }
 

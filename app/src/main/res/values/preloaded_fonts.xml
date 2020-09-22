@@ -3,5 +3,6 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/kanit</item>
         <item>@font/permanent_marker</item>
+        <item>@font/sarala</item>
     </array>
 </resources>

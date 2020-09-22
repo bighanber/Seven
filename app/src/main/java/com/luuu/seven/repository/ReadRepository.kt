@@ -3,6 +3,7 @@ package com.luuu.seven.repository
 import com.luuu.seven.bean.*
 import com.luuu.seven.db.AppDatabase
 import com.luuu.seven.http.HttpManager
+import kotlinx.coroutines.flow.Flow
 
 
 class ReadRepository {
@@ -10,7 +11,7 @@ class ReadRepository {
         return HttpManager.getInstance.getService().getComicReadPage(comicId, chapterId)
     }
 
-    suspend fun isReadInChapter(comicId: Int): Boolean {
+    fun isReadInChapter(comicId: Int): Flow<Boolean> {
         return AppDatabase.getInstance().historyDao().isReadInChapter(comicId)
     }
 

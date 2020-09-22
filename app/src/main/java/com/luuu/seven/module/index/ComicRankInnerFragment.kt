@@ -1,15 +1,14 @@
 package com.luuu.seven.module.index
 
 import android.os.Bundle
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicRankAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.HotComicBean
-import com.luuu.seven.module.intro.ComicIntroActivity
-import com.luuu.seven.util.*
 import com.luuu.seven.widgets.RankItemDecoration
 import kotlinx.android.synthetic.main.fra_tab_layout.*
 
@@ -19,7 +18,7 @@ import kotlinx.android.synthetic.main.fra_tab_layout.*
  */
 class ComicRankInnerFragment : BaseFragment() {
 
-    private lateinit var mViewModel: HomeViewModel
+    private val mViewModel: HomeViewModel by viewModels()
     private var mRankBeanList: ArrayList<HotComicBean> = ArrayList()
     private var mHotComicBeanList: MutableList<HotComicBean>? = null
     private var mHotComicTopList: MutableList<HotComicBean>? = null
@@ -70,25 +69,23 @@ class ComicRankInnerFragment : BaseFragment() {
             mViewModel.getRankComic(num ?: 0, mPageNum)
         }
 
-        mViewModel = obtainViewModel<HomeViewModel>().apply {
 
-            rankData.observe(viewLifecycleOwner, Observer { data ->
-                mRankBeanList.addAll(data)
+        mViewModel.rankData.observe(viewLifecycleOwner) { data ->
+            mRankBeanList.addAll(data)
 
-                mAdapter?.let { adapter ->
-                    adapter.loadMoreComplete()
+            mAdapter?.let { adapter ->
+                adapter.loadMoreComplete()
 
-                    if (refresh.isRefreshing) {
-                        refresh.isRefreshing = false
+                if (refresh.isRefreshing) {
+                    refresh.isRefreshing = false
+                } else {
+                    if (data.isEmpty()) {
+                        adapter.loadMoreEnd()
                     } else {
-                        if (data.isEmpty()) {
-                            adapter.loadMoreEnd()
-                        } else {
-                            adapter.notifyDataSetChanged()
-                        }
+                        adapter.notifyDataSetChanged()
                     }
-                } ?: initAdapter()
-            })
+                }
+            } ?: initAdapter()
         }
     }
 
@@ -104,7 +101,8 @@ class ComicRankInnerFragment : BaseFragment() {
             setOnItemClickListener { _, _, position ->
                 val mBundle = Bundle()
                 mBundle.putInt("comicId", mRankBeanList[position].comicId)
-                startNewActivity(ComicIntroActivity::class.java, mBundle)
+//                startNewActivity(ComicIntroActivity::class.java, mBundle)
+                findNavController().navigate(R.id.action_home_fragment_to_intro_fragment, mBundle)
             }
         }
 

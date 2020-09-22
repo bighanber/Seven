@@ -11,13 +11,13 @@
         android:layout_width="wrap_content"
         android:layout_height="46dp"
         android:layout_marginStart="8dp"
-        android:drawableStart="@drawable/ic_index_flag"
         android:gravity="center_vertical"
         android:textColor="@color/item_text"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="最新更新" />
+        tools:text="最新更新"
+        app:drawableStartCompat="@drawable/ic_index_flag" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_items"

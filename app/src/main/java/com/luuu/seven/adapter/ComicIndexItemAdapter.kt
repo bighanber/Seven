@@ -6,10 +6,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.luuu.seven.R
 import com.luuu.seven.bean.IndexDataBean
-import com.luuu.seven.util.ifNotNull
-import com.luuu.seven.util.loadImg
-import com.luuu.seven.util.loadWithHead
-import com.luuu.seven.util.setGone
+import com.luuu.seven.util.*
 
 
 /**
@@ -28,7 +25,7 @@ class ComicIndexItemAdapter(layoutResId: Int, data: List<IndexDataBean>?) : Base
             getView<ImageView>(R.id.iv_grid_img).loadWithHead(item?.cover ?: "")
             getView<TextView>(R.id.comic_state)?.let {
                 if (item?.status.isNullOrEmpty()) {
-                    it.setGone()
+                    it.gone()
                 } else {
                     it.text = item?.status
                 }

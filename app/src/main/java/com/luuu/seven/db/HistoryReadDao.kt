@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.luuu.seven.bean.ReadHistoryBean
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HistoryReadDao {
@@ -16,11 +17,11 @@ interface HistoryReadDao {
     suspend fun updateReadHistory(readHistoryBean: ReadHistoryBean)
 
     @Query("select exists(select * from history_read where comic_id = :comicId)")
-    suspend fun isReadInChapter(comicId: Int): Boolean
+    fun isReadInChapter(comicId: Int): Flow<Boolean>
 
     @Query("select * from history_read where comic_id = :comicId")
-    suspend fun queryByComicId(comicId: Int): List<ReadHistoryBean>
+    fun queryByComicId(comicId: Int): Flow<List<ReadHistoryBean>>
 
     @Query("select * from history_read")
-    suspend fun getReadHistory(): List<ReadHistoryBean>
+    fun getReadHistory(): Flow<List<ReadHistoryBean>>
 }

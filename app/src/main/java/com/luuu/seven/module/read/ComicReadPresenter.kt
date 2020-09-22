@@ -1,7 +1,5 @@
 package com.luuu.seven.module.read
 
-import com.luuu.seven.db.ReadHistoryDao
-import com.luuu.seven.http.TaskData
 import io.reactivex.disposables.CompositeDisposable
 
 

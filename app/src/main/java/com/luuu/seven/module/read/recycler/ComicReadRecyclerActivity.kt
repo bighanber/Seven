@@ -7,64 +7,65 @@ import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.SeekBar
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.activity.viewModels
+import androidx.viewpager2.widget.ViewPager2
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicReadAdapter
 import com.luuu.seven.base.BaseActivity
 import com.luuu.seven.bean.ChapterDataBean
 import com.luuu.seven.bean.ReadHistoryBean
 import com.luuu.seven.module.read.ReadViewModel
-import com.luuu.seven.util.get
-import com.luuu.seven.util.obtainViewModel
 import com.luuu.seven.util.toast
+import androidx.lifecycle.observe
 import kotlinx.android.synthetic.main.activity_comic_read_recycler.*
 import kotlinx.android.synthetic.main.read_page_info.*
 
 class ComicReadRecyclerActivity : BaseActivity() {
 
-    private val mLayoutManager: ViewPagerLayoutManager by lazy {
-        ViewPagerLayoutManager(
-            this,
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
-    }
-    private lateinit var mViewModel: ReadViewModel
+//    private val mLayoutManager: ViewPagerLayoutManager by lazy {
+//        ViewPagerLayoutManager(
+//            this,
+//            LinearLayoutManager.HORIZONTAL,
+//            false
+//        )
+//    }
+    private val mViewModel: ReadViewModel by viewModels()
     private var mAdapter: ComicReadAdapter? = null
-    private var mComicId: Int = 0
+    private val mComicId: Int by lazy { intent.getIntExtra(COMIC_ID, 0) }
     private var intCurPage: Int = 0
     private var mTotalPage: Int = 0
-    private var mChapters: List<ChapterDataBean>? = null
+    private val mChapters: List<ChapterDataBean> by lazy { intent.getParcelableArrayListExtra<ChapterDataBean>(COMIC_CHAPTER_LIST) }
     private var mCurChapterPosition: Int = 0
-    private var mHistoryBrowsePosition: Int = 0
-    private var mChapterTagName: String? = null
-    private var mComicCover: String? = null
-    private var mComicTitle: String? = null
+    private val mHistoryBrowsePosition: Int by lazy { intent.getIntExtra(COMIC_BROW_HISTORY_POS, 0) }
+    private val mChapterTagName: String by lazy { intent.getStringExtra(COMIC_TAG_NAME) }
+    private val mComicCover: String by lazy { intent.getStringExtra(COMIC_COVER) }
+    private val mComicTitle: String by lazy { intent.getStringExtra(COMIC_TITLE) }
     private var isUse = true
+
+    companion object {
+        const val COMIC_ID = "comicId"
+        const val COMIC_CHAPTER_LIST = "comicChapter"
+        const val COMIC_TAG_NAME = "comicTagName"
+        const val COMIC_CHAPTER_POS = "comicPosition"
+        const val COMIC_BROW_HISTORY_POS = "historyPosition"
+        const val COMIC_COVER = "comicCover"
+        const val COMIC_TITLE = "comicTitle"
+    }
 
     override fun initViews() {
 
-        mComicId = intent.get("comicId") ?: 0
-        mChapters = intent.get("comicChapter")
-        mChapterTagName = intent.get("comicTagName")
-        mCurChapterPosition = intent.get("comicPosition") ?: 0
-        mHistoryBrowsePosition = intent.get("historyPosition") ?: 0
-        mComicCover = intent.get("comicCover")
-        mComicTitle = intent.get("comicTitle")
+        mCurChapterPosition = intent.getIntExtra(COMIC_CHAPTER_POS, 0)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        mViewModel = obtainViewModel<ReadViewModel>().apply {
-            getComicReadPage(mComicId, mChapters!![mCurChapterPosition].chapterId)
+        mViewModel.getComicReadPage(mComicId, mChapters[mCurChapterPosition].chapterId)
 
-            comicPageData.observe(this@ComicReadRecyclerActivity, Observer {
-                updateComicContent(it.pageUrl)
-            })
+        mViewModel.comicPageData.observe(this) {
+            updateComicContent(it.pageUrl)
+        }
 
-            updateOrInsert.observe(this@ComicReadRecyclerActivity, Observer {
-                finish()
-            })
+        mViewModel.updateOrInsert.observe(this) {
+            finish()
         }
 
         seek_bar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -77,39 +78,59 @@ class ComicReadRecyclerActivity : BaseActivity() {
             }
 
             override fun onStopTrackingTouch(p0: SeekBar?) {
-                comic_list.smoothScrollToPosition(intCurPage)
+//                comic_list.smoothScrollToPosition(intCurPage)
             }
 
         })
 
         iv_back.setOnClickListener {
-            mViewModel.updateOrInsertReadData(ReadHistoryBean(mComicId, mChapters!![mCurChapterPosition].chapterId,  mChapterTagName!!, intCurPage, mComicCover!!, mComicTitle!!))
+            saveHistory()
         }
 
-        mLayoutManager.setOnViewPagerListener(object : OnViewPagerListener {
-            override fun onPageRelease(isNext: Boolean, position: Int) {
-            }
+//        mLayoutManager.setOnViewPagerListener(object : OnViewPagerListener {
+//            override fun onPageRelease(isNext: Boolean, position: Int) {
+//            }
+//
+//            override fun onPageSelected(position: Int, isTop: Boolean, isBottom: Boolean) {
+//
+//            }
+//
+//            override fun onLayoutComplete() {
+//            }
+//
+//        })
 
-            override fun onPageSelected(position: Int, isTop: Boolean, isBottom: Boolean) {
+        comic_list.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+//                super.onPageSelected(position)
                 seek_bar.progress = position
                 intCurPage = position
                 toast("$position")
                 tv_chapter_page.text = "${position + 1} | $mTotalPage"
-                dealTopAndBottom(isTop, isBottom)
+                dealTopAndBottom(position == 0, position == mTotalPage - 1)
             }
-
-            override fun onLayoutComplete() {
-            }
-
         })
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            mViewModel.updateOrInsertReadData(ReadHistoryBean(mComicId, mChapters!![mCurChapterPosition].chapterId,  mChapterTagName!!, intCurPage, mComicCover!!, mComicTitle!!))
+            saveHistory()
             return true
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    private fun saveHistory() {
+        mViewModel.updateOrInsertReadData(
+            ReadHistoryBean(
+                mComicId,
+                mChapters[mCurChapterPosition].chapterId,
+                mChapterTagName,
+                intCurPage,
+                mComicCover,
+                mComicTitle
+            )
+        )
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.activity_comic_read_recycler
@@ -119,7 +140,7 @@ class ComicReadRecyclerActivity : BaseActivity() {
         bytes: MutableList<ByteArray>? = null,
         isFromDisk: Boolean = false
     ) {
-        tv_chapter_title.text = mChapters!![mCurChapterPosition].chapterTitle
+        tv_chapter_title.text = mChapters[mCurChapterPosition].chapterTitle
         mTotalPage = if (isFromDisk) bytes!!.size else urls.size
         tv_chapter_page.text = "1 | $mTotalPage"
         seek_bar.max = mTotalPage - 1
@@ -128,14 +149,14 @@ class ComicReadRecyclerActivity : BaseActivity() {
         if (isUse) {
             isUse = false
             intCurPage = mHistoryBrowsePosition
-            comic_list.scrollToPosition(intCurPage)
+//            comic_list.scrollToPosition(intCurPage)
+            comic_list.currentItem = intCurPage
         }
     }
 
     private fun setAdapter(urls: MutableList<String>) {
         if (mAdapter == null) {
             mAdapter = ComicReadAdapter(urls)
-            comic_list.layoutManager = mLayoutManager
             comic_list.adapter = mAdapter
         } else {
             mAdapter?.setNewData(urls)
@@ -156,7 +177,8 @@ class ComicReadRecyclerActivity : BaseActivity() {
                 if (intCurPage < 0) {
                     dealTopAndBottom(true, false)
                 } else {
-                    comic_list.scrollToPosition(intCurPage)
+//                    comic_list.scrollToPosition(intCurPage)
+                    comic_list.currentItem = intCurPage
                 }
             }
             x * point.x > 2 * limitX -> {
@@ -164,7 +186,8 @@ class ComicReadRecyclerActivity : BaseActivity() {
                 if (intCurPage >= mTotalPage) {
                     dealTopAndBottom(false, true)
                 } else {
-                    comic_list.scrollToPosition(intCurPage)
+//                    comic_list.scrollToPosition(intCurPage)
+                    comic_list.currentItem = intCurPage
                 }
             }
             y * point.y < limitY -> {
@@ -185,16 +208,16 @@ class ComicReadRecyclerActivity : BaseActivity() {
         }
 
         if (intCurPage == mTotalPage - 1) {
-            if (mCurChapterPosition < mChapters!!.size - 1) {
+            if (mCurChapterPosition < mChapters.size - 1) {
                 mCurChapterPosition += 1
-                mViewModel.getComicReadPage(mComicId, mChapters!![mCurChapterPosition].chapterId)
+                mViewModel.getComicReadPage(mComicId, mChapters[mCurChapterPosition].chapterId)
             } else {
                 showToast(comic_list, "已经是第一话了")
             }
         } else if (intCurPage == 0) {
             if (mCurChapterPosition > 0) {
                 mCurChapterPosition -= 1
-                mViewModel.getComicReadPage(mComicId, mChapters!![mCurChapterPosition].chapterId)
+                mViewModel.getComicReadPage(mComicId, mChapters[mCurChapterPosition].chapterId)
             } else {
                 showToast(comic_list, "已经是最新的了")
             }

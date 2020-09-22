@@ -25,13 +25,7 @@
             tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".MainActivity"/>
         <activity android:name=".module.update.ComicUpdateActivity"/>
-        <activity android:name=".module.sort.ComicSortActivity"/>
-        <activity android:name=".module.special.ComicSpecialActivity"/>
-        <activity android:name=".module.special.detail.ComicSpecialDetailActivity"/>
-        <activity android:name=".module.intro.ComicIntroActivity"/>
         <activity android:name=".module.read.ComicReadActivity"/>
-        <activity android:name=".WebActivity"/>
-        <activity android:name=".module.search.ComicSearchActivity"/>
         <activity
                 android:name=".SplashActivity"
                 android:theme="@style/SplashTheme">

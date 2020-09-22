@@ -7,8 +7,18 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.DialogTitle
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.luuu.seven.R
+import com.luuu.seven.util.BarUtils
 import io.reactivex.disposables.CompositeDisposable
 
 /**
@@ -23,8 +33,7 @@ abstract class BaseFragment : Fragment() {
 
     var mContext: Context? = null
     var fragmentRootView: View? = null
-
-    var mSubscription = CompositeDisposable()
+    private var mainToolbar: Toolbar? = null
 
     open fun onFragmentVisibleChange(isVisible: Boolean) {
 
@@ -35,6 +44,8 @@ abstract class BaseFragment : Fragment() {
     open fun onFirstUserInvisible() {
 
     }
+
+    open fun toolBarTitle() = ""
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -50,14 +61,25 @@ abstract class BaseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mainToolbar = view.findViewById(R.id.common_toolbar)
+        mainToolbar?.let {
+            BarUtils.setPaddingSmart(requireContext(), it)
+            it.contentInsetStartWithNavigation = 0
+            (requireActivity() as AppCompatActivity).apply {
+                setSupportActionBar(it)
+                supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            }
+            it.setNavigationOnClickListener { findNavController().navigateUp() }
+        }
         initViews()
+    }
+
+    fun setToolbarTitle(title: String) {
+        mainToolbar?.title = title
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if (!mSubscription.isDisposed) {
-            mSubscription.clear()
-        }
     }
 
     protected fun startNewActivity(clazz: Class<*>) {

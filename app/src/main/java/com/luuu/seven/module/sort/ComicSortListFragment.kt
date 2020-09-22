@@ -6,7 +6,6 @@ import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicSortListAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicSortListBean
-import com.luuu.seven.module.intro.ComicIntroActivity
 import com.luuu.seven.util.DataLoadType
 import kotlinx.android.synthetic.main.fra_tab_layout.*
 
@@ -101,9 +100,9 @@ class ComicSortListFragment : BaseFragment() {
 //                mPresent.loadMoreData(sortId, mPageNum)
             }, recycler)
             setOnItemClickListener { _, _, position ->
-                val mBundle = Bundle()
-                mBundle.putInt("comicId", mSortListBeanList!![position].id)
-                startNewActivity(ComicIntroActivity::class.java, mBundle)
+//                val mBundle = Bundle()
+//                mBundle.putInt("comicId", mSortListBeanList!![position].id)
+//                startNewActivity(ComicIntroActivity::class.java, mBundle)
             }
         }
         recycler.layoutManager = mLayoutManager

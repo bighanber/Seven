@@ -7,7 +7,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.luuu.seven.R
 import com.luuu.seven.bean.ComicSortListBean
 import com.luuu.seven.util.ifNotNull
-import com.luuu.seven.util.loadImg
+import com.luuu.seven.util.loadWithHead
 
 /**
  * Created by lls on 2017/8/4.
@@ -23,7 +23,7 @@ class ComicSortListAdapter(layoutResId: Int, data: List<ComicSortListBean>) :
             helper.setText(R.id.tv_sort_list_types, item.types)
             helper.setText(R.id.tv_sort_list_status, item.status)
             helper.setText(R.id.tv_last_update_time, "最后更新: " + DateFormat.format("yyyy-MM-dd", item.lastUpdatetime * 1000))
-            helper.getView<ImageView>(R.id.iv_sort_list_cover).loadImg(item.cover)
+            helper.getView<ImageView>(R.id.iv_sort_list_cover).loadWithHead(item.cover)
         })
     }
 

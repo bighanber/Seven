@@ -1,11 +1,11 @@
 package com.luuu.seven.module.shelf
 
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicFragmentAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.util.BarUtils
+import com.luuu.seven.util.color
 import kotlinx.android.synthetic.main.fra_shelf_layout.*
 
 
@@ -22,7 +22,7 @@ class ComicShelfFragment : BaseFragment() {
     private val mTabs = arrayOf("历史", "收藏")
 
     override fun initViews() {
-        BarUtils.addStatusBarView(status_bg, mContext!!, ContextCompat.getColor(mContext!!, R.color.colorPrimary))
+        BarUtils.addStatusBarView(status_bg, requireContext(), color(R.color.colorPrimary))
         val fragments = ArrayList<Fragment>()
         val title = ArrayList<String>()
         fragments.add(ComicHistoryFragment())

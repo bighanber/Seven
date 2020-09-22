@@ -1,16 +1,15 @@
 package com.luuu.seven.module.news
 
+import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.appbar.AppBarLayout
 import com.luuu.seven.R
-import com.luuu.seven.WebActivity
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicNewsPicBean
-import com.luuu.seven.util.GlideImageLoader
-import com.luuu.seven.util.obtainViewModel
-import com.luuu.seven.util.startActivity
+import com.luuu.seven.util.SevenImageLoader
 import kotlinx.android.synthetic.main.fra_news_layout.*
 
 /**
@@ -27,18 +26,18 @@ class ComicNewsFragment : BaseFragment() {
     private var mNewsListFragment: ComicNewsListFragment? = null
     private var mNewsFlashFragment: ComicNewsFlashFragment? = null
 
-    private lateinit var viewModel: NewsViewModel
+    private val viewModel: NewsViewModel by viewModels()
 
     override fun initViews() {
 
-        viewModel = obtainViewModel<NewsViewModel>().apply {
+        viewModel.apply {
             getComicNewsPic()
 
-            newsPicData.observe(viewLifecycleOwner, Observer { data ->
+            newsPicData.observe(viewLifecycleOwner) { data ->
                 data?.let {
                     updateComicList(it)
                 }
-            })
+            }
         }
 
         fm = childFragmentManager
@@ -64,9 +63,10 @@ class ComicNewsFragment : BaseFragment() {
         val urls = ArrayList<String>()
         data.data.mapTo(urls) { it.picUrl }
         news_banner.setOnBannerListener { position ->
-            startActivity<WebActivity>("url" to data.data[position].objectUrl)
+//            startActivity<WebActivity>("url" to data.data[position].objectUrl)
+            findNavController().navigate(R.id.action_home_fragment_to_web_fragment, Bundle().apply { putString("url", data.data[position].objectUrl) })
         }
-        news_banner.setImages(urls).setImageLoader(GlideImageLoader()).start()
+        news_banner.setImages(urls).setImageLoader(SevenImageLoader()).start()
     }
 
     private fun showFragment(id: Int) {

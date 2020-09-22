@@ -5,8 +5,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.luuu.seven.R
 import com.luuu.seven.bean.ReadHistoryBean
-import com.luuu.seven.util.ifNotNull
-import com.luuu.seven.util.loadImg
 import com.luuu.seven.util.loadWithHead
 
 /**

@@ -6,15 +6,16 @@ import com.luuu.seven.db.AppDatabase
 import com.luuu.seven.db.CollectDao
 import com.luuu.seven.db.ReadHistoryDao
 import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 
 
 class  ShelfRepository {
 
-    suspend fun getReadHistory(): List<ReadHistoryBean> {
+    fun getReadHistory(): Flow<List<ReadHistoryBean>> {
         return AppDatabase.getInstance().historyDao().getReadHistory()
     }
 
-    suspend fun getCollect(): List<CollectBean> {
+    fun getCollect(): Flow<List<CollectBean>> {
         return AppDatabase.getInstance().collectionDao().getCollectionData()
     }
 }

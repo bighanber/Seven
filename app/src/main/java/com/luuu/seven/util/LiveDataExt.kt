@@ -1,9 +1,7 @@
 package com.luuu.seven.util
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.annotation.MainThread
+import androidx.lifecycle.*
 
 fun <A, B, Result> LiveData<A>.combine(
     other: LiveData<B>,
@@ -32,4 +30,18 @@ fun <X, Y> LiveData<X>.map(body: (X) -> Y): LiveData<Y> {
 
 fun <T> MutableLiveData<T>.setValueIfNew(newValue: T) {
     if (this.value != newValue) value = newValue
+}
+
+//@MainThread
+//inline fun <T> LiveData<T>.observe(
+//    owner: LifecycleOwner,
+//    crossinline onChanged: (T) -> Unit
+//): Observer<T> {
+//    val wrappedObserver = Observer<T> { t -> onChanged.invoke(t) }
+//    observe(owner, wrappedObserver)
+//    return wrappedObserver
+//}
+
+inline fun <T> LiveData<Event<T>>.observeEvent(owner: LifecycleOwner, crossinline onEventUnhandledContent: (T) -> Unit) {
+    observe(owner, Observer { it?.getContentIfNotHandled()?.let(onEventUnhandledContent) })
 }

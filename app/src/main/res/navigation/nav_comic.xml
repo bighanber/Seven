@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/main_fragment">
+
+    <fragment
+        android:id="@+id/main_fragment"
+        android:name="com.luuu.seven.MainFragment"
+        tools:layout="@layout/fra_main">
+
+        <action
+            android:id="@+id/action_home_pager_fragment_to_search_fragment"
+            app:destination="@id/search_fragment"/>
+
+        <action
+            android:id="@+id/action_home_fragment_to_intro_fragment"
+            app:destination="@id/intro_fragment"/>
+
+        <action
+            android:id="@+id/action_home_fragment_to_web_fragment"
+            app:destination="@id/web_fragment"/>
+
+        <action
+            android:id="@+id/action_home_fragment_to_sort_fragment"
+            app:destination="@id/sort_fragment"/>
+
+        <action
+            android:id="@+id/action_home_fragment_to_special_detail_fragment"
+            app:destination="@id/special_detail_fragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/search_fragment"
+        android:name="com.luuu.seven.module.search.ComicSearchFragment"
+        tools:layout="@layout/fra_comic_search">
+
+        <action
+            android:id="@+id/action_search_fragment_to_intro_fragment"
+            app:destination="@id/intro_fragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/intro_fragment"
+        android:name="com.luuu.seven.module.intro.ComicIntroFragment"
+        tools:layout="@layout/fra_comic_intro">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/web_fragment"
+        android:name="com.luuu.seven.WebFragment"
+        tools:layout="@layout/fra_web">
+        <action
+            android:id="@+id/action_web_fragment_to_intro_fragment"
+            app:destination="@id/intro_fragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/sort_fragment"
+        android:name="com.luuu.seven.module.sort.ComicSortFragment"
+        tools:layout="@layout/fra_sort_layout">
+        <action
+            android:id="@+id/action_sort_fragment_to_intro_fragment"
+            app:destination="@id/intro_fragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/special_detail_fragment"
+        android:name="com.luuu.seven.module.special.ComicSpecialDetailFragment"
+        tools:layout="@layout/fra_comic_special_detail">
+        <action
+            android:id="@+id/action_special_detail_fragment_to_intro_fragment"
+            app:destination="@id/intro_fragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/special_fragment"
+        android:name="com.luuu.seven.module.special.ComicSpecialFragment"
+        tools:layout="@layout/fra_comic_special">
+        <action
+            android:id="@+id/action_special_fragment_to_special_detail_fragment"
+            app:destination="@id/special_detail_fragment"/>
+
+        <action
+            android:id="@+id/action_special_fragment_to_web_fragment"
+            app:destination="@id/web_fragment"/>
+    </fragment>
+</navigation>

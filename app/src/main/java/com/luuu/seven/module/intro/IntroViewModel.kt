@@ -1,8 +1,6 @@
 package com.luuu.seven.module.intro
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.luuu.seven.bean.*
 import com.luuu.seven.repository.IntroRepository
 import com.luuu.seven.util.handleLoading
@@ -10,6 +8,8 @@ import com.luuu.seven.util.ioMain
 import com.luuu.seven.util.launch
 import com.luuu.seven.util.toast
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class IntroViewModel : ViewModel() {
 
@@ -31,88 +31,50 @@ class IntroViewModel : ViewModel() {
     val dataLoading: LiveData<Boolean> = _dataLoading
 
     fun getComicIntro(comicId: Int) {
-        launch<ComicIntroBean> {
-            request {
-                mRepository.getComicIntro(comicId)
-            }
-            onSuccess { result ->
-                _comicIntroData.value = result
-            }
-            onFailed { error, code ->
-                toast(error)
+        viewModelScope.launch {
+            mRepository.getComicIntro(comicId).collectLatest {
+                _comicIntroData.value = it
             }
         }
     }
 
     fun getComicRelated(comicId: Int) {
-        launch<ComicRelatedInfoBean> {
-            request {
-                mRepository.getComicRelated(comicId)
-            }
-            onSuccess { result ->
-                _comicRelatedData.value = result
-            }
-            onFailed { error, code ->
-                toast(error)
+        viewModelScope.launch {
+            mRepository.getComicRelated(comicId).collectLatest {
+                _comicRelatedData.value = it
             }
         }
     }
 
     fun getReadHistory(comicId: Int) {
-        launch<List<ReadHistoryBean>> {
-            request {
-                mRepository.getReadHistory(comicId)
-            }
-            onSuccess { result ->
-                _readHistory.value = result
-            }
-            onFailed { error, code ->
-                toast(error)
+        viewModelScope.launch {
+            mRepository.getReadHistory(comicId).collectLatest {
+                _readHistory.value = it
             }
         }
     }
 
     fun favoriteComic(comicId: Int, comicTitle: String, comicAuthors: String, comicCover: String, time: Long) {
-        launch<Boolean> {
-            request {
-                mRepository.favoriteComic(CollectBean(comicId, comicTitle, comicAuthors, comicCover, time))
-                return@request true
-            }
-            onSuccess { result ->
-                _updateFavorite.value = result
-            }
-            onFailed { error, code ->
-                toast(error)
-            }
+        viewModelScope.launch {
+            mRepository.favoriteComic(CollectBean(comicId, comicTitle, comicAuthors, comicCover, time))
+            _updateFavorite.value = true
         }
     }
 
     fun isFavorite(comicId: Int) {
-        launch<Boolean> {
-            request {
-                mRepository.isFavorite(comicId)
-            }
-            onSuccess { result ->
-                _updateFavorite.value = result
-            }
-            onFailed { error, code ->
-                toast(error)
+        viewModelScope.launch {
+            mRepository.isFavorite(comicId).collectLatest {
+                _updateFavorite.value = it
             }
         }
     }
 
     fun unFavoriteComic(comicId: Int) {
-        launch<Boolean> {
-            request {
-                mRepository.unFavoriteComic(comicId)
-                return@request true
-            }
-            onSuccess { result ->
-                _updateFavorite.value = result
-            }
-            onFailed { error, code ->
-                toast(error)
-            }
+        viewModelScope.launch {
+            mRepository.unFavoriteComic(comicId)
+            _updateFavorite.value = false
         }
     }
+
+
 }

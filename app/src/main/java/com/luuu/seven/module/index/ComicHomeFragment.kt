@@ -1,15 +1,13 @@
 package com.luuu.seven.module.index
 
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicFragmentAdapter
 import com.luuu.seven.base.BaseFragment
-import com.luuu.seven.module.search.ComicSearchActivity
-import com.luuu.seven.module.shelf.ComicCollectFragment
-import com.luuu.seven.module.shelf.ComicHistoryFragment
-import com.luuu.seven.module.sort.ComicSortActivity
-import com.luuu.seven.util.*
+import com.luuu.seven.util.BarUtils
+import com.luuu.seven.util.click
+import com.luuu.seven.util.color
+import com.luuu.seven.util.pageChangeListener
 import kotlinx.android.synthetic.main.fra_home_layout.*
 
 class ComicHomeFragment : BaseFragment() {
@@ -29,14 +27,15 @@ class ComicHomeFragment : BaseFragment() {
     }
 
     override fun initViews() {
-        BarUtils.addStatusBarView(status_bg, mContext!!, ContextCompat.getColor(mContext!!, R.color.transparent))
+        BarUtils.addStatusBarView(status_bg, requireContext(), color(R.color.transparent))
 
         tv_search.click {
-            startActivity<ComicSearchActivity>()
+            findNavController().navigate(R.id.action_home_pager_fragment_to_search_fragment)
         }
 
         iv_history.click {
-            startActivity<ComicSortActivity>()
+//            startActivity<ComicSortActivity>()
+            findNavController().navigate(R.id.action_home_fragment_to_sort_fragment)
         }
 
         val mAdapter = ComicFragmentAdapter(childFragmentManager, homePages, HOME_TITLES)
@@ -45,6 +44,7 @@ class ComicHomeFragment : BaseFragment() {
             currentItem = 1
             offscreenPageLimit = homePages.size
         })
+
         home_viewpager.pageChangeListener {
             onPageSelected {  pos ->
                 if (pos != 1) {
