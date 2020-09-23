@@ -16,7 +16,6 @@ import com.luuu.seven.bean.ChapterDataBean
 import com.luuu.seven.bean.ReadHistoryBean
 import com.luuu.seven.module.read.ReadViewModel
 import com.luuu.seven.util.toast
-import androidx.lifecycle.observe
 import kotlinx.android.synthetic.main.activity_comic_read_recycler.*
 import kotlinx.android.synthetic.main.read_page_info.*
 
