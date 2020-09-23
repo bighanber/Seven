@@ -5,11 +5,6 @@ import android.os.Environment
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
-import android.util.Log
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.Toast
-import com.luuu.seven.ComicApplication
 import java.lang.ref.WeakReference
 import java.text.DecimalFormat
 import java.util.*
@@ -18,17 +13,6 @@ import java.util.*
  * Created by lls on 2017/11/9.
  *
  */
-
-fun <T1, T2> ifNotNull(value1: T1?, value2: T2?, bothNotNull: (T1, T2) -> (Unit)) {
-    if (value1 != null && value2 != null) {
-        bothNotNull(value1, value2)
-    } else {
-        Log.e("IfNotNull", "some value is null")
-    }
-}
-
-
-
 
 //fun Fragment.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
 //    Toast.makeText(context, message, duration).show()

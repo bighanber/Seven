@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnLayout
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.*
 import com.luuu.seven.R
@@ -14,7 +14,6 @@ import com.luuu.seven.bean.FilterSection
 import com.luuu.seven.bean.FilterViewBean
 import com.luuu.seven.bean.SortFilterBean
 import com.luuu.seven.util.BarUtils
-import com.luuu.seven.util.activityViewModel
 import com.luuu.seven.util.toast
 import com.luuu.seven.widgets.BottomSheetBehavior
 import com.luuu.seven.widgets.BottomSheetBehavior.Companion.STATE_COLLAPSED
@@ -24,7 +23,7 @@ import kotlinx.android.synthetic.main.fra_filter_layout.*
 
 class ComicSortFilterFragment : BaseFragment() {
 
-    private lateinit var viewModel: SortViewModel
+    private val viewModel: SortViewModel by viewModels()
     private var mAdapter: SortFilterAdapter? = null
 
     private val checkMap by lazy { HashMap<String, FilterViewBean>() }
@@ -39,21 +38,18 @@ class ComicSortFilterFragment : BaseFragment() {
     }
 
     override fun initViews() {
-        viewModel = activityViewModel<SortViewModel>().apply {
-            sortFilterData.observe(viewLifecycleOwner, Observer { data ->
-                data?.let {
-                    assemblyData(it)
-                    initAdapter()
-                }
-            })
-        }
-
+        viewModel.sortFilterData.observe(viewLifecycleOwner, { data ->
+            data?.let {
+                assemblyData(it)
+                initAdapter()
+            }
+        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val lp = filter_sheet.layoutParams as ViewGroup.MarginLayoutParams
-        lp.topMargin = BarUtils.getStatusBarHeight(context!!)
+        lp.topMargin = BarUtils.getStatusBarHeight(requireContext())
         filter_sheet.layoutParams = lp
 
         val behavior = BottomSheetBehavior.from(filter_sheet)
@@ -97,7 +93,7 @@ class ComicSortFilterFragment : BaseFragment() {
             adapter = mAdapter
         }
 
-        mAdapter?.setOnItemChildClickListener { adapter, view, position ->
+        mAdapter?.setOnItemChildClickListener { _, view, position ->
             if (view.id == R.id.filter_label) {
                 val filterView = view as FilterView
                 val check = !filterView.isChecked

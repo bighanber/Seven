@@ -5,7 +5,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.luuu.seven.R
 import com.luuu.seven.bean.ComicSpecialBean
-import com.luuu.seven.util.ifNotNull
 import com.luuu.seven.util.loadWithHead
 
 
@@ -16,10 +15,8 @@ import com.luuu.seven.util.loadWithHead
 class ComicSpecialAdapter(layoutResId: Int, data: List<ComicSpecialBean>) :
         BaseQuickAdapter<ComicSpecialBean, BaseViewHolder>(layoutResId, data) {
 
-    override fun convert(helper: BaseViewHolder, item: ComicSpecialBean?) {
-        ifNotNull(helper, item, {helper, item ->
-            helper.setText(R.id.tv_special_title, item.title)
-            helper.getView<ImageView>(R.id.iv_special_cover).loadWithHead(item.smallCover)
-        })
+    override fun convert(helper: BaseViewHolder, item: ComicSpecialBean) {
+        helper.setText(R.id.tv_special_title, item.title)
+        helper.getView<ImageView>(R.id.iv_special_cover).loadWithHead(item.smallCover)
     }
 }

@@ -6,7 +6,6 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.luuu.seven.R
 import com.luuu.seven.bean.HotSearchBean
-import com.luuu.seven.util.ifNotNull
 
 /**
  * Created by lls on 2017/8/9.

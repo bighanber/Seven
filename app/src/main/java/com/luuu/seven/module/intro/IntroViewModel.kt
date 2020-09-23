@@ -1,13 +1,14 @@
 package com.luuu.seven.module.intro
 
-import androidx.lifecycle.*
-import com.luuu.seven.bean.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.luuu.seven.bean.CollectBean
+import com.luuu.seven.bean.ComicIntroBean
+import com.luuu.seven.bean.ComicRelatedInfoBean
+import com.luuu.seven.bean.ReadHistoryBean
 import com.luuu.seven.repository.IntroRepository
-import com.luuu.seven.util.handleLoading
-import com.luuu.seven.util.ioMain
-import com.luuu.seven.util.launch
-import com.luuu.seven.util.toast
-import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

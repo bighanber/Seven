@@ -4,15 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.luuu.seven.bean.*
-import com.luuu.seven.repository.ShelfRepository
-import com.luuu.seven.repository.SortRepository
+import com.luuu.seven.bean.ComicSpecialBean
+import com.luuu.seven.bean.ComicSpecialDetBean
 import com.luuu.seven.repository.SpecialRepository
-import com.luuu.seven.util.handleLoading
-import com.luuu.seven.util.ioMain
-import com.luuu.seven.util.launch
-import com.luuu.seven.util.toast
-import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

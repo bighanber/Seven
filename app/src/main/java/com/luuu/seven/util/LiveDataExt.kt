@@ -1,6 +1,5 @@
 package com.luuu.seven.util
 
-import androidx.annotation.MainThread
 import androidx.lifecycle.*
 
 fun <A, B, Result> LiveData<A>.combine(

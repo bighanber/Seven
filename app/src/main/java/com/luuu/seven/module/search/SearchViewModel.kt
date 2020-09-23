@@ -4,8 +4,6 @@ import androidx.lifecycle.*
 import com.luuu.seven.bean.HotSearchBean
 import com.luuu.seven.bean.SearchDataBean
 import com.luuu.seven.repository.SearchRepository
-import com.luuu.seven.util.launch
-import com.luuu.seven.util.toast
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel

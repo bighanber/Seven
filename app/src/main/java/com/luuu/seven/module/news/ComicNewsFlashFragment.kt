@@ -1,13 +1,12 @@
 package com.luuu.seven.module.news
 
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicNewsFlashAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicNewsFlashBean
-import com.luuu.seven.util.obtainViewModel
 import kotlinx.android.synthetic.main.fra_tab_layout.*
 
 /**
@@ -21,27 +20,27 @@ class ComicNewsFlashFragment : BaseFragment() {
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
     private var mAdapter: ComicNewsFlashAdapter? = null
     private var mFlashList: ArrayList<ComicNewsFlashBean> = ArrayList()
-    private lateinit var viewModel: NewsViewModel
+    private val viewModel: NewsViewModel by viewModels()
 
     override fun initViews() {
-        viewModel = obtainViewModel<NewsViewModel>().apply {
-            newsFlashData.observe(viewLifecycleOwner, Observer { data ->
+        viewModel.apply {
+            newsFlashData.observe(viewLifecycleOwner) { data ->
                 data?.let {
                     mFlashList.addAll(it)
                     updateComicList(it)
                 }
 
-            })
+            }
 
-            swipeRefreshing.observe(viewLifecycleOwner, Observer {
+            swipeRefreshing.observe(viewLifecycleOwner, {
                 refresh.isEnabled = false
             })
 
-            loadMore.observe(viewLifecycleOwner, Observer {
+            loadMore.observe(viewLifecycleOwner, {
                 mAdapter?.loadMoreComplete()
             })
 
-            isEmpty.observe(viewLifecycleOwner, Observer {
+            isEmpty.observe(viewLifecycleOwner, {
                 if (it) {
                     mAdapter?.loadMoreEnd()
                 }
