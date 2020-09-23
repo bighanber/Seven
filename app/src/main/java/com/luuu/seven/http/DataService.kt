@@ -3,8 +3,6 @@ package com.luuu.seven.http
 import com.luuu.seven.bean.*
 import io.reactivex.Observable
 import retrofit2.http.GET
-import retrofit2.http.HEAD
-import retrofit2.http.Headers
 import retrofit2.http.Path
 
 /**
@@ -29,11 +27,11 @@ interface DataService {
 
     //专题
     @GET("")
-    fun getSpecialComic(@Path("id") id: Int): Observable<List<ComicSpecialBean>>
+    suspend fun getSpecialComic(@Path("id") id: Int): List<ComicSpecialBean>
 
     //专题详情
     @GET("")
-    fun getSpecialComicDetail(@Path("objId") objId: Int): Observable<ComicSpecialDetBean>
+    suspend fun getSpecialComicDetail(@Path("objId") objId: Int): ComicSpecialDetBean
 
     //漫画排行 人气榜 待删除
     @GET("")

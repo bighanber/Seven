@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.appcompat.widget.Toolbar
 import com.luuu.seven.R
 import com.luuu.seven.util.BarUtils
-import io.reactivex.disposables.CompositeDisposable
 
 
 /**
@@ -20,18 +19,18 @@ abstract class BaseActivity : BaseAppCompatActivity() {
 
     override fun setContentView(layoutResID: Int) {
         super.setContentView(layoutResID)
-//        mToolbar = findViewById(R.id.common_toolbar)
-//        if (mToolbar != null) {
-//            mToolbar!!.contentInsetStartWithNavigation = 0
-//            setSupportActionBar(mToolbar)
-//            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-//            supportActionBar!!.elevation = 0f
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                mToolbar!!.elevation = 0f
-//            }
-//
-//            mToolbar!!.setNavigationOnClickListener { onBackPressed() }
-//        }
+        mToolbar = findViewById(R.id.common_toolbar)
+        mToolbar?.let {
+            it.contentInsetStartWithNavigation = 0
+            setSupportActionBar(it)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.elevation = 0f
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                it.elevation = 0f
+            }
+
+            it.setNavigationOnClickListener { onBackPressed() }
+        }
         setStatusBar()
     }
 
@@ -52,9 +51,5 @@ abstract class BaseActivity : BaseAppCompatActivity() {
         if (supportActionBar != null) {
             supportActionBar!!.setTitle(strId)
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 }
