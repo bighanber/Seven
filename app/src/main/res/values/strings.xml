@@ -12,12 +12,32 @@
     <string name="update">更新</string>
     <string name="rank">排行</string>
     <string name="special">专题</string>
-    <string name="comic_search">漫画搜索</string>
     <string name="search">搜索</string>
     <string name="cancel">取消</string>
-    <string name="hot_search">- 热门搜索 -</string>
     <string name="start_read">开始阅读</string>
     <string name="news">新闻</string>
     <string name="flash_news">快讯</string>
     <string name="choose_type">选择类型</string>
+
+    <!--漫画详情-->
+    <string name="intro_comic_chapter">漫画章节</string>
+    <string name="intro_more_recommend">更多推荐</string>
+    <string name="intro_comic_authors">作者: %s</string>
+    <string name="intro_comic_types">类型: %s</string>
+    <string name="intro_comic_last_update">最后更新: %s</string>
+
+    <!--漫画搜索-->
+    <string name="search_input_keyword_first">请输入搜索内容</string>
+    <string name="search_empty">未搜索到相关漫画</string>
+    <string name="hot_search">- 热门搜索 -</string>
+    <string name="comic_search">漫画搜索</string>
+    <string name="search_comic_authors">作者: %s</string>
+    <string name="search_comic_types">类型: %s</string>
+    <string name="search_comic_newest">最新: %s</string>
+
+    <!--书架-->
+    <string name="shelf_continue_watch">续看</string>
+
+    <!--筛选-->
+    <string name="filter_title">筛选</string>
 </resources>

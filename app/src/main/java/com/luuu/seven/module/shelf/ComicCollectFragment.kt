@@ -1,65 +1,53 @@
 package com.luuu.seven.module.shelf
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicCollectAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.CollectBean
-import com.luuu.seven.module.intro.ComicIntroActivity
-import com.luuu.seven.util.addTo
-import com.luuu.seven.util.obtainViewModel
-import com.luuu.seven.util.toast
 import kotlinx.android.synthetic.main.fra_shelf_list_layout.*
 
 /**
  * Created by lls on 2017/8/9.
  * 收藏界面
  */
-class ComicCollectFragment : BaseFragment(){
+class ComicCollectFragment : BaseFragment() {
+
 
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
     private var mAdapter: ComicCollectAdapter? = null
 
-    private lateinit var viewModel: ShelfViewModel
+    private val viewModel: ShelfViewModel by viewModels()
 
-    override fun onFirstUserVisible() {
-
-        viewModel = obtainViewModel().apply {
-            getCollect(false).addTo(mSubscription)
-        }
-        viewModel.collectData.observe(viewLifecycleOwner, Observer { data ->
+    override fun initViews() {
+        viewModel.collectData.observe(viewLifecycleOwner) { data ->
             data?.let {
                 updateComicCollect(it)
             }
-        })
-    }
-
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
-        viewModel.getCollect(false)
-    }
-
-    override fun initViews() {
-
+        }
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_shelf_list_layout
 
-    override fun onFirstUserInvisible() {
+    override fun onStart() {
+        super.onStart()
+        Log.e("asd", "coll - onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.e("asd", "coll - onResume")
+        viewModel.getCollect()
     }
 
 
-
     private fun updateComicCollect(data: List<CollectBean>) {
-        if (mAdapter == null) {
-            initAdapter(data)
-        } else {
-            mAdapter?.setNewData(data)
-        }
+
+        mAdapter?.setNewData(data) ?: initAdapter(data)
     }
 
     private fun initAdapter(collectBeanList: List<CollectBean>) {
@@ -67,11 +55,10 @@ class ComicCollectFragment : BaseFragment(){
         recycler_shelf.layoutManager = mLayoutManager
         recycler_shelf.adapter = mAdapter
         mAdapter?.setOnItemClickListener { _, _, position ->
-            val mBundle = Bundle()
-            mBundle.putInt("comicId", collectBeanList[position].comicId)
-            startNewActivity(ComicIntroActivity::class.java, mBundle)
+//            startActivity<ComicIntroActivity>(ComicIntroActivity.COMIC_ID to collectBeanList[position].comicId)
+            findNavController().navigate(
+                R.id.action_home_fragment_to_intro_fragment,
+                Bundle().apply { putInt("comicId", collectBeanList[position].comicId) })
         }
     }
-
-    private fun obtainViewModel(): ShelfViewModel = obtainViewModel(ShelfViewModel::class.java)
 }

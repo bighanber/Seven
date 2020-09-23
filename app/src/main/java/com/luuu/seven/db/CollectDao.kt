@@ -3,7 +3,7 @@ package com.luuu.seven.db
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.luuu.seven.MyApplication
+import com.luuu.seven.ComicApplication
 import com.luuu.seven.bean.CollectBean
 import com.luuu.seven.util.SchedulerHelper
 import io.reactivex.Observable
@@ -36,27 +36,10 @@ class CollectDao private constructor() {
     }
 
     fun createHelp() {
-        mHelp = CollectHelp(MyApplication.sAppContext)
+        mHelp = CollectHelp(ComicApplication.mApp)
     }
 
-    fun insert(id: Int, title: String, authors: String, img: String, time: Long): Observable<Boolean> {
-        return Observable.defer{  Observable.just(addCollect(id,title,authors,img,time)) }
-                .compose(SchedulerHelper.io_main())
-    }
-
-    fun queryById(id: Int): Observable<Boolean> {
-        return Observable.defer { Observable.just(isCollect(id)) }.compose(SchedulerHelper.io_main())
-    }
-
-    fun cancelCollect(id: Int): Observable<Boolean> {
-        return Observable.defer { Observable.just(deletCollect(id)) }.compose(SchedulerHelper.io_main())
-    }
-
-    fun getCollect(): Observable<List<CollectBean>> {
-        return Observable.defer { Observable.just(getAllCollect()) }.compose(SchedulerHelper.io_main())
-    }
-
-    private fun addCollect(id: Int, title: String, authors: String, img: String, time: Long): Boolean {
+    suspend fun insert(id: Int, title: String, authors: String, img: String, time: Long): Boolean {
         try {
             db = mHelp!!.writableDatabase
             db.beginTransaction()
@@ -78,7 +61,7 @@ class CollectDao private constructor() {
         return false
     }
 
-    private fun isCollect(comicId: Int): Boolean {
+    suspend fun queryById(comicId: Int): Boolean {
         var cursor: Cursor? = null
         try {
             db = mHelp!!.readableDatabase
@@ -99,7 +82,7 @@ class CollectDao private constructor() {
         return false
     }
 
-    private fun deletCollect(comicId: Int): Boolean {
+    suspend fun cancelCollect(comicId: Int): Boolean {
         try {
             db = mHelp!!.writableDatabase
             db.beginTransaction()
@@ -115,7 +98,7 @@ class CollectDao private constructor() {
         return false
     }
 
-    private fun getAllCollect(): List<CollectBean> {
+    suspend fun getCollect(): List<CollectBean> {
         var cursor: Cursor? = null
         val orderList = ArrayList<CollectBean>()
         try {

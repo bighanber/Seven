@@ -7,7 +7,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.luuu.seven.R
 import com.luuu.seven.bean.ComicNewsListBean
 import com.luuu.seven.util.ifNotNull
-import com.luuu.seven.util.loadImg
+import com.luuu.seven.util.loadWithHead
 
 
 /**
@@ -17,12 +17,12 @@ import com.luuu.seven.util.loadImg
 class ComicNewsListAdapter(layoutResId: Int, data: List<ComicNewsListBean>) :
         BaseQuickAdapter<ComicNewsListBean, BaseViewHolder>(layoutResId, data) {
 
-    override fun convert(helper: BaseViewHolder?, item: ComicNewsListBean?) {
+    override fun convert(helper: BaseViewHolder, item: ComicNewsListBean?) {
         ifNotNull(helper, item, {helper, item ->
             helper.setText(R.id.tv_news_list_title, item.title)
             helper.setText(R.id.tv_news_list_authors, item.nickname)
             helper.setText(R.id.tv_create_time, DateFormat.format("yyyy-MM-dd", item.createTime*1000))
-            helper.getView<ImageView>(R.id.iv_news_list_cover).loadImg(item.rowPicUrl)
+            helper.getView<ImageView>(R.id.iv_news_list_cover).loadWithHead(item.rowPicUrl)
         })
     }
 }

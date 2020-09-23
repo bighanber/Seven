@@ -1,16 +1,17 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/white</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar"/>
 
-    <style name="transparentText" parent="TextAppearance.AppCompat.Small">
+    <style name="transparentText" parent="TextAppearance.MaterialComponents.Subtitle2">
         <item name="android:textColor" >#00000000</item>
     </style>
 
@@ -38,7 +39,34 @@
     <style name="SplashTheme" parent="AppTheme">
 
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@drawable/splash</item>
 
     </style>
+
+    <style name="TabLayoutTextStyle">
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="RankStyle">
+        <item name="android:width">30dp</item>
+        <item name="android:fontFamily">@font/kanit</item>
+        <item name="android:textColor">?colorPrimary</item>
+        <item name="topThreeTextSize">60dp</item>
+        <item name="normalTextSize">30dp</item>
+    </style>
+
+    <style name="FilterStyle">
+        <item name="android:letterSpacing">-0.06</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:strokeColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorFont</item>
+        <item name="android:textSize">14sp</item>
+        <item name="outlineWidth">1dp</item>
+        <item name="clearIcon">@drawable/ic_tag_clear</item>
+        <item name="foreground">?selectableItemBackground</item>
+        <item name="showIcons">true</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
 </resources>
+

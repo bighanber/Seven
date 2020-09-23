@@ -3,9 +3,9 @@ package com.luuu.seven.base
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 
 /**
  *     author : dell
@@ -24,11 +24,8 @@ abstract class BaseAppCompatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        extra = intent.extras
-        getIntentExtras(extra)
         mContext = this
         if (getContentViewLayoutID() != 0) {
-
             setContentView(getContentViewLayoutID())
         } else {
             throw IllegalArgumentException("返回一个正确的ContentView")
@@ -37,7 +34,6 @@ abstract class BaseAppCompatActivity : AppCompatActivity() {
     }
 
     abstract fun initViews()
-    abstract fun getIntentExtras(extras: Bundle?)
     abstract fun getContentViewLayoutID(): Int
 
     fun showToast(view: View, msg: String) {

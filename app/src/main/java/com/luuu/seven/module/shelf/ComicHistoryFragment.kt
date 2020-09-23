@@ -1,16 +1,14 @@
 package com.luuu.seven.module.shelf
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicHistoryAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ReadHistoryBean
-import com.luuu.seven.module.intro.ComicIntroActivity
-import com.luuu.seven.util.addTo
-import com.luuu.seven.util.obtainViewModel
-import com.luuu.seven.util.toast
 import kotlinx.android.synthetic.main.fra_shelf_list_layout.*
 
 /**
@@ -22,41 +20,32 @@ class ComicHistoryFragment : BaseFragment() {
     private var mAdapter: ComicHistoryAdapter? = null
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
 
-    private lateinit var viewModel: ShelfViewModel
+    private val viewModel: ShelfViewModel by viewModels()
 
-    override fun onFirstUserVisible() {
-        viewModel = obtainViewModel().apply {
-            getReadHistory(false).addTo(mSubscription)
-        }
-        viewModel.historyData.observe(viewLifecycleOwner, Observer { data ->
+    override fun initViews() {
+        viewModel.historyData.observe(viewLifecycleOwner) { data ->
             data?.let {
                 updateComic(it)
             }
-        })
+        }
     }
 
-    override fun onUserInvisible() {
+    override fun onStart() {
+        super.onStart()
+        Log.e("asd", "his - onStart")
     }
 
-    override fun onUserVisible() {
-        viewModel.getReadHistory(false)
-    }
-
-    override fun initViews() {
-
+    override fun onResume() {
+        super.onResume()
+        Log.e("asd", "his - onResume")
+        viewModel.getReadHistory()
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_shelf_list_layout
 
-    override fun onFirstUserInvisible() {
-    }
-
     private fun updateComic(data: List<ReadHistoryBean>) {
-        if (mAdapter == null) {
-            initAdapter(data)
-        } else {
-            mAdapter?.setNewData(data)
-        }
+
+        mAdapter?.setNewData(data) ?: initAdapter(data)
     }
 
     private fun initAdapter(historyBeanList: List<ReadHistoryBean>) {
@@ -65,11 +54,12 @@ class ComicHistoryFragment : BaseFragment() {
         recycler_shelf.adapter = mAdapter
 
         mAdapter?.setOnItemClickListener { _, _, position ->
-            val mBundle = Bundle()
-            mBundle.putInt("comicId", historyBeanList[position].comicId)
-            startNewActivity(ComicIntroActivity::class.java, mBundle)
+
+//            startActivity<ComicIntroActivity>(ComicIntroActivity.COMIC_ID to historyBeanList[position].comicId)
+            findNavController().navigate(
+                R.id.action_home_fragment_to_intro_fragment,
+                Bundle().apply { putInt("comicId", historyBeanList[position].comicId) })
         }
     }
 
-    private fun obtainViewModel(): ShelfViewModel = obtainViewModel(ShelfViewModel::class.java)
 }

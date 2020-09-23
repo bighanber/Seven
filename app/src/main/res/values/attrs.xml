@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="RankHead">
+        <attr name="android:width" />
+        <attr name="android:textColor" />
+        <attr name="android:fontFamily" />
+        <attr name="topThreeTextSize" format="dimension" />
+        <attr name="normalTextSize" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="FilterView">
+        <attr name="android:checked" />
+        <attr name="android:text" />
+        <attr name="android:textColor" />
+        <attr name="android:textSize" />
+        <attr name="android:color" />
+        <attr name="android:padding" />
+        <attr name="android:strokeColor" />
+        <attr name="android:letterSpacing" />
+        <attr name="outlineWidth" format="dimension" />
+        <attr name="clearIcon" format="reference" />
+        <attr name="foreground" format="reference" />
+        <attr name="showIcons" format="boolean" />
+        <attr name="cornerRadius" format="dimension" />
+    </declare-styleable>
+</resources>

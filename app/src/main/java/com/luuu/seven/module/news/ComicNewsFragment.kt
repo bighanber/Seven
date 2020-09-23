@@ -1,18 +1,15 @@
 package com.luuu.seven.module.news
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.appbar.AppBarLayout
 import com.luuu.seven.R
-import com.luuu.seven.WebActivity
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicNewsPicBean
-import com.luuu.seven.util.BarUtils
-import com.luuu.seven.util.GlideImageLoader
-import com.luuu.seven.util.addTo
-import com.luuu.seven.util.obtainViewModel
+import com.luuu.seven.util.SevenImageLoader
 import kotlinx.android.synthetic.main.fra_news_layout.*
 
 /**
@@ -24,39 +21,23 @@ import kotlinx.android.synthetic.main.fra_news_layout.*
  */
 class ComicNewsFragment : BaseFragment() {
 
+
     private lateinit var fm: FragmentManager
     private var mNewsListFragment: ComicNewsListFragment? = null
     private var mNewsFlashFragment: ComicNewsFlashFragment? = null
 
-    private lateinit var viewModel: NewsViewModel
-
-    override fun onFirstUserVisible() {
-    }
-
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-            BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
-        }
-    }
+    private val viewModel: NewsViewModel by viewModels()
 
     override fun initViews() {
-        BarUtils.setTranslucentForCoordinatorLayout(activity!!, 0)
 
-        viewModel = obtainViewModel().apply {
-            getComicNewsPic(false).addTo(mSubscription)
-        }.apply {
-            newsPicData.observe(viewLifecycleOwner, Observer { data ->
+        viewModel.apply {
+            getComicNewsPic()
+
+            newsPicData.observe(viewLifecycleOwner) { data ->
                 data?.let {
                     updateComicList(it)
                 }
-            })
+            }
         }
 
         fm = childFragmentManager
@@ -67,7 +48,7 @@ class ComicNewsFragment : BaseFragment() {
                 R.id.rb_flash -> showFragment(1)
             }
         }
-        appbar_layout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+        appbar_layout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             if (verticalOffset == 0) {
                 news_banner.startAutoPlay()
             } else {
@@ -78,19 +59,14 @@ class ComicNewsFragment : BaseFragment() {
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_news_layout
 
-    override fun onFirstUserInvisible() {
-    }
-
-
     private fun updateComicList(data: ComicNewsPicBean) {
         val urls = ArrayList<String>()
         data.data.mapTo(urls) { it.picUrl }
         news_banner.setOnBannerListener { position ->
-            val mBundle = Bundle()
-            mBundle.putString("url", data.data[position].objectUrl)
-            startNewActivity(WebActivity::class.java, mBundle)
+//            startActivity<WebActivity>("url" to data.data[position].objectUrl)
+            findNavController().navigate(R.id.action_home_fragment_to_web_fragment, Bundle().apply { putString("url", data.data[position].objectUrl) })
         }
-        news_banner.setImages(urls).setImageLoader(GlideImageLoader()).start()
+        news_banner.setImages(urls).setImageLoader(SevenImageLoader()).start()
     }
 
     private fun showFragment(id: Int) {
@@ -118,5 +94,4 @@ class ComicNewsFragment : BaseFragment() {
         if (mNewsFlashFragment != null) ft.hide(mNewsFlashFragment!!)
     }
 
-    private fun obtainViewModel(): NewsViewModel = obtainViewModel(NewsViewModel::class.java)
 }

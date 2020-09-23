@@ -9,17 +9,18 @@ import android.graphics.Point
 import android.os.BatteryManager
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.view.ViewPager
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.SeekBar
+import androidx.viewpager.widget.ViewPager
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicReadPagerAdapter
 import com.luuu.seven.base.BaseActivity
 import com.luuu.seven.bean.ChapterDataBean
+import com.luuu.seven.util.get
 import kotlinx.android.synthetic.main.activity_comic_read.*
 import kotlinx.android.synthetic.main.read_page_info.*
 
@@ -43,6 +44,16 @@ class ComicReadActivity : BaseActivity(), ComicReadContract.View {
     private val mPresenter by lazy { ComicReadPresenter(this) }
 
     override fun initViews() {
+
+            mComicId = intent.get("comicId") ?: 0
+            mChapters = intent.get("comicChapter")
+            mChapterTagName = intent.get("comicTagName")
+            mCurChapterPosition = intent.get("comicPosition") ?: 0
+            mHistoryBrowsePosition = intent.get("historyPosition") ?: 0
+            mComicCover = intent.get("comicCover")
+            mComicTitle = intent.get("comicTitle")
+
+
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         gallery_pager.setLocked(true)
         gallery_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -125,18 +136,6 @@ class ComicReadActivity : BaseActivity(), ComicReadContract.View {
             return true
         }
         return super.onKeyDown(keyCode, event)
-    }
-
-    override fun getIntentExtras(extras: Bundle?) {
-        extras?.let {
-            mComicId = it.getInt("comicId")
-            mChapters = it.getParcelableArrayList<Parcelable>("comicChapter") as ArrayList<ChapterDataBean>
-            mChapterTagName = it.getString("comicTagName")
-            mCurChapterPosition = it.getInt("comicPosition")
-            mHistoryBrowsePosition = it.getInt("historyPosition")
-            mComicCover = it.getString("comicCover")
-            mComicTitle = it.getString("comicTitle")
-        }
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.activity_comic_read

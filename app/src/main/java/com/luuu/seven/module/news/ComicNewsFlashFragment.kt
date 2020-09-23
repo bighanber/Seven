@@ -1,13 +1,12 @@
 package com.luuu.seven.module.news
 
-import android.arch.lifecycle.Observer
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicNewsFlashAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicNewsFlashBean
-import com.luuu.seven.util.addTo
 import com.luuu.seven.util.obtainViewModel
 import kotlinx.android.synthetic.main.fra_tab_layout.*
 
@@ -17,25 +16,15 @@ import kotlinx.android.synthetic.main.fra_tab_layout.*
  */
 class ComicNewsFlashFragment : BaseFragment() {
 
+
     private var mPageNum = 0
     private val mLayoutManager by lazy { LinearLayoutManager(mContext) }
     private var mAdapter: ComicNewsFlashAdapter? = null
     private var mFlashList: ArrayList<ComicNewsFlashBean> = ArrayList()
     private lateinit var viewModel: NewsViewModel
 
-    override fun onFirstUserVisible() {
-    }
-
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
-    }
-
     override fun initViews() {
-        viewModel = obtainViewModel().apply {
-            getComicNewsFlash(mPageNum, false).addTo(mSubscription)
-        }.apply {
+        viewModel = obtainViewModel<NewsViewModel>().apply {
             newsFlashData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {
                     mFlashList.addAll(it)
@@ -44,15 +33,17 @@ class ComicNewsFlashFragment : BaseFragment() {
 
             })
 
-            dataRefresh.observe(viewLifecycleOwner, Observer { bol ->
-                bol?.let {
-                    refresh.isEnabled = it
-                }
+            swipeRefreshing.observe(viewLifecycleOwner, Observer {
+                refresh.isEnabled = false
             })
 
-            dataLoadMore.observe(viewLifecycleOwner, Observer {  bol ->
-                if (bol == null || !bol) {
-                    mAdapter?.loadMoreComplete()
+            loadMore.observe(viewLifecycleOwner, Observer {
+                mAdapter?.loadMoreComplete()
+            })
+
+            isEmpty.observe(viewLifecycleOwner, Observer {
+                if (it) {
+                    mAdapter?.loadMoreEnd()
                 }
             })
         }
@@ -65,24 +56,20 @@ class ComicNewsFlashFragment : BaseFragment() {
         refresh.setOnRefreshListener {
             mPageNum = 0
             mFlashList.clear()
-            viewModel.getComicNewsFlash(mPageNum, false, isRefresh = true)
+            viewModel.getComicNewsFlash(mPageNum, true)
         }
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_tab_layout
 
-    override fun onFirstUserInvisible() {
+    override fun onResume() {
+        super.onResume()
+        viewModel.getComicNewsFlash(mPageNum)
     }
 
-
     private fun updateComicList(data: List<ComicNewsFlashBean>) {
-        when {
-            mAdapter == null -> initAdapter()
-            data.isEmpty() -> mAdapter?.loadMoreEnd()
-            else -> {
-                mAdapter?.notifyDataSetChanged()
-            }
-        }
+
+        mAdapter?.notifyDataSetChanged() ?: initAdapter()
     }
 
     private fun initAdapter() {
@@ -90,12 +77,11 @@ class ComicNewsFlashFragment : BaseFragment() {
             setEnableLoadMore(true)
             setOnLoadMoreListener({
                 mPageNum++
-                viewModel.getComicNewsFlash(mPageNum, false, isLoadMore = true)
+                viewModel.getComicNewsFlash(mPageNum, more = true)
             }, recycler)
         }
         recycler.layoutManager = mLayoutManager
         recycler.adapter = mAdapter
     }
 
-    private fun obtainViewModel(): NewsViewModel = obtainViewModel(NewsViewModel::class.java)
 }

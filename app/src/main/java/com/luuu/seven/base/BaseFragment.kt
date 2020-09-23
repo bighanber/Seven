@@ -3,12 +3,22 @@ package com.luuu.seven.base
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.DialogTitle
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
+import com.luuu.seven.R
+import com.luuu.seven.util.BarUtils
 import io.reactivex.disposables.CompositeDisposable
 
 /**
@@ -22,22 +32,22 @@ abstract class BaseFragment : Fragment() {
     val TAG_LOG: String = BaseFragment::class.java.simpleName
 
     var mContext: Context? = null
-    private var fragmentRootView: View? = null
-    private var isFirstResume = true
-    private var isFirstVisible = true
-    private var isFirstInvisible = true
-    private var isPrepared = false
+    var fragmentRootView: View? = null
+    private var mainToolbar: Toolbar? = null
 
-    var mSubscription = CompositeDisposable()
+    open fun onFragmentVisibleChange(isVisible: Boolean) {
 
-    abstract fun onFirstUserVisible()
-    abstract fun onUserInvisible()
-    abstract fun onUserVisible()
+    }
     abstract fun initViews()
     abstract fun getContentViewLayoutID(): Int
-    abstract fun onFirstUserInvisible()
 
-    override fun onAttach(context: Context?) {
+    open fun onFirstUserInvisible() {
+
+    }
+
+    open fun toolBarTitle() = ""
+
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
     }
@@ -46,86 +56,30 @@ abstract class BaseFragment : Fragment() {
         if (fragmentRootView == null) {
             fragmentRootView = inflater.inflate(getContentViewLayoutID(), container, false)
         }
-        val parent = fragmentRootView!!.parent as ViewGroup?
-        parent?.removeView(fragmentRootView)
         return fragmentRootView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val displayMetrics = DisplayMetrics()
-        activity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        mainToolbar = view.findViewById(R.id.common_toolbar)
+        mainToolbar?.let {
+            BarUtils.setPaddingSmart(requireContext(), it)
+            it.contentInsetStartWithNavigation = 0
+            (requireActivity() as AppCompatActivity).apply {
+                setSupportActionBar(it)
+                supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            }
+            it.setNavigationOnClickListener { findNavController().navigateUp() }
+        }
         initViews()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        initPrepare()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (isFirstResume) {
-            isFirstResume = false
-            return
-        }
-        if (userVisibleHint) {
-            onUserVisible()
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (userVisibleHint) {
-            onUserInvisible()
-        }
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser) {
-            if (isFirstVisible) {
-                isFirstVisible = false
-                initPrepare()
-            } else {
-                onUserVisible()
-            }
-        } else {
-            if (isFirstInvisible) {
-                isFirstInvisible = false
-                onFirstUserInvisible()
-            } else {
-                onUserInvisible()
-            }
-        }
-    }
-
-    @Synchronized private fun initPrepare() {
-        if (isPrepared) {
-            onFirstUserVisible()
-        } else {
-            isPrepared = true
-        }
+    fun setToolbarTitle(title: String) {
+        mainToolbar?.title = title
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        isPrepared = false
-        mSubscription.clear()
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        try {
-            val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
-            childFragmentManager.isAccessible = true
-            childFragmentManager.set(this, null)
-        } catch (e: NoSuchFieldException) {
-            throw RuntimeException(e)
-        } catch (e: IllegalAccessException) {
-            throw RuntimeException(e)
-        }
-
     }
 
     protected fun startNewActivity(clazz: Class<*>) {

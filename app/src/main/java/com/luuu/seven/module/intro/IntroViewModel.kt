@@ -1,69 +1,80 @@
 package com.luuu.seven.module.intro
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
-import com.luuu.seven.bean.ComicIntroBean
+import androidx.lifecycle.*
+import com.luuu.seven.bean.*
 import com.luuu.seven.repository.IntroRepository
 import com.luuu.seven.util.handleLoading
 import com.luuu.seven.util.ioMain
+import com.luuu.seven.util.launch
 import com.luuu.seven.util.toast
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class IntroViewModel : ViewModel() {
 
     private val mRepository by lazy { IntroRepository() }
 
     private val _comicIntroData = MutableLiveData<ComicIntroBean>()
-    val comicIntroData: LiveData<ComicIntroBean>
-        get() = _comicIntroData
+    val comicIntroData: LiveData<ComicIntroBean> = _comicIntroData
 
     private val _updateFavorite = MutableLiveData<Boolean>()
-    val updateFavorite: LiveData<Boolean>
-        get() = _updateFavorite
+    val updateFavorite: LiveData<Boolean> = _updateFavorite
+
+    private val _readHistory = MutableLiveData<List<ReadHistoryBean>>()
+    val readHistory: LiveData<List<ReadHistoryBean>> = _readHistory
+
+    private val _comicRelatedData = MutableLiveData<ComicRelatedInfoBean>()
+    val comicRelatedData: LiveData<ComicRelatedInfoBean> = _comicRelatedData
 
     private val _dataLoading = MutableLiveData<Boolean>()
-    val dataLoading: LiveData<Boolean>
-        get() = _dataLoading
+    val dataLoading: LiveData<Boolean> = _dataLoading
 
-    fun getComicIntro(comicId: Int, showLoading: Boolean): Disposable {
-        return mRepository.getComicIntro(comicId)
-                .compose(ioMain())
-                .compose(handleLoading(showLoading, _dataLoading))
-                .subscribe({
-                    _comicIntroData.value = it
-                }, {
-                    toast(it.message)
-                }, {})
+    fun getComicIntro(comicId: Int) {
+        viewModelScope.launch {
+            mRepository.getComicIntro(comicId).collectLatest {
+                _comicIntroData.value = it
+            }
+        }
     }
 
-    fun favoriteComic(comicId: Int, comicTitle: String, comicAuthors: String, comicCover: String, time: Long): Disposable {
-        return mRepository.favoriteComic(comicId, comicTitle, comicAuthors, comicCover, time)
-                .compose(ioMain())
-                .subscribe({
-                    _updateFavorite.value = it
-                }, {
-                    toast(it.message)
-                }, {})
+    fun getComicRelated(comicId: Int) {
+        viewModelScope.launch {
+            mRepository.getComicRelated(comicId).collectLatest {
+                _comicRelatedData.value = it
+            }
+        }
     }
 
-    fun isFavorite(comicId: Int): Disposable {
-        return mRepository.isFavorite(comicId)
-                .compose(ioMain())
-                .subscribe({
-                    _updateFavorite.value = it
-                }, {
-                    toast(it.message)
-                }, {})
+    fun getReadHistory(comicId: Int) {
+        viewModelScope.launch {
+            mRepository.getReadHistory(comicId).collectLatest {
+                _readHistory.value = it
+            }
+        }
     }
 
-    fun unFavoriteComic(comicId: Int): Disposable {
-        return mRepository.unFavoriteComic(comicId)
-                .compose(ioMain())
-                .subscribe({
-                    _updateFavorite.value = it
-                }, {
-                    toast(it.message)
-                }, {})
+    fun favoriteComic(comicId: Int, comicTitle: String, comicAuthors: String, comicCover: String, time: Long) {
+        viewModelScope.launch {
+            mRepository.favoriteComic(CollectBean(comicId, comicTitle, comicAuthors, comicCover, time))
+            _updateFavorite.value = true
+        }
     }
+
+    fun isFavorite(comicId: Int) {
+        viewModelScope.launch {
+            mRepository.isFavorite(comicId).collectLatest {
+                _updateFavorite.value = it
+            }
+        }
+    }
+
+    fun unFavoriteComic(comicId: Int) {
+        viewModelScope.launch {
+            mRepository.unFavoriteComic(comicId)
+            _updateFavorite.value = false
+        }
+    }
+
+
 }

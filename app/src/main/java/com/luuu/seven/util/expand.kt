@@ -1,39 +1,23 @@
 package com.luuu.seven.util
 
-import android.annotation.TargetApi
 import android.os.Build
-import android.text.TextUtils
+import android.os.Environment
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import android.util.Log
-import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.model.GlideUrl
-import com.bumptech.glide.load.model.LazyHeaders
-import com.bumptech.glide.load.resource.drawable.GlideDrawable
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.animation.GlideAnimation
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.target.Target
-import com.luuu.seven.MyApplication
-import com.luuu.seven.R
-import com.luuu.seven.http.Api
-import jp.wasabeef.glide.transformations.BlurTransformation
-import java.lang.Exception
+import com.luuu.seven.ComicApplication
+import java.lang.ref.WeakReference
+import java.text.DecimalFormat
+import java.util.*
 
 /**
  * Created by lls on 2017/11/9.
  *
  */
-fun ImageView.loadImg(imageUrl: String) {
-    if (TextUtils.isEmpty(imageUrl)) {
-        Glide.with(MyApplication.sAppContext).load(R.mipmap.ic_launcher).into(this)
-    } else {
-        Glide.with(MyApplication.sAppContext).load(GlideUrl(imageUrl, LazyHeaders.Builder().addHeader("Referer", Api.DMZJ).build()))
-                .into(this)
-    }
-}
 
 fun <T1, T2> ifNotNull(value1: T1?, value2: T2?, bothNotNull: (T1, T2) -> (Unit)) {
     if (value1 != null && value2 != null) {
@@ -43,41 +27,9 @@ fun <T1, T2> ifNotNull(value1: T1?, value2: T2?, bothNotNull: (T1, T2) -> (Unit)
     }
 }
 
-fun ImageView.loadImgWithTransform(imageUrl: String) {
-    Glide.with(MyApplication.sAppContext).load(GlideUrl(imageUrl, LazyHeaders.Builder().addHeader("Referer", Api.DMZJ).build()))
-            .bitmapTransform(BlurTransformation(context, 50))
-            .into(object : SimpleTarget<GlideDrawable>() {
-                @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-                override fun onResourceReady(resource: GlideDrawable, glideAnimation: GlideAnimation<in GlideDrawable>) {
-                    background = resource
-                }
-            })
-}
 
-fun ImageView.loadImgWithProgress(imageUrl: String, view: ProgressBar) {
-    Glide.with(MyApplication.sAppContext)
-            .load(GlideUrl(imageUrl, LazyHeaders.Builder().addHeader("Referer", Api.DMZJ).build()))
-            .listener(object : RequestListener<GlideUrl, GlideDrawable> {
-                override fun onResourceReady(resource: GlideDrawable?, model: GlideUrl?, target: Target<GlideDrawable>?, isFromMemoryCache: Boolean, isFirstResource: Boolean): Boolean {
-                    view.visibility = View.INVISIBLE
-                    return false
-                }
 
-                override fun onException(e: Exception?, model: GlideUrl?, target: Target<GlideDrawable>?, isFirstResource: Boolean): Boolean {
-                    return false
-                }
 
-            })
-            .into(this)
-}
-
-fun String.toast(isShortToast: Boolean = true) = toast(this, isShortToast)
-
-fun toast(msg: Any?, isShort: Boolean = true) {
-    msg?.let {
-        Toast.makeText(MyApplication.sAppContext, msg.toString(), if (isShort) Toast.LENGTH_SHORT else Toast.LENGTH_LONG).show()
-    }
-}
 //fun Fragment.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
 //    Toast.makeText(context, message, duration).show()
 //}
@@ -85,3 +37,82 @@ fun toast(msg: Any?, isShort: Boolean = true) {
 //fun Fragment.showSnackbar(view: View, message: String, duration: Int = Snackbar.LENGTH_SHORT) {
 //    Snackbar.make(view, message, duration).show()
 //}
+
+/**
+ * @param source
+ * @param paint
+ * @param width 文字区域的宽度
+ * @param alignment 文字的对齐方向
+ * @param spacingmult 行间距的倍数
+ * @param spacingadd 行间距的额外增加值
+ * @param includepad 文字上下添加额外的空间
+ */
+fun newStaticLayout(
+    source: CharSequence,
+    paint: TextPaint,
+    width: Int,
+    alignment: Layout.Alignment,
+    spacingmult: Float,
+    spacingadd: Float,
+    includepad: Boolean
+): StaticLayout {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        StaticLayout.Builder.obtain(source, 0, source.length, paint, width).apply {
+            setAlignment(alignment)
+            setLineSpacing(spacingadd, spacingmult)
+            setIncludePad(includepad)
+        }.build()
+    } else {
+        @Suppress("DEPRECATION")
+        StaticLayout(source, paint, width, alignment, spacingmult, spacingadd, includepad)
+    }
+}
+
+fun StaticLayout.textWidth(): Int {
+    var width = 0f
+    for (i in 0 until lineCount) {
+        width = width.coerceAtLeast(getLineWidth(i))
+    }
+    return width.toInt()
+}
+
+fun lerp(a: Float, b: Float, t: Float): Float {
+    return a + (b - a) * t
+}
+
+fun isSDCardEnable() = Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()
+
+fun Float.normalize(
+    inputMin: Float,
+    inputMax: Float,
+    outputMin: Float,
+    outputMax: Float
+): Float {
+    if (this < inputMin) {
+        return outputMin
+    } else if (this > inputMax) {
+        return outputMax
+    }
+
+    return outputMin * (1 - (this - inputMin) / (inputMax - inputMin)) +
+            outputMax * ((this - inputMin) / (inputMax - inputMin))
+}
+
+fun Int.centsToDollars(): Double = this.toDouble() / 100.0
+
+fun Int.centsToDollarsFormat(currency: String): String {
+    val dollars = this / 100
+    val cents = this % 100
+    return String.format(Locale.getDefault(), "%s%d.%02d", currency, dollars, cents)
+}
+
+fun Double.toPrice(): String {
+    val pattern = "#,###.00"
+    val decimalFormat = DecimalFormat(pattern)
+    decimalFormat.groupingSize = 3
+
+    return "¥" + decimalFormat.format(this)
+}
+
+val <T> T.weak: WeakReference<T>
+    get() = WeakReference(this)

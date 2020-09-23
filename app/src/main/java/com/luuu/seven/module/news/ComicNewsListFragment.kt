@@ -1,16 +1,15 @@
 package com.luuu.seven.module.news
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.luuu.seven.R
-import com.luuu.seven.WebActivity
 import com.luuu.seven.adapter.ComicNewsListAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicNewsListBean
-import com.luuu.seven.util.addTo
-import com.luuu.seven.util.obtainViewModel
 import kotlinx.android.synthetic.main.fra_tab_layout.*
 
 /**
@@ -19,46 +18,37 @@ import kotlinx.android.synthetic.main.fra_tab_layout.*
  */
 class ComicNewsListFragment : BaseFragment() {
 
+
     private var mPageNum = 0
     private val mLayoutManager: LinearLayoutManager = LinearLayoutManager(mContext)
     private var mAdapter: ComicNewsListAdapter? = null
     private var mNewsListBeanList: ArrayList<ComicNewsListBean> = ArrayList()
 
-    private lateinit var viewModel: NewsViewModel
-
-    override fun onFirstUserVisible() {
-    }
-
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
-    }
+    private val viewModel: NewsViewModel by viewModels()
 
     override fun initViews() {
 
-        viewModel = obtainViewModel().apply {
-            getComicNewsList(mPageNum, false).addTo(mSubscription)
-        }.apply {
+        viewModel.apply {
             newsListData.observe(viewLifecycleOwner, Observer { data ->
                 data?.let {
                     mNewsListBeanList.addAll(it)
-                    updateComicList(it)
-                }
-
-            })
-
-            dataRefresh.observe(viewLifecycleOwner, Observer { bol ->
-                bol?.let {
-                    refresh.isEnabled = it
+                    updateComicList()
                 }
             })
 
-            dataLoadMore.observe(viewLifecycleOwner, Observer {  bol ->
-                if (bol == null || !bol) {
-                    mAdapter?.loadMoreComplete()
+            swipeRefreshing.observe(viewLifecycleOwner) {
+                refresh.isEnabled = false
+            }
+
+            loadMore.observe(viewLifecycleOwner) {
+                mAdapter?.loadMoreComplete()
+            }
+
+            isEmpty.observe(viewLifecycleOwner) {
+                if (it) {
+                    mAdapter?.loadMoreEnd()
                 }
-            })
+            }
         }
 
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -71,25 +61,20 @@ class ComicNewsListFragment : BaseFragment() {
         refresh.setOnRefreshListener {
             mPageNum = 0
             mNewsListBeanList.clear()
-            viewModel.getComicNewsList(mPageNum, false, isRefresh = true)
+            viewModel.getComicNewsList(mPageNum, true)
         }
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_tab_layout
 
-    override fun onFirstUserInvisible() {
+    override fun onResume() {
+        super.onResume()
+        viewModel.getComicNewsList(mPageNum)
     }
 
+    private fun updateComicList() {
 
-    private fun updateComicList(data: List<ComicNewsListBean>) {
-
-        when {
-            mAdapter == null -> initAdapter()
-            data.isEmpty() -> mAdapter?.loadMoreEnd()
-            else -> {
-                mAdapter?.notifyDataSetChanged()
-            }
-        }
+        mAdapter?.notifyDataSetChanged() ?: initAdapter()
     }
 
     private fun initAdapter() {
@@ -97,12 +82,13 @@ class ComicNewsListFragment : BaseFragment() {
             setEnableLoadMore(true)
             setOnLoadMoreListener({
                 mPageNum++
-                viewModel.getComicNewsList(mPageNum, false, isLoadMore = true)
+                viewModel.getComicNewsList(mPageNum, more = true)
             }, recycler)
             setOnItemClickListener { _, _, position ->
                 val mBundle = Bundle()
                 mBundle.putString("url", mNewsListBeanList[position].pageUrl)
-                startNewActivity(WebActivity::class.java, mBundle)
+//                startNewActivity(WebActivity::class.java, mBundle)
+                findNavController().navigate(R.id.action_home_fragment_to_web_fragment, mBundle)
             }
         }
         recycler.layoutManager = mLayoutManager
@@ -111,5 +97,4 @@ class ComicNewsListFragment : BaseFragment() {
 
     }
 
-    private fun obtainViewModel(): NewsViewModel = obtainViewModel(NewsViewModel::class.java)
 }

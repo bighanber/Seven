@@ -15,11 +15,11 @@ import com.luuu.seven.util.ifNotNull
 class ComicHotSearchAdapter(layoutResId: Int, data: List<HotSearchBean>) :
         BaseQuickAdapter<HotSearchBean, BaseViewHolder>(layoutResId, data) {
 
-    override fun convert(helper: BaseViewHolder?, item: HotSearchBean?) {
-        ifNotNull(helper, item, {helper, item ->
-            helper.setText(R.id.tv_hot, item.name)
+    override fun convert(helper: BaseViewHolder, item: HotSearchBean?) {
+        helper.apply {
+            setText(R.id.tv_hot, item?.name)
             val params = helper.getView<TextView>(R.id.tv_hot).layoutParams
             if(params is FlexboxLayoutManager.LayoutParams) params.flexGrow = 1.0f
-        })
+        }
     }
 }

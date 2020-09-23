@@ -3,19 +3,29 @@ package com.luuu.seven.repository
 import com.luuu.seven.bean.ComicNewsFlashBean
 import com.luuu.seven.bean.ComicNewsListBean
 import com.luuu.seven.bean.ComicNewsPicBean
-import com.luuu.seven.http.TaskData
-import io.reactivex.Observable
+import com.luuu.seven.http.HttpManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+
 
 class NewsRepository {
-    fun getComicNewsPic(): Observable<ComicNewsPicBean> {
-        return TaskData.getComicNewsPic()
+    suspend fun getComicNewsPic(): Flow<ComicNewsPicBean> {
+        return flow {
+            emit(HttpManager.getInstance.getService().getComicNewsPic())
+        }.flowOn(Dispatchers.IO)
     }
 
-    fun getComicNewsList(page: Int): Observable<List<ComicNewsListBean>> {
-        return TaskData.getComicNewsList(page)
+    suspend fun getComicNewsList(page: Int): Flow<List<ComicNewsListBean>> {
+        return flow {
+            emit(HttpManager.getInstance.getService().getComicNewsList(page))
+        }.flowOn(Dispatchers.IO)
     }
 
-    fun getComicNewsFlash(page: Int): Observable<List<ComicNewsFlashBean>> {
-        return TaskData.getComicNewsFlash(page)
+    suspend fun getComicNewsFlash(page: Int): Flow<List<ComicNewsFlashBean>> {
+        return flow {
+            emit(HttpManager.getInstance.getService().getComicNewsFlash(page))
+        }.flowOn(Dispatchers.IO)
     }
 }

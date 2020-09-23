@@ -1,75 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/search_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:cardCornerRadius="5dp"
-    app:cardElevation="3dp"
     tools:targetApi="lollipop">
 
 
     <ImageView
         android:id="@+id/iv_comic_cover"
         android:layout_width="100dp"
-        android:layout_height="130dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
         android:scaleType="centerCrop"
-        tools:background="@mipmap/ic_launcher"/>
+        app:layout_constraintDimensionRatio="0.7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="@color/colorPrimary" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_comic_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="120dp">
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:textColor="@color/item_text"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_comic_cover"
+        app:layout_constraintTop_toTopOf="@+id/iv_comic_cover"
+        tools:text="title" />
 
-        <TextView
-            android:id="@+id/tv_comic_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:lines="1"
-            android:textColor="?android:textColorPrimary"
-            android:textSize="16sp"
-            tools:text="title"/>
+    <TextView
+        android:id="@+id/tv_comic_authors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorSubFont"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_comic_title"
+        app:layout_constraintBottom_toTopOf="@+id/tv_comic_types"
+        tools:text="authors" />
 
-        <TextView
-            android:id="@+id/tv_comic_authors"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_comic_title"
-            android:layout_marginTop="5dp"
-            android:ellipsize="end"
-            android:lines="1"
-            android:textColor="?android:textColorSecondary"
-            tools:text="authors"/>
+    <TextView
+        android:id="@+id/tv_comic_types"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorSubFont"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_comic_title"
+        app:layout_constraintBottom_toTopOf="@+id/tv_last_name"
+        tools:text="types" />
 
-        <TextView
-            android:id="@+id/tv_comic_types"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_comic_authors"
-            android:layout_marginTop="5dp"
-            android:ellipsize="end"
-            android:lines="1"
-            android:textColor="?android:textColorSecondary"
-            tools:text="types"/>
+    <TextView
+        android:id="@+id/tv_last_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorSubFont"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_comic_title"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_comic_cover"
+        tools:text="last name" />
 
-        <TextView
-            android:id="@+id/tv_last_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_comic_types"
-            android:layout_marginTop="5dp"
-            android:ellipsize="end"
-            android:lines="1"
-            android:textColor="?android:textColorSecondary"
-            tools:text="last name"/>
-    </RelativeLayout>
-
-</android.support.v7.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

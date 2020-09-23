@@ -5,8 +5,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.luuu.seven.R
 import com.luuu.seven.bean.ComicUpdateBean
-import com.luuu.seven.util.ifNotNull
-import com.luuu.seven.util.loadImg
+import com.luuu.seven.util.loadWithHead
 
 /**
  * Created by lls on 2017/8/4.
@@ -15,11 +14,11 @@ import com.luuu.seven.util.loadImg
 class ComicUpdateAdapter(layoutResId: Int, data: List<ComicUpdateBean>) :
         BaseQuickAdapter<ComicUpdateBean, BaseViewHolder>(layoutResId, data) {
 
-    override fun convert(helper: BaseViewHolder?, item: ComicUpdateBean?) {
-        ifNotNull(helper, item, {helper, item ->
-            helper.setText(R.id.tv_comic_title, item.title)
-            helper.setText(R.id.tv_comic_chapter, item.lastUpdateChapterName)
-            helper.getView<ImageView>(R.id.iv_photo_summary).loadImg(item.cover)
-        })
+    override fun convert(helper: BaseViewHolder, item: ComicUpdateBean?) {
+        helper.apply {
+            setText(R.id.tv_comic_title, item?.title)
+            setText(R.id.tv_comic_chapter, item?.lastUpdateChapterName)
+            getView<ImageView>(R.id.iv_photo_summary).loadWithHead(item?.cover ?: "")
+        }
     }
 }

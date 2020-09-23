@@ -1,9 +1,9 @@
 package com.luuu.seven.widgets
 
 import android.content.Context
-import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.MotionEvent
+import androidx.viewpager.widget.ViewPager
 
 
 class ComicPageViewPager : ViewPager {
@@ -20,12 +20,7 @@ class ComicPageViewPager : ViewPager {
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
         if (!isLocked) {
-            return try {
-                super.onInterceptTouchEvent(ev)
-            } catch (e: IllegalArgumentException) {
-                false
-            }
-
+            return super.onInterceptTouchEvent(ev)
         }
         return false
     }

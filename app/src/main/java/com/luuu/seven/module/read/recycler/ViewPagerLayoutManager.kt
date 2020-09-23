@@ -1,10 +1,10 @@
 package com.luuu.seven.module.read.recycler
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.PagerSnapHelper
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 
 
 class ViewPagerLayoutManager : LinearLayoutManager {

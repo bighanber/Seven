@@ -1,11 +1,11 @@
 package com.luuu.seven.module.shelf
 
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicFragmentAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.util.BarUtils
+import com.luuu.seven.util.color
 import kotlinx.android.synthetic.main.fra_shelf_layout.*
 
 
@@ -18,28 +18,11 @@ import kotlinx.android.synthetic.main.fra_shelf_layout.*
  */
 class ComicShelfFragment : BaseFragment() {
 
+
     private val mTabs = arrayOf("历史", "收藏")
 
-    override fun onFirstUserVisible() {
-    }
-
-    override fun onUserInvisible() {
-    }
-
-    override fun onUserVisible() {
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-            BarUtils.setColorForToolbarInFragment(activity!!,
-                    ContextCompat.getColor(mContext!!, R.color.colorAccent), shelf_tabs)
-        }
-    }
-
     override fun initViews() {
-        BarUtils.setColorForToolbarInFragment(activity!!,
-                ContextCompat.getColor(mContext!!, R.color.colorAccent), shelf_tabs)
+        BarUtils.addStatusBarView(status_bg, requireContext(), color(R.color.colorPrimary))
         val fragments = ArrayList<Fragment>()
         val title = ArrayList<String>()
         fragments.add(ComicHistoryFragment())
@@ -51,9 +34,6 @@ class ComicShelfFragment : BaseFragment() {
     }
 
     override fun getContentViewLayoutID(): Int = R.layout.fra_shelf_layout
-
-    override fun onFirstUserInvisible() {
-    }
 
     private fun initViewPager(names: List<String>, fragments: List<Fragment>) {
         val adapter = ComicFragmentAdapter(childFragmentManager, fragments, names)
