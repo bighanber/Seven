@@ -9,6 +9,7 @@ import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicHistoryAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ReadHistoryBean
+import com.luuu.seven.util.nav
 import kotlinx.android.synthetic.main.fra_shelf_list_layout.*
 
 /**
@@ -56,7 +57,7 @@ class ComicHistoryFragment : BaseFragment() {
         mAdapter?.setOnItemClickListener { _, _, position ->
 
 //            startActivity<ComicIntroActivity>(ComicIntroActivity.COMIC_ID to historyBeanList[position].comicId)
-            findNavController().navigate(
+            nav().navigate(
                 R.id.action_home_fragment_to_intro_fragment,
                 Bundle().apply { putInt("comicId", historyBeanList[position].comicId) })
         }

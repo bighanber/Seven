@@ -4,10 +4,7 @@ import androidx.navigation.fragment.findNavController
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicFragmentAdapter
 import com.luuu.seven.base.BaseFragment
-import com.luuu.seven.util.BarUtils
-import com.luuu.seven.util.click
-import com.luuu.seven.util.color
-import com.luuu.seven.util.pageChangeListener
+import com.luuu.seven.util.*
 import kotlinx.android.synthetic.main.fra_home_layout.*
 
 class ComicHomeFragment : BaseFragment() {
@@ -30,12 +27,12 @@ class ComicHomeFragment : BaseFragment() {
         BarUtils.addStatusBarView(status_bg, requireContext(), color(R.color.transparent))
 
         tv_search.click {
-            findNavController().navigate(R.id.action_home_pager_fragment_to_search_fragment)
+            nav().navigate(R.id.action_home_pager_fragment_to_search_fragment)
         }
 
         iv_history.click {
 //            startActivity<ComicSortActivity>()
-            findNavController().navigate(R.id.action_home_fragment_to_sort_fragment)
+            nav().navigate(R.id.action_home_fragment_to_sort_fragment)
         }
 
         val mAdapter = ComicFragmentAdapter(childFragmentManager, homePages, HOME_TITLES)

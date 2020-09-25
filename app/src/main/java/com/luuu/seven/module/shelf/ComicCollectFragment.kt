@@ -9,6 +9,7 @@ import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicCollectAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.CollectBean
+import com.luuu.seven.util.nav
 import kotlinx.android.synthetic.main.fra_shelf_list_layout.*
 
 /**
@@ -56,7 +57,7 @@ class ComicCollectFragment : BaseFragment() {
         recycler_shelf.adapter = mAdapter
         mAdapter?.setOnItemClickListener { _, _, position ->
 //            startActivity<ComicIntroActivity>(ComicIntroActivity.COMIC_ID to collectBeanList[position].comicId)
-            findNavController().navigate(
+            nav().navigate(
                 R.id.action_home_fragment_to_intro_fragment,
                 Bundle().apply { putInt("comicId", collectBeanList[position].comicId) })
         }

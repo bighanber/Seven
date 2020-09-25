@@ -15,7 +15,9 @@ import com.luuu.seven.R
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ChapterDataBean
 import com.luuu.seven.bean.ComicIntroBean
+import com.luuu.seven.bean.ReadHistoryBean
 import com.luuu.seven.util.BarUtils
+import com.luuu.seven.util.nav
 import com.luuu.seven.widgets.BottomSheetBehavior
 import com.luuu.seven.widgets.BottomSheetBehavior.Companion.STATE_COLLAPSED
 import com.luuu.seven.widgets.BottomSheetBehavior.Companion.STATE_EXPANDED
@@ -23,7 +25,7 @@ import kotlinx.android.synthetic.main.fra_chapter_layout.*
 
 class ComicChapterFragment : BaseFragment() {
 
-    private val viewModel: IntroViewModel by viewModels()
+    private val viewModel: IntroViewModel by viewModels({requireParentFragment()})
     private var mAdapter: BaseQuickAdapter<ChapterDataBean, BaseViewHolder>? = null
     private lateinit var mComicIntroBean: ComicIntroBean
     private var isBack = false
@@ -31,6 +33,8 @@ class ComicChapterFragment : BaseFragment() {
     private var mHistoryChapterPosition = 0
     private var mLayoutManager: GridLayoutManager = GridLayoutManager(mContext, 4)
     private var comicId = 0
+
+    private var readHistoryData: ReadHistoryBean? = null
 
     override fun initViews() {
 
@@ -40,6 +44,10 @@ class ComicChapterFragment : BaseFragment() {
                 updateComicData(it)
             }
         })
+
+        viewModel.readHistory.observe(viewLifecycleOwner) {
+            readHistoryData = it.getOrNull(0)
+        }
 
     }
 
@@ -93,15 +101,15 @@ class ComicChapterFragment : BaseFragment() {
 
             override fun convert(holder: BaseViewHolder, item: ChapterDataBean?) {
                 holder.setText(R.id.tv_num, item?.chapterTitle)
-                if (mComicIntroBean.mReadHistoryBean != null && item?.chapterId == mComicIntroBean.mReadHistoryBean!!.chapterId) {
+                if (readHistoryData != null && item?.chapterId == readHistoryData!!.chapterId) {
                     holder.itemView.setBackgroundResource(R.drawable.chapter_read_backgroud)
                     (holder.itemView as AppCompatTextView).setTextColor(0xFFFFFFFF.toInt())
                     mHistoryChapterPosition = holder.absoluteAdapterPosition
                     mHistoryBrowsePosition =
-                        if (mComicIntroBean.mReadHistoryBean!!.browsePosition < 1)
+                        if (readHistoryData!!.browsePosition < 1)
                             1
                         else
-                            mComicIntroBean.mReadHistoryBean!!.browsePosition
+                            readHistoryData!!.browsePosition
                 } else {
                     holder.itemView.setBackgroundResource(R.drawable.chapter_backgroud)
                     (holder.itemView as AppCompatTextView).setTextColor(
@@ -133,6 +141,7 @@ class ComicChapterFragment : BaseFragment() {
                     if (position + 1 == mHistoryChapterPosition) mHistoryBrowsePosition else 0
                 )
             }
+            nav().navigate(R.id.action_intro_fragment_to_read_fragment, mBundle)
 //            startNewActivityForResult(ComicReadRecyclerActivity::class.java, 10002, mBundle)
         }
     }

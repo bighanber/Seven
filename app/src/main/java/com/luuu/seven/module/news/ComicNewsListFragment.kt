@@ -10,6 +10,7 @@ import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicNewsListAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicNewsListBean
+import com.luuu.seven.util.nav
 import kotlinx.android.synthetic.main.fra_tab_layout.*
 
 /**
@@ -88,7 +89,7 @@ class ComicNewsListFragment : BaseFragment() {
                 val mBundle = Bundle()
                 mBundle.putString("url", mNewsListBeanList[position].pageUrl)
 //                startNewActivity(WebActivity::class.java, mBundle)
-                findNavController().navigate(R.id.action_home_fragment_to_web_fragment, mBundle)
+                nav().navigate(R.id.action_home_fragment_to_web_fragment, mBundle)
             }
         }
         recycler.layoutManager = mLayoutManager

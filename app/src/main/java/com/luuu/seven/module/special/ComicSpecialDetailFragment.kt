@@ -8,6 +8,7 @@ import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicSpecialDetailAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicSpecialDetBean
+import com.luuu.seven.util.nav
 import kotlinx.android.synthetic.main.fra_comic_special_detail.*
 
 /**
@@ -44,7 +45,7 @@ class ComicSpecialDetailFragment : BaseFragment(){
         mAdapter?.setOnItemClickListener { _, _, position ->
             val mBundle = Bundle()
             mBundle.putInt("comicId", specialDetBean.comics[position].id)
-            findNavController().navigate(
+            nav().navigate(
                 R.id.action_special_detail_fragment_to_intro_fragment,mBundle)
 //            startNewActivity(ComicIntroActivity::class.java, mBundle)
         }

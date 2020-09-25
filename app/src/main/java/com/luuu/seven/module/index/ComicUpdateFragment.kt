@@ -11,6 +11,7 @@ import com.luuu.seven.adapter.ComicUpdateAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicUpdateBean
 import com.luuu.seven.util.dp2px
+import com.luuu.seven.util.nav
 import com.luuu.seven.util.paddingTop
 import com.luuu.seven.widgets.SpaceItemDecoration
 import kotlinx.android.synthetic.main.fra_tab_layout.*
@@ -91,7 +92,7 @@ class ComicUpdateFragment : BaseFragment() {
                 val mBundle = Bundle()
                 mBundle.putInt("comicId", mUpdateBeanList[position].id)
 //                startNewActivity(ComicIntroActivity::class.java, mBundle)
-                findNavController().navigate(R.id.action_home_fragment_to_intro_fragment, mBundle)
+                nav().navigate(R.id.action_home_fragment_to_intro_fragment, mBundle)
             }
         }
         recycler.layoutManager = mLayoutManager

@@ -45,6 +45,9 @@
         android:name="com.luuu.seven.module.intro.ComicIntroFragment"
         tools:layout="@layout/fra_comic_intro">
 
+        <action
+            android:id="@+id/action_intro_fragment_to_read_fragment"
+            app:destination="@+id/read_fragment"/>
     </fragment>
 
     <fragment
@@ -85,5 +88,11 @@
         <action
             android:id="@+id/action_special_fragment_to_web_fragment"
             app:destination="@id/web_fragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/read_fragment"
+        android:name="com.luuu.seven.module.read.ComicReadFragment"
+        tools:layout="@layout/fra_comic_read">
     </fragment>
 </navigation>

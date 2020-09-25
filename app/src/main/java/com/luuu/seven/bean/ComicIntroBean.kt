@@ -27,8 +27,7 @@ data class ComicIntroBean (
     var types: List<TypesBean>,
     var authors: List<AuthorsBean>,
     var status: List<StatusBean>,
-    var chapters: List<ChaptersBean>,
-    var mReadHistoryBean: ReadHistoryBean? = null
+    var chapters: List<ChaptersBean>
 )
 
 data class CommentBean (

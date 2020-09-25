@@ -10,6 +10,7 @@ import com.luuu.seven.R
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicNewsPicBean
 import com.luuu.seven.util.SevenImageLoader
+import com.luuu.seven.util.nav
 import kotlinx.android.synthetic.main.fra_news_layout.*
 
 /**
@@ -64,7 +65,7 @@ class ComicNewsFragment : BaseFragment() {
         data.data.mapTo(urls) { it.picUrl }
         news_banner.setOnBannerListener { position ->
 //            startActivity<WebActivity>("url" to data.data[position].objectUrl)
-            findNavController().navigate(R.id.action_home_fragment_to_web_fragment, Bundle().apply { putString("url", data.data[position].objectUrl) })
+            nav().navigate(R.id.action_home_fragment_to_web_fragment, Bundle().apply { putString("url", data.data[position].objectUrl) })
         }
         news_banner.setImages(urls).setImageLoader(SevenImageLoader()).start()
     }

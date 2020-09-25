@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -47,7 +48,8 @@ class ComicIntroFragment : BaseFragment() {
     private var mChapterList: ArrayList<ChapterDataBean>? = null
     private var isMoreThanEight = false
 
-    private var readList = ArrayList<ReadHistoryBean>()
+    private var readHistoryData: ReadHistoryBean? = null
+    private val bottomSheetBehavior by lazy { BottomSheetBehavior.from(requireView().findViewById(R.id.chapter_sheet)) }
 
     companion object {
         const val COMIC_ID = "comicId"
@@ -55,9 +57,6 @@ class ComicIntroFragment : BaseFragment() {
 
     override fun initViews() {
 
-        val bottomSheetBehavior = BottomSheetBehavior.from(requireView().findViewById(R.id.chapter_sheet))
-
-//        setToolbarTitle(" ")
         BarUtils.setPaddingSmart(requireContext(), toolbar)
 
         bottomSheetBehavior.addBottomSheetCallback(object :
@@ -102,7 +101,7 @@ class ComicIntroFragment : BaseFragment() {
         }
 
         viewModel.readHistory.observe(this) {
-            readList.addAll(it)
+            readHistoryData = it.getOrNull(0)
             viewModel.getComicIntro(comicId)
         }
 
@@ -116,7 +115,7 @@ class ComicIntroFragment : BaseFragment() {
 
     private fun updateComicData(data: ComicIntroBean) {
         mChapterList = data.chapters[0].data
-//        filterChapter(data.chapters[0].data)
+        filterChapter(data.chapters[0].data)
         mComicIntroBean = data
 
         mAdapter?.notifyDataSetChanged() ?: initAdapter()
@@ -153,15 +152,15 @@ class ComicIntroFragment : BaseFragment() {
                     holder.setText(R.id.tv_num, item?.chapterTitle)
                 }
 
-                if (mComicIntroBean.mReadHistoryBean != null && item?.chapterId == mComicIntroBean.mReadHistoryBean?.chapterId) {
+                if (readHistoryData != null && item?.chapterId == readHistoryData?.chapterId) {
                     holder.itemView.setBackgroundResource(R.drawable.chapter_read_backgroud)
                     (holder.itemView as AppCompatTextView).setTextColor(0xFFFFFFFF.toInt())
                     mHistoryChapterPosition = holder.absoluteAdapterPosition
                     mHistoryBrowsePosition =
-                        if (mComicIntroBean.mReadHistoryBean!!.browsePosition < 1)
+                        if (readHistoryData!!.browsePosition < 1)
                             1
                         else
-                            mComicIntroBean.mReadHistoryBean!!.browsePosition
+                            readHistoryData!!.browsePosition
                 } else {
                     holder.itemView.setBackgroundResource(R.drawable.chapter_backgroud)
                     (holder.itemView as AppCompatTextView).setTextColor(
@@ -176,20 +175,25 @@ class ComicIntroFragment : BaseFragment() {
         chapter_grid.adapter = mAdapter
 
         mAdapter?.setOnItemClickListener { _, _, position ->
-            val mBundle = Bundle()
-            mBundle.run {
-                putInt("comicId", comicId)
-                putParcelableArrayList("comicChapter", mChapterList)
-                putInt("comicPosition", position)
-                putString("comicTagName", mChapterList?.get(position)?.chapterTitle)
-                putString("comicCover", mComicIntroBean.cover)
-                putString("comicTitle", mComicIntroBean.title)
-                putInt(
-                    "historyPosition",
-                    if (position + 1 == mHistoryChapterPosition) mHistoryBrowsePosition else 0
-                )
-            }
+            if (isMoreThanEight && position == (mFilterChapterList?.size ?: 1) - 1) {
+                bottomSheetBehavior.state = STATE_EXPANDED
+            } else {
+                val mBundle = Bundle()
+                mBundle.run {
+                    putInt("comicId", comicId)
+                    putParcelableArrayList("comicChapter", mChapterList)
+                    putInt("comicPosition", position)
+                    putString("comicTagName", mChapterList?.get(position)?.chapterTitle)
+                    putString("comicCover", mComicIntroBean.cover)
+                    putString("comicTitle", mComicIntroBean.title)
+                    putInt(
+                        "historyPosition",
+                        if (position + 1 == mHistoryChapterPosition) mHistoryBrowsePosition else 0
+                    )
+                }
+                nav().navigate(R.id.action_intro_fragment_to_read_fragment, mBundle)
 //            startNewActivityForResult(ComicReadRecyclerActivity::class.java, 10002, mBundle)
+            }
         }
     }
 

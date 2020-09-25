@@ -57,10 +57,10 @@ class ComicSearchFragment : BaseFragment() {
             if (it) toast(string(R.string.search_empty))
         }
 
-        tv_cancel.click { findNavController().navigateUp() }
+        tv_cancel.click { nav().navigateUp() }
 
         back.click {
-            findNavController().navigateUp()
+            nav().navigateUp()
         }
 
         et_search_view.setOnEditorActionListener { _, actionId, _ ->
@@ -105,7 +105,7 @@ class ComicSearchFragment : BaseFragment() {
         recycler_search.adapter = mAdapter
         mAdapter?.setOnItemClickListener { _, _, position ->
 //            startActivity<ComicIntroActivity>(ComicIntroActivity.COMIC_ID to mSearchDataBeanList!![position].id)
-            findNavController().navigate(
+            nav().navigate(
                 R.id.action_search_fragment_to_intro_fragment,
                 Bundle().apply { putInt("comicId", mSearchDataBeanList!![position].id) })
         }

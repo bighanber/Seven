@@ -78,15 +78,15 @@ class ComicIndexFragment : BaseFragment() {
         }
 
         mViewModel.toIntro.observeEvent(viewLifecycleOwner) {
-            findNavController().navigate(R.id.action_home_fragment_to_intro_fragment, it)
+            nav().navigate(R.id.action_home_fragment_to_intro_fragment, it)
         }
 
         mViewModel.toSpecialDetail.observeEvent(viewLifecycleOwner) {
-            findNavController().navigate(R.id.action_home_fragment_to_special_detail_fragment, it)
+            nav().navigate(R.id.action_home_fragment_to_special_detail_fragment, it)
         }
 
         mViewModel.toWeb.observeEvent(viewLifecycleOwner) {
-            findNavController().navigate(R.id.action_home_fragment_to_web_fragment, it)
+            nav().navigate(R.id.action_home_fragment_to_web_fragment, it)
         }
 
 //        tv_search_bg.setOnClickListener { startNewActivity(ComicSearchActivity::class.java) }

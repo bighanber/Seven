@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".module.read.ComicReadFragment">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/comic_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"/>
+
+    <androidx.constraintlayout.helper.widget.Layer
+        android:id="@+id/ll_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="#66000000"
+        android:gravity="center_vertical"
+        tools:visibility="visible"
+        app:constraint_referenced_ids="iv_back,seek_bar"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/back_icon"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/seek_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:stepSize="1"
+        android:valueFrom="1"
+        tools:valueTo="10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_back"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_back"
+        app:layout_constraintTop_toTopOf="@+id/iv_back"/>
+
+    <androidx.constraintlayout.helper.widget.Layer
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="#66000000"
+        app:constraint_referenced_ids="tv_chapter_title,tv_chapter_page,clock,iv_battery_charge,iv_battery,tv_battery"/>
+
+    <TextView
+        android:id="@+id/tv_chapter_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        app:layout_constraintEnd_toStartOf="@+id/tv_chapter_page"
+        app:layout_constraintBottom_toTopOf="@+id/iv_back"
+        android:textSize="12sp"
+        tools:text="title"/>
+
+    <TextView
+        android:id="@+id/tv_chapter_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        app:layout_constraintEnd_toStartOf="@+id/clock"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_chapter_title"
+        android:textSize="12sp"
+        tools:text="chapter"/>
+
+    <com.luuu.seven.widgets.ClockText
+        android:id="@+id/clock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toTopOf="@+id/tv_chapter_title"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_chapter_title"
+        app:layout_constraintEnd_toStartOf="@+id/iv_battery_charge"
+        android:textSize="12sp"/>
+
+    <ImageView
+        android:id="@+id/iv_battery_charge"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@+id/iv_battery"
+        app:layout_constraintTop_toTopOf="@+id/tv_chapter_title"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_chapter_title"
+        android:background="@drawable/ic_battery_charge"/>
+
+    <ImageView
+        android:id="@+id/iv_battery"
+        android:layout_width="23dp"
+        android:layout_height="20dp"
+        android:background="@drawable/ic_battery_10"
+        app:layout_constraintEnd_toStartOf="@+id/tv_battery"
+        app:layout_constraintTop_toTopOf="@+id/tv_chapter_title"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_chapter_title"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/tv_battery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="10dp"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        tools:text="65"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_chapter_title"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_chapter_title"
+        android:textSize="12sp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

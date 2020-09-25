@@ -9,6 +9,7 @@ import android.webkit.WebViewClient
 import androidx.navigation.fragment.findNavController
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.http.Api
+import com.luuu.seven.util.nav
 import kotlinx.android.synthetic.main.fra_web.*
 
 class WebFragment : BaseFragment() {
@@ -36,7 +37,7 @@ class WebFragment : BaseFragment() {
                             putInt("comicId", id?.toIntOrNull() ?: 0)
                         }
 //                        startNewActivity(ComicIntroActivity::class.java, mBundle)
-                        findNavController().navigate(R.id.action_web_fragment_to_intro_fragment, bundle)
+                        nav().navigate(R.id.action_web_fragment_to_intro_fragment, bundle)
                     }
                 } else {
                     view!!.loadUrl(url)
@@ -48,7 +49,7 @@ class WebFragment : BaseFragment() {
 
         iv_web_back.setOnClickListener {
 
-            if (mWeb!!.canGoBack()) mWeb?.goBack() else findNavController().navigateUp()
+            if (mWeb!!.canGoBack()) mWeb?.goBack() else nav().navigateUp()
         }
     }
 

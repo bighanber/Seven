@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
@@ -17,6 +16,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import com.luuu.seven.navigation.NavHostFragment
 import com.luuu.seven.theme.Theme
 
 /**
@@ -143,3 +144,5 @@ fun AppCompatActivity.callTo(phoneNumber: String, requestCode: Int) {
         startActivity(intent)
     }
 }
+
+fun Fragment.nav(): NavController = NavHostFragment.findNavController(this)

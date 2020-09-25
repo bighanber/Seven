@@ -10,6 +10,7 @@ import com.luuu.seven.adapter.ComicSortAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicSortListBean
 import com.luuu.seven.util.click
+import com.luuu.seven.util.nav
 import com.luuu.seven.widgets.BottomSheetBehavior
 import com.luuu.seven.widgets.SpaceItemDecoration
 import kotlinx.android.synthetic.main.fra_sort_layout.*
@@ -84,7 +85,7 @@ class ComicSortFragment : BaseFragment() {
 
             setOnItemClickListener { _, _, position ->
 //                startActivity<ComicIntroActivity>(ComicIntroActivity.COMIC_ID to mSortBeanList[position].id)
-                findNavController().navigate(
+                nav().navigate(
                     R.id.action_sort_fragment_to_intro_fragment,
                     Bundle().apply { putInt("comicId", mSortBeanList[position].id) })
             }

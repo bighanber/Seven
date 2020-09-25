@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.luuu.seven.R
 import com.luuu.seven.util.BarUtils
+import com.luuu.seven.util.nav
 import io.reactivex.disposables.CompositeDisposable
 
 /**
@@ -69,7 +70,7 @@ abstract class BaseFragment : Fragment() {
                 setSupportActionBar(it)
                 supportActionBar?.setDisplayHomeAsUpEnabled(true)
             }
-            it.setNavigationOnClickListener { findNavController().navigateUp() }
+            it.setNavigationOnClickListener { nav().navigateUp() }
         }
         initViews()
     }

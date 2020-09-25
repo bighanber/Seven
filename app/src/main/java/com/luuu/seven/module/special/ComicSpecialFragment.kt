@@ -8,6 +8,7 @@ import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicSpecialAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicSpecialBean
+import com.luuu.seven.util.nav
 import kotlinx.android.synthetic.main.common_toolbar.*
 import kotlinx.android.synthetic.main.fra_comic_special.*
 
@@ -88,13 +89,13 @@ class ComicSpecialFragment : BaseFragment() {
                     val mBundle = Bundle()
                     mBundle.putString("url", mSpecialBeanList!![position].pageUrl)
 //                    startNewActivity(WebActivity::class.java, mBundle)
-                    findNavController().navigate(R.id.action_special_fragment_to_web_fragment, mBundle)
+                    nav().navigate(R.id.action_special_fragment_to_web_fragment, mBundle)
                 } else {
                     val mBundle = Bundle()
                     mBundle.putInt("tagId", mSpecialBeanList!![position].id)
                     mBundle.putString("title", mSpecialBeanList!![position].title)
 //                    startNewActivity(ComicSpecialDetailActivity::class.java, mBundle)
-                    findNavController().navigate(R.id.action_special_fragment_to_special_detail_fragment, mBundle)
+                    nav().navigate(R.id.action_special_fragment_to_special_detail_fragment, mBundle)
                 }
             }
         }

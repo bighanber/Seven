@@ -9,6 +9,7 @@ import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicRankAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.HotComicBean
+import com.luuu.seven.util.nav
 import com.luuu.seven.widgets.RankItemDecoration
 import kotlinx.android.synthetic.main.fra_tab_layout.*
 
@@ -102,7 +103,7 @@ class ComicRankInnerFragment : BaseFragment() {
                 val mBundle = Bundle()
                 mBundle.putInt("comicId", mRankBeanList[position].comicId)
 //                startNewActivity(ComicIntroActivity::class.java, mBundle)
-                findNavController().navigate(R.id.action_home_fragment_to_intro_fragment, mBundle)
+                nav().navigate(R.id.action_home_fragment_to_intro_fragment, mBundle)
             }
         }
 
