@@ -31,16 +31,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/tv_cancel"/>
 
-    <com.luuu.seven.widgets.ClearEditText
+    <com.luuu.seven.widgets.SearchEditText
         android:id="@+id/et_search_view"
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:background="@drawable/search_bg"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:gravity="center_vertical"
         android:hint="@string/comic_search"
-        android:imeOptions="actionSearch"
         android:maxLines="1"
         android:paddingStart="10dp"
         android:singleLine="true"

@@ -1,5 +1,6 @@
 package com.luuu.seven
 
+import android.os.Bundle
 import com.luuu.seven.base.BaseActivity
 
 class MainActivity : BaseActivity() {
@@ -11,6 +12,11 @@ class MainActivity : BaseActivity() {
     }
 
 //    private lateinit var mAccount: Account
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun initViews() {
 //        updateForTheme(ThemedActivityDelegateImpl().currentTheme)

@@ -49,10 +49,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:fontFamily="@font/sarala"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                android:fontFamily="@font/poppins_semibold"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/black"
-                android:textSize="22sp"
                 app:layout_constraintStart_toEndOf="@+id/comic_img"
                 app:layout_constraintTop_toTopOf="@id/comic_img"
                 tools:text="Title" />

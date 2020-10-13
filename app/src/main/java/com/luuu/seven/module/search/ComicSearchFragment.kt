@@ -13,6 +13,7 @@ import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.HotSearchBean
 import com.luuu.seven.bean.SearchDataBean
 import com.luuu.seven.util.*
+import com.luuu.seven.widgets.SearchEditText
 import kotlinx.android.synthetic.main.fra_comic_search.*
 
 /**
@@ -63,17 +64,19 @@ class ComicSearchFragment : BaseFragment() {
             nav().navigateUp()
         }
 
-        et_search_view.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val keyWords = et_search_view.values()
-                if (keyWords.isEmpty()) {
+        et_search_view.setQueryTextChangeListener(object : SearchEditText.QueryTextListener {
+            override fun onQueryTextSubmit(query: String?) {
+                if (query.isNullOrBlank()) {
                     toast(string(R.string.search_input_keyword_first))
                 } else {
-                    mViewModel.getSearchData(keyWords)
+                    mViewModel.getSearchData(query)
                 }
             }
-            false
-        }
+
+            override fun onQueryTextChange(newText: String?) {
+            }
+
+        })
 
     }
 
