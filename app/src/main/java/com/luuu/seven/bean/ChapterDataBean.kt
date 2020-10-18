@@ -44,4 +44,6 @@ data class ChapterDataBean (
             }
         }
     }
+
+    fun isReadHistory(id: Int?) = chapterId == id ?: -1
 }

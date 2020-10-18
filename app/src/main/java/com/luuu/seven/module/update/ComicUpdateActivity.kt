@@ -1,11 +1,9 @@
 package com.luuu.seven.module.update
 
-import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicFragmentAdapter
 import com.luuu.seven.base.BaseActivity
-import com.luuu.seven.module.index.ComicUpdateFragment
 import kotlinx.android.synthetic.main.activity_comic_tab.*
 
 

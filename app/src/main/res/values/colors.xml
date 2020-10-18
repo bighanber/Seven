@@ -17,4 +17,8 @@
     <color name="itemBg">#ccffffff</color>
     <color name="colorBg">#f5f5f5</color>
     <color name="transparent">#00000000</color>
+
+    <color name="champion">#ffffb50b</color>
+    <color name="runnerUp">#ff94988f</color>
+    <color name="thirdPlace">#ffC17E4D</color>
 </resources>

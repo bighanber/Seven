@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.*
 import com.luuu.seven.R
@@ -38,12 +39,12 @@ class ComicSortFilterFragment : BaseFragment() {
     }
 
     override fun initViews() {
-        viewModel.sortFilterData.observe(viewLifecycleOwner, { data ->
+        viewModel.sortFilterData.observe(viewLifecycleOwner) { data ->
             data?.let {
                 assemblyData(it)
                 initAdapter()
             }
-        })
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

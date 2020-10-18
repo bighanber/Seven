@@ -1,9 +1,10 @@
 package com.luuu.seven.module.index
 
-import androidx.navigation.fragment.findNavController
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicFragmentAdapter
 import com.luuu.seven.base.BaseFragment
+import com.luuu.seven.module.rank.ComicRankFragment
+import com.luuu.seven.module.update.ComicUpdateFragment
 import com.luuu.seven.util.*
 import kotlinx.android.synthetic.main.fra_home_layout.*
 

@@ -2,8 +2,6 @@ package com.luuu.seven.module.index
 
 import android.os.Bundle
 import androidx.lifecycle.*
-import com.luuu.seven.bean.ComicUpdateBean
-import com.luuu.seven.bean.HotComicBean
 import com.luuu.seven.bean.IndexBean
 import com.luuu.seven.repository.HomeRepository
 import com.luuu.seven.util.Event
@@ -23,14 +21,6 @@ class HomeViewModel : ViewModel() {
     private val _homeBanner = MediatorLiveData<IndexBean>()
     val homeBanner: LiveData<IndexBean>
         get() = _homeBanner
-
-    private val _updateData = MutableLiveData<List<ComicUpdateBean>>()
-    val updateData: LiveData<List<ComicUpdateBean>>
-        get() = _updateData
-
-    private val _rankData = MutableLiveData<List<HotComicBean>>()
-    val rankData: LiveData<List<HotComicBean>>
-        get() = _rankData
 
     private val _toSpecialDetail = MutableLiveData<Event<Bundle>>()
     val toSpecialDetail: LiveData<Event<Bundle>> = _toSpecialDetail
@@ -59,46 +49,21 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun getComicUpdate(num: Int, page: Int) {
-        viewModelScope.launch {
-            mRepository.getComicUpdate(num, page).collectLatest {
-                _updateData.postValue(it)
-            }
-        }
-    }
-
-    fun getRankComic(type: Int, page: Int) {
-        viewModelScope.launch {
-            mRepository.getRankComic(type, page).collectLatest {
-                _rankData.postValue(it)
-            }
-        }
-    }
-
     fun adapterClick(pos: Int, item: IndexBean) {
         if (item.sort == 5) {
             if (item.data[pos].url.isEmpty()) {
                 val mBundle = Bundle()
                 mBundle.putInt("tagId", item.data[pos].objId)
                 mBundle.putString("title", item.data[pos].subTitle)
-//                val intent = Intent(mContext, ComicSpecialDetailActivity::class.java)
-//                intent.putExtras(mBundle)
-//                mContext.startActivity(intent)
                 _toSpecialDetail.value = Event(mBundle)
             } else {
                 val mBundle = Bundle()
                 mBundle.putString("url", item.data[pos].url)
-//                val intent = Intent(mContext, WebActivity::class.java)
-//                intent.putExtras(mBundle)
-//                mContext.startActivity(intent)
                 _toWeb.value = Event(mBundle)
             }
         } else {
             val mBundle = Bundle()
             mBundle.putInt("comicId", item.data[pos].objId)
-//            val intent = Intent(mContext, ComicIntroActivity::class.java)
-//            intent.putExtras(mBundle)
-//            mContext.startActivity(intent)
             _toIntro.value = Event(mBundle)
         }
     }

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.viewpager2.widget.ViewPager2
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicReadAdapter
@@ -21,11 +22,6 @@ import com.luuu.seven.util.gone
 import com.luuu.seven.util.nav
 import com.luuu.seven.util.show
 import kotlinx.android.synthetic.main.fra_comic_read.*
-import kotlinx.android.synthetic.main.fra_comic_read.iv_battery
-import kotlinx.android.synthetic.main.fra_comic_read.iv_battery_charge
-import kotlinx.android.synthetic.main.fra_comic_read.tv_battery
-import kotlinx.android.synthetic.main.fra_comic_read.tv_chapter_page
-import kotlinx.android.synthetic.main.fra_comic_read.tv_chapter_title
 
 class ComicReadFragment : BaseFragment() {
 

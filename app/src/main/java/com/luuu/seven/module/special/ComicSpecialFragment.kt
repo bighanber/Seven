@@ -2,14 +2,13 @@ package com.luuu.seven.module.special
 
 import android.os.Bundle
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicSpecialAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicSpecialBean
 import com.luuu.seven.util.nav
-import kotlinx.android.synthetic.main.common_toolbar.*
 import kotlinx.android.synthetic.main.fra_comic_special.*
 
 /***

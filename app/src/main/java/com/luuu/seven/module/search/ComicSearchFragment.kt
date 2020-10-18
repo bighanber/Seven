@@ -1,9 +1,8 @@
 package com.luuu.seven.module.search
 
 import android.os.Bundle
-import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.*
 import com.luuu.seven.R

@@ -3,7 +3,7 @@ package com.luuu.seven.module.shelf
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicHistoryAdapter

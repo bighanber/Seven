@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.observe
 import com.google.android.material.appbar.AppBarLayout
 import com.luuu.seven.R
 import com.luuu.seven.base.BaseFragment

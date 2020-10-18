@@ -1,17 +1,19 @@
-package com.luuu.seven.module.index
+package com.luuu.seven.module.update
 
 import android.os.Bundle
 import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicUpdateAdapter
+import com.luuu.seven.adapter.DiffUpdateCallback
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ComicUpdateBean
 import com.luuu.seven.util.dp2px
 import com.luuu.seven.util.nav
+import com.luuu.seven.util.observeEvent
 import com.luuu.seven.util.paddingTop
 import com.luuu.seven.widgets.SpaceItemDecoration
 import kotlinx.android.synthetic.main.fra_tab_layout.*
@@ -26,10 +28,8 @@ import kotlinx.android.synthetic.main.fra_tab_layout.*
  */
 class ComicUpdateFragment : BaseFragment() {
 
-    private val mViewModel: HomeViewModel by viewModels()
+    private val mViewModel: UpdateViewModel by viewModels()
     private var mUpdateBeanList: ArrayList<ComicUpdateBean> = ArrayList()
-    private var mPageNum = 0
-    private var num = 100
     private var mAdapter: ComicUpdateAdapter? = null
     private val mLayoutManager by lazy { GridLayoutManager(mContext, 3) }
 
@@ -43,30 +43,38 @@ class ComicUpdateFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        mPageNum = 0
-        mViewModel.getComicUpdate(num, 0)
+        mViewModel.getComicUpdate()
     }
 
     override fun initViews() {
 
         recycler.updatePadding(left = dp2px(15), top = paddingTop(requireContext()), right = dp2px(15))
 
-        mViewModel.updateData.observe(viewLifecycleOwner) { data ->
+        mViewModel.updateList.observe(viewLifecycleOwner) { data ->
+
+            mUpdateBeanList.clear()
             mUpdateBeanList.addAll(data)
+            mAdapter?.setNewDiffData(DiffUpdateCallback(data)) ?: initAdapter()
+        }
 
+        mViewModel.loadMore.observe(viewLifecycleOwner) {
+            mUpdateBeanList.addAll(it)
             mAdapter?.let { adapter ->
-
                 adapter.loadMoreComplete()
-                if (refresh.isRefreshing) {
-                    refresh.isRefreshing = false
-                } else {
-                    if (data.isEmpty()) {
-                        adapter.loadMoreEnd()
-                    } else {
-                        adapter.notifyDataSetChanged()
-                    }
-                }
-            } ?: initAdapter()
+                adapter.setNewDiffData(DiffUpdateCallback(mUpdateBeanList))
+            }
+        }
+
+        mViewModel.swipeRefreshing.observeEvent(viewLifecycleOwner) {
+            if (refresh.isRefreshing) {
+                refresh.isRefreshing = it
+            }
+        }
+
+        mViewModel.loadMoreEnd.observeEvent(viewLifecycleOwner) {
+            if (it) {
+                mAdapter?.loadMoreEnd()
+            }
         }
 
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -75,9 +83,9 @@ class ComicUpdateFragment : BaseFragment() {
                 refresh.isEnabled = mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0
             }
         })
+
         refresh.setOnRefreshListener {
-            mPageNum = 0
-            mViewModel.getComicUpdate(num, mPageNum)
+            mViewModel.updateRefresh()
         }
     }
 
@@ -85,21 +93,17 @@ class ComicUpdateFragment : BaseFragment() {
         mAdapter = ComicUpdateAdapter(R.layout.item_comic_layout, mUpdateBeanList).apply {
             setEnableLoadMore(true)
             setOnLoadMoreListener({
-                mPageNum++
-                mViewModel.getComicUpdate(num, mPageNum)
+                mViewModel.updateLoadNextPage()
             }, recycler)
             setOnItemClickListener { _, _, position ->
                 val mBundle = Bundle()
                 mBundle.putInt("comicId", mUpdateBeanList[position].id)
-//                startNewActivity(ComicIntroActivity::class.java, mBundle)
                 nav().navigate(R.id.action_home_fragment_to_intro_fragment, mBundle)
             }
         }
         recycler.layoutManager = mLayoutManager
         recycler.adapter = mAdapter
         recycler.addItemDecoration(SpaceItemDecoration(mContext!!).setSpace(10))
-
-
     }
 
 }

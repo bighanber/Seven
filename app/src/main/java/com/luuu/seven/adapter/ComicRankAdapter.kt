@@ -3,6 +3,7 @@ package com.luuu.seven.adapter
 import android.widget.ImageView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.chad.library.adapter.base.diff.BaseQuickDiffCallback
 import com.luuu.seven.R
 import com.luuu.seven.bean.HotComicBean
 import com.luuu.seven.util.loadWithHead
@@ -26,4 +27,15 @@ class ComicRankAdapter(layoutResId: Int, data: List<HotComicBean>) :
                 getView<ImageView>(R.id.iv_rank_cover).loadWithHead(item?.cover ?: "")
             }
     }
+}
+
+class DiffRankCallback(newList: List<HotComicBean>) : BaseQuickDiffCallback<HotComicBean>(newList) {
+    override fun areItemsTheSame(oldItem: HotComicBean, newItem: HotComicBean): Boolean {
+        return oldItem.comicId == newItem.comicId
+    }
+
+    override fun areContentsTheSame(oldItem: HotComicBean, newItem: HotComicBean): Boolean {
+        return oldItem.num == newItem.num && oldItem.lastUpdatetime == newItem.lastUpdatetime
+    }
+
 }

@@ -3,7 +3,7 @@ package com.luuu.seven.module.sort
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import com.luuu.seven.R
 import com.luuu.seven.adapter.ComicSortAdapter

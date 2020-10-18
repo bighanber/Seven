@@ -9,6 +9,7 @@ import androidx.core.content.res.*
 import androidx.core.view.isEmpty
 import androidx.recyclerview.widget.RecyclerView
 import com.luuu.seven.R
+import com.luuu.seven.util.color
 import com.luuu.seven.util.dp2px
 
 class RankItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
@@ -21,12 +22,15 @@ class RankItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     private var marginTop: Int
     private var paddingStart = 0
     private var mContext: Context
+    private val colors = arrayListOf(R.color.champion, R.color.runnerUp, R.color.thirdPlace)
+    private var normalColor = 0
 
     init {
         val attrs = context.obtainStyledAttributes(R.style.RankStyle, R.styleable.RankHead)
+        normalColor = attrs.getColorOrThrow(R.styleable.RankHead_android_textColor)
         paint.apply {
             flags = Paint.ANTI_ALIAS_FLAG
-            color = attrs.getColorOrThrow(R.styleable.RankHead_android_textColor)
+            color = normalColor
             typeface = ResourcesCompat.getFont(context, attrs.getResourceIdOrThrow(R.styleable.RankHead_android_fontFamily))
         }
         headWidth = attrs.getDimensionPixelSizeOrThrow(R.styleable.RankHead_android_width)
@@ -58,8 +62,10 @@ class RankItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     private fun drawRankHeader(canvas: Canvas, child: View, pos: Int, isTopThree: Boolean) {
         if (isTopThree) {
             paint.textSize = topThreeTextSize.toFloat()
+            paint.color = mContext.color(colors[pos - 1])
         } else {
             paint.textSize = normalTextSize.toFloat()
+            paint.color = normalColor
         }
 
         paint.getTextBounds("$pos", 0, "$pos".length, textBounds)

@@ -1,6 +1,7 @@
 package com.luuu.seven.module.news
 
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.luuu.seven.R
@@ -32,19 +33,19 @@ class ComicNewsFlashFragment : BaseFragment() {
 
             }
 
-            swipeRefreshing.observe(viewLifecycleOwner, {
+            swipeRefreshing.observe(viewLifecycleOwner) {
                 refresh.isEnabled = false
-            })
+            }
 
-            loadMore.observe(viewLifecycleOwner, {
+            loadMore.observe(viewLifecycleOwner) {
                 mAdapter?.loadMoreComplete()
-            })
+            }
 
-            isEmpty.observe(viewLifecycleOwner, {
+            isEmpty.observe(viewLifecycleOwner) {
                 if (it) {
                     mAdapter?.loadMoreEnd()
                 }
-            })
+            }
         }
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

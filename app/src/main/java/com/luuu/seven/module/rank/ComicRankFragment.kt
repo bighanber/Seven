@@ -1,4 +1,4 @@
-package com.luuu.seven.module.index
+package com.luuu.seven.module.rank
 
 import androidx.core.view.updatePadding
 import com.luuu.seven.ComicConst
@@ -14,9 +14,15 @@ import kotlinx.android.synthetic.main.fra_inner_viewpager.*
 class ComicRankFragment : BaseFragment() {
 
     private val rankPages = arrayListOf(
-        ComicRankInnerFragment.newInstance(ComicConst.RANK_POPULARTY),
-        ComicRankInnerFragment.newInstance(ComicConst.RANK_ROAST),
-        ComicRankInnerFragment.newInstance(ComicConst.RANK_SUBSCRIBE)
+        ComicRankInnerFragment.newInstance(
+            ComicConst.RANK_POPULARTY
+        ),
+        ComicRankInnerFragment.newInstance(
+            ComicConst.RANK_ROAST
+        ),
+        ComicRankInnerFragment.newInstance(
+            ComicConst.RANK_SUBSCRIBE
+        )
     )
 
     companion object {
@@ -29,9 +35,11 @@ class ComicRankFragment : BaseFragment() {
 
     override fun initViews() {
 
-        sort_layout.updatePadding(top = paddingTop(mContext!!))
+        sort_layout.updatePadding(top = paddingTop(requireContext()))
 
-        val mAdapter = ComicFragmentAdapter(childFragmentManager, rankPages, RANK_TITLE)
+        val mAdapter = ComicFragmentAdapter(childFragmentManager, rankPages,
+            RANK_TITLE
+        )
 
         sort_tabs.setupWithViewPager(sort_viewpager.apply {
             adapter = mAdapter
