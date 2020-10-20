@@ -40,4 +40,6 @@
 
     <!--筛选-->
     <string name="filter_title">筛选</string>
+
+    <string name="percent_sign">%s%</string>
 </resources>

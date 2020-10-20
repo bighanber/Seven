@@ -2,6 +2,7 @@ package com.luuu.seven.util
 
 import android.content.ComponentName
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -17,9 +18,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.core.os.ParcelCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.RecyclerView
 import com.luuu.seven.ComicApplication
 import java.io.Serializable
@@ -162,5 +161,16 @@ fun Context.showActivity(packageName: String, activityDir: String) {
     intent.component = ComponentName(packageName, activityDir)
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     startActivity(intent)
+}
+
+fun Context?.getLifecycle(): Lifecycle? {
+    var context: Context? = this
+    while (true) {
+        when (context) {
+            is LifecycleOwner -> return context.lifecycle
+            !is ContextWrapper -> return null
+            else -> context = context.baseContext
+        }
+    }
 }
 

@@ -1,11 +1,6 @@
 package com.luuu.seven.module.read
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.Point
-import android.os.BatteryManager
 import android.view.KeyEvent
 import android.view.View
 import android.view.animation.Animation
@@ -18,9 +13,11 @@ import com.luuu.seven.adapter.ComicReadAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ChapterDataBean
 import com.luuu.seven.bean.ReadHistoryBean
+import com.luuu.seven.util.observer.BatteryObserver
 import com.luuu.seven.util.gone
 import com.luuu.seven.util.nav
 import com.luuu.seven.util.show
+import com.luuu.seven.util.string
 import kotlinx.android.synthetic.main.fra_comic_read.*
 
 class ComicReadFragment : BaseFragment() {
@@ -68,7 +65,7 @@ class ComicReadFragment : BaseFragment() {
             nav().navigateUp()
         }
 
-        seek_bar.addOnChangeListener { slider, value, fromUser ->
+        seek_bar.addOnChangeListener { _, value, _ ->
             intCurPage = value.toInt() - 1
             comic_list.currentItem = intCurPage
         }
@@ -87,23 +84,34 @@ class ComicReadFragment : BaseFragment() {
             }
 
         })
+
+        BatteryObserver(requireContext()) {
+            tv_battery.text = string(R.string.percent_sign, it.power.toString())
+            if (it.batteryCharging) {
+                iv_battery_charge.show()
+            } else {
+                iv_battery_charge.gone()
+            }
+            val source = when {
+                it.power <= 10 -> R.drawable.ic_battery_10
+                it.power <= 30 -> R.drawable.ic_battery_30
+                it.power <= 50 -> R.drawable.ic_battery_50
+                it.power < 100 -> R.drawable.ic_battery_80
+                else -> R.drawable.ic_battery_full
+            }
+            iv_battery.setBackgroundResource(source)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        view?.setOnKeyListener { v, keyCode, event ->
+        view?.setOnKeyListener { _, keyCode, _ ->
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 saveHistory()
                 return@setOnKeyListener true
             }
             false
         }
-        requireActivity().registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-    }
-
-    override fun onPause() {
-        super.onPause()
-        requireActivity().unregisterReceiver(batteryReceiver)
     }
 
     //    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -164,7 +172,7 @@ class ComicReadFragment : BaseFragment() {
             x * point.x < limitX -> {
                 intCurPage -= 1
                 if (intCurPage < 0) {
-                    dealTopAndBottom(true, false)
+                    dealTopAndBottom(isTop = true, isBottom = false)
                 } else {
                     comic_list.currentItem = intCurPage
                 }
@@ -242,30 +250,4 @@ class ComicReadFragment : BaseFragment() {
         ll_bottom_bar.visibility = View.VISIBLE
     }
 
-    private val batteryReceiver = object : BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            if (Intent.ACTION_BATTERY_CHANGED == p1?.action) {
-                val level = p1.getIntExtra("level", 0)
-                val scale = p1.getIntExtra("scale", 100)
-                val status = p1.getIntExtra("status", BatteryManager.BATTERY_STATUS_UNKNOWN)
-                val power = level * 100 / scale
-                val text = "$power%"
-                tv_battery.text = text
-                if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
-                    iv_battery_charge.show()
-                } else {
-                    iv_battery_charge.gone()
-                }
-                val source = when {
-                    power <= 10 -> R.drawable.ic_battery_10
-                    power <= 30 -> R.drawable.ic_battery_30
-                    power <= 50 -> R.drawable.ic_battery_50
-                    power < 100 -> R.drawable.ic_battery_80
-                    else -> R.drawable.ic_battery_full
-                }
-                iv_battery.setBackgroundResource(source)
-            }
-
-        }
-    }
 }

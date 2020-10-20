@@ -1,4 +1,4 @@
-package com.luuu.seven.util
+package com.luuu.seven.util.observer
 
 import android.net.*
 import androidx.lifecycle.*
