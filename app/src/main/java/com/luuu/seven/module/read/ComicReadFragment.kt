@@ -1,6 +1,7 @@
 package com.luuu.seven.module.read
 
 import android.graphics.Point
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.animation.Animation
@@ -13,11 +14,8 @@ import com.luuu.seven.adapter.ComicReadAdapter
 import com.luuu.seven.base.BaseFragment
 import com.luuu.seven.bean.ChapterDataBean
 import com.luuu.seven.bean.ReadHistoryBean
+import com.luuu.seven.util.*
 import com.luuu.seven.util.observer.BatteryObserver
-import com.luuu.seven.util.gone
-import com.luuu.seven.util.nav
-import com.luuu.seven.util.show
-import com.luuu.seven.util.string
 import kotlinx.android.synthetic.main.fra_comic_read.*
 
 class ComicReadFragment : BaseFragment() {
@@ -36,6 +34,11 @@ class ComicReadFragment : BaseFragment() {
     private val mComicCover: String by lazy { arguments?.getString(COMIC_COVER) ?: "" }
     private val mComicTitle: String by lazy { arguments?.getString(COMIC_TITLE) ?: "" }
     private var isUse = true
+    private val mPoint by lazy {
+        val point = Point()
+        requireActivity().windowManager.defaultDisplay.getSize(point)
+        point
+    }
 
     companion object {
         const val COMIC_ID = "comicId"
@@ -57,14 +60,6 @@ class ComicReadFragment : BaseFragment() {
 
         mViewModel.getComicReadPage(mComicId, mChapters?.get(mCurChapterPosition)?.chapterId ?: 0)
 
-        mViewModel.comicPageData.observe(this) {
-            updateComicContent(it.pageUrl)
-        }
-
-        mViewModel.updateOrInsert.observe(this) {
-            nav().navigateUp()
-        }
-
         seek_bar.addOnChangeListener { _, value, _ ->
             intCurPage = value.toInt() - 1
             comic_list.currentItem = intCurPage
@@ -76,7 +71,6 @@ class ComicReadFragment : BaseFragment() {
 
         comic_list.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-//                super.onPageSelected(position)
                 seek_bar.value = (position + 1).toFloat()
                 intCurPage = position
                 tv_chapter_page.text = "${position + 1} | $mTotalPage"
@@ -85,8 +79,8 @@ class ComicReadFragment : BaseFragment() {
 
         })
 
-        BatteryObserver(requireContext()) {
-            tv_battery.text = string(R.string.percent_sign, it.power.toString())
+        BatteryObserver(requireContext(), this.lifecycle) {
+            tv_battery.text = "${it.power}%"
             if (it.batteryCharging) {
                 iv_battery_charge.show()
             } else {
@@ -100,6 +94,38 @@ class ComicReadFragment : BaseFragment() {
                 else -> R.drawable.ic_battery_full
             }
             iv_battery.setBackgroundResource(source)
+        }
+
+        mViewModel.comicPageData.observe(viewLifecycleOwner) {
+            updateComicContent(it.pageUrl)
+        }
+
+        mViewModel.updateOrInsert.observe(viewLifecycleOwner) {
+            nav().navigateUp()
+        }
+
+        mViewModel.clickLeft.observeEvent(viewLifecycleOwner) {
+            intCurPage -= 1
+            if (intCurPage < 0) {
+                intCurPage = 0
+                dealTopAndBottom(true)
+            } else {
+                comic_list.currentItem = intCurPage
+            }
+        }
+
+        mViewModel.clickRight.observeEvent(viewLifecycleOwner) {
+            intCurPage += 1
+            if (intCurPage >= mTotalPage) {
+                intCurPage = mTotalPage
+                dealTopAndBottom(false)
+            } else {
+                comic_list.currentItem = intCurPage
+            }
+        }
+
+        mViewModel.clickMid.observeEvent(viewLifecycleOwner) {
+            switchControl()
         }
     }
 
@@ -159,58 +185,19 @@ class ComicReadFragment : BaseFragment() {
             mAdapter?.setNewData(urls)
         }
         mAdapter?.getTapBack { x, y ->
-            clickEvents(x, y)
+            mViewModel.checkClickPoint(x, y, mPoint)
         }
     }
 
-    private fun clickEvents(x: Float, y: Float) {
-        val point = Point()
-        requireActivity().windowManager.defaultDisplay.getSize(point)
-        val limitX = point.x / 3.0f
-        val limitY = point.y / 3.0f
-        when {
-            x * point.x < limitX -> {
-                intCurPage -= 1
-                if (intCurPage < 0) {
-                    dealTopAndBottom(isTop = true, isBottom = false)
-                } else {
-                    comic_list.currentItem = intCurPage
-                }
-            }
-            x * point.x > 2 * limitX -> {
-                intCurPage += 1
-                if (intCurPage >= mTotalPage) {
-                    dealTopAndBottom(false, true)
-                } else {
-//                    comic_list.scrollToPosition(intCurPage)
-                    comic_list.currentItem = intCurPage
-                }
-            }
-            y * point.y < limitY -> {
-                //上边
-            }
-            y * point.y > 2 * limitY -> {
-                //下边
-            }
-            else -> switchControl()//剩余位置
-        }
-    }
-
-    private fun dealTopAndBottom(isTop: Boolean, isBottom: Boolean) {
-        if (isBottom) {
-            intCurPage = 0
-        } else if (isTop) {
-            intCurPage = mTotalPage - 1
-        }
-
-        if (intCurPage == mTotalPage - 1) {
+    private fun dealTopAndBottom(isPrev: Boolean) {
+        if (isPrev) {
             if (mCurChapterPosition < mChapters!!.size - 1) {
                 mCurChapterPosition += 1
                 mViewModel.getComicReadPage(mComicId, mChapters!![mCurChapterPosition].chapterId)
             } else {
                 showToast("已经是第一话了")
             }
-        } else if (intCurPage == 0) {
+        } else {
             if (mCurChapterPosition > 0) {
                 mCurChapterPosition -= 1
                 mViewModel.getComicReadPage(mComicId, mChapters!![mCurChapterPosition].chapterId)

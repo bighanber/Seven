@@ -5,12 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
+import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.luuu.seven.util.getLifecycle
 
 class BatteryObserver(
     private val context: Context,
+    private val lifecycle: Lifecycle,
     listener: (info: BatteryInfo) -> Unit
 ) : DefaultLifecycleObserver {
 
@@ -31,16 +34,15 @@ class BatteryObserver(
         }
     }
 
-    private val life = context.getLifecycle() ?: GlobalLifecycle
-
     init {
-        life.addObserver(this)
+        //为什么用context获取的lifecycle和传递进来的不一样？？？？
+        lifecycle.addObserver(this)
         context.registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
         context.unregisterReceiver(batteryReceiver)
-        life.removeObserver(this)
+        lifecycle.removeObserver(this)
     }
 }
 

@@ -9,8 +9,9 @@ import com.luuu.seven.util.loadWithHead
 /**
  * Created by lls on 2018/9/1
  */
-class ComicReadAdapter(data: List<String>) :
-        BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_read_list, data) {
+class ComicReadAdapter(
+    data: List<String>
+) : BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_read_list, data) {
 
     lateinit var tapCallBack: (Float, Float) -> Unit
 
@@ -21,7 +22,7 @@ class ComicReadAdapter(data: List<String>) :
     override fun convert(helper: BaseViewHolder, item: String?) {
         helper.apply {
             getView<PhotoView>(R.id.read_view).loadWithHead(item ?: "")
-            getView<PhotoView>(R.id.read_view).setOnPhotoTapListener { view, x, y ->
+            getView<PhotoView>(R.id.read_view).setOnPhotoTapListener { _, x, y ->
                 tapCallBack.invoke(x, y)
             }
         }
